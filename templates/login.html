@@ -1,0 +1,49 @@
+{% block title %}Login{% endblock %}
+
+{% block css %}
+<style type="text/css">
+aside {
+  background-color:rgb(202, 60, 60);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="content">
+
+  <div class="header">
+    <h1>Login</h1>
+  </div>
+
+  <div class="content">
+
+    <form class="pure-form" method="POST">
+        {% if failure %}
+        <div class="pure-u-1">
+            <aside>
+                <p>
+                    Login attempt failed, make sure to check your password/email....
+                </p>
+            </aside>
+        </div>
+        {% endif %}
+
+          <fieldset class="pure-group">
+              <input class="pure-input-1" type="email" name="email" placeholder="Email">
+              <input class="pure-input-1" type="password" name="password" placeholder="Password">
+          </fieldset>
+         <button type="submit" class="pure-button pure-button-primary">Sign in</button>
+         <a href="{{ url_for('views.register_page') }}" class="pure-button">Register</a>
+
+
+    </form>
+
+    
+</div>
+{% endblock %}
+
+{% block js %}
+
+
+{% endblock %}

@@ -1,4 +1,18 @@
-494Sandbox
+Stuff
 ==========
+### Goals
 
-Sandbox for senior design
+
+### Primary Contributors
+* Andrew Guibert
+* Andrew Hartman
+* Jonathan Mielke
+* Lucas Rorhet
+* Travis Reed
+
+Resources
+--------------------
+* [Trello Board]
+* [WebSite]
+* [Project Plan]
+

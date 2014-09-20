@@ -8,7 +8,7 @@ from flask_login import login_required
 
 
 class HomeScreenView(MethodView):
-    #decorators = [login_required]
+    decorators = [login_required]
 
     def get(self):
         text = flask.request.args.get('text', "")

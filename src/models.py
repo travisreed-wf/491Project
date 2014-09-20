@@ -5,12 +5,26 @@ db = SQLAlchemy()
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.Unicode(255), unique=True)
     email = db.Column(db.String(255), unique=True)
-    displayname = db.Column(db.Unicode(255))
+    password = db.Column(db.String(128))
+    displayname = db.Column(db.String(255))
 
-    def __init__(self, username, email, displayname):
-        self.username = username
+    def __init__(self, email, displayname):
         self.email = email
         self.displayname = displayname
         return
+
+    def get_id(self):
+        return str(self.id)
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def is_authenticated(self):
+        return True
+
+    def is_admin(self):
+        return True

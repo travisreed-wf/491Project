@@ -1,4 +1,5 @@
 from flask_login import LoginManager
+from flask_login import login_user
 import models
 
 
@@ -10,5 +11,16 @@ def initialize(app):
     loginmanager.login_message = None
 
 
-def load_user(username):
-    return models.User.get_by_username(username)
+def load_user(email):
+    return models.User.query.filter_by(email=email).first()
+
+
+def login(email, password):
+    user = models.User.query.filter_by(email=email).first()
+    if not user:
+        return False
+
+    if user.password == password:
+        login_user(user)
+        return True
+    return False

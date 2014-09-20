@@ -1,3 +1,4 @@
+import flask
 from flask_login import LoginManager
 from flask_login import login_user
 import models
@@ -21,6 +22,7 @@ def login(email, password):
         return False
 
     if user.password == password:
+        flask.session['displayname'] = user.displayname
         login_user(user)
         return True
     return False

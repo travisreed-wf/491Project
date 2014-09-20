@@ -31,15 +31,9 @@
     <!-- End of NavBar -->
 
     <!-- Start the main page content -->
-    {% if session.user_id %}
     <div class="container-fluid" style="position: relative; min-height: 100%;">
         {% block body %}{% endblock %}
     </div>
-    {% else %}
-    <div class="container">
-        {% block login %}{% endblock %}
-    </div>
-    {% endif %}
     <!-- End the main page content -->
 
     {% block js_bottom %}{# Placed at the end of the document so the pages load faster #}

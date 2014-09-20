@@ -11,8 +11,8 @@ def initialize(app):
     loginmanager.login_message = None
 
 
-def load_user(email):
-    return models.User.query.filter_by(email=email).first()
+def load_user(user_id):
+    return models.User.query.filter_by(id=int(user_id)).first()
 
 
 def login(email, password):

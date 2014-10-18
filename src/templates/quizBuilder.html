@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+{% block header_css %}
+<head>
+    <title>Layout Selector</title>
+    {{ super() }}
+</head>
+{% endblock %}
+{% block body %}
+<div class="row">
+  <!-- Sidebar -->
+  <div class="col-md-2">
+    {% for element in elements %}
+      <div class="element" style="border:2px">
+        {% if element.image %}
+        {% else %}
+          <img src="../static/images/Manda-Pie-Back-To-School-Books.ico" alt="Mountain View" style="width:100px;height:100px">
+        {% endif %}
+        <br>
+        {{ element.name }}
+      </div>
+    {% endfor %}
+  </div>
+  <!-- Question List -->
+  <div class="col-md-9">
+    <div class="row">
+      
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block js_bottom %}
+{{ super() }}
+<link rel="stylesheet" href="{{url_for('static', filename='jquery-ui-1.10.3.custom/development-bundle/themes/smoothness/jquery-ui.css')}}" />
+<script src="{{url_for('static', filename='jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.min.js')}}"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $("div.element").draggable({
+      scroll: true,
+      revert: true,
+      distance: 25
+    });
+  });
+</script>
+
+{% endblock %}

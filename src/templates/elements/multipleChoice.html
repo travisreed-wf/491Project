@@ -1,10 +1,11 @@
+
 <div class="row">
   <div class="col-md-10 col-md-offset-1">
     <div class="panel panel-default">
       <div class="panel-body">
         <input type="text" id="title" class="form-control" placeholder="Question Title"><br>
         <textarea id="body" class="form-control" placeholder="Question Content"></textarea><br>
-          <div id="radioResponse" class="input-group hidden">
+          <div class="input-group hidden radioResponse">
             <span class="input-group-addon"> <input type="radio"> </span>
             <input type="text" class="form-control">
             <span class="input-group-addon">
@@ -20,3 +21,41 @@
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+  function addRadioResponse(ctx){
+    console.log(ctx);
+    var textcon = $(this)
+    if (typeof ctx.first === 'function'){
+      textcon = ctx;
+    }
+    textcon.parent().find('.panel-body').append("<div><div class='input-group'>" + $(".radioResponse").first().html() + "</div><br><div>");
+      $(".glyphicon-trash").click(function(){
+        $(this).closest("div").parent().remove();
+      });
+  };
+  $(document).ready(function(){
+    addRadioResponse($('#addNewResponse'));
+    addRadioResponse($('#addNewResponse'));
+    $("#addNewResponse").click(addRadioResponse);
+    $('#addNewResponse').attr('id', '');
+  });
+  // function addRadioResponse(clickedButton){
+  //   var btn = clickedButton;
+  //   if(btn == null)
+  //     btn = $(this);
+  //   console.log(btn);
+  //   var toRet = function(){
+  //     btn.closest(".panel-body").append("<div><div class='input-group'>" + $(".radioResponse").first().html() + "</div><br><div>");
+  //     $(".glyphicon-trash").click(function(){
+  //       $(this).closest($("div")).parent().remove();
+  //     });
+  //   };
+  //   return toRet;
+  // };
+  // $(document).ready(function(){
+  //   addRadioResponse();
+  //   addRadioResponse();
+  //   $("#addNewResponse").click(addRadioResponse($(this)));
+  // });
+</script>

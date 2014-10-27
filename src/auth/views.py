@@ -10,7 +10,7 @@ from flask_login import current_user
 from flask_login import login_required
 import models
 import re
-
+import json
 
 class LoginView(MethodView):
 
@@ -46,18 +46,20 @@ class RegisterView(MethodView):
         emailConfirm = data.get('emailConfirm')
         password = data.get('password')
         passwordConfirm = data.get('passwordConfirm')
-        print "Email is: " + email + "  Password is: " + password
+        """print "Email is: " + email + "  Password is: " + password"""
         user = models.User(email, password)
+        
+        temp = flask.request.form.get('email')
+        print temp
+
         models.db.session.add(user)
         models.db.session.commit()
 
         auth.login(email, password)
-        print "logged in"
         if current_user.is_authenticated():
-            """next_url = flask.request.args.get('next', url_for("home"))"""
             print "got ehre"
-            return redirect(url_for("home"))
-        print "actually here";
+            next_url = flask.request.args.get('next', url_for("home"))
+            return json.dumps({"next_url": next_url})
         return render_template("register.html", failure=True)
 
 

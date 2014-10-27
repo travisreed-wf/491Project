@@ -2,8 +2,12 @@
 
 {% block title %}Login{% endblock %}
 
-{% block css %}
-super()
+{% block header_css %}
+<head>
+  <title>Register  </title>
+    
+  {{super()}}
+</head>
 {% endblock %}
 
 {% block body %}
@@ -123,7 +127,10 @@ var setErrorClass = function(element){
         'password': $("#password").val(),
         'passwordConfirm': $("#passwordConfirm").val()
       }),
-      success:  function() {
+      success:  function(data) {
+        console.log($.parseJSON(data));
+        console.log($.parseJSON(data)["next_url"]);
+        window.location.href=$.parseJSON(data)["next_url"];
       }
     });
   }

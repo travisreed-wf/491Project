@@ -1,27 +1,17 @@
-
-<div class="row">
-  <div class="col-md-10 col-md-offset-1">
-    <div class="panel panel-default">
-      <div class="panel-body">
-        <input type="text" id="title" class="form-control" placeholder="Question Title"><br>
-        <textarea id="body" class="form-control" placeholder="Question Content"></textarea><br>
-          <div class="input-group hidden radioResponse">
-            <span class="input-group-addon"> <input type="radio"> </span>
-            <input type="text" class="form-control">
-            <span class="input-group-addon">
-              <span class="glyphicon glyphicon-trash"></span>
-            </span>
-          </div>
-      </div>
-      <p id="addNewResponse" class="text-center"><a>Add another response</a></p>
-      <div class="panel-footer">
-        <button type="button" class="btn btn-success pull-right">Submit</button>
-        <div class="clearfix"></div>
-      </div>
-    </div>
+{% extends "layout-question.html" %}
+{% block answer_details %}
+  <div class="input-group hidden radioResponse">
+    <span class="input-group-addon"> <input type="radio"> </span>
+    <input type="text" class="form-control">
+    <span class="EDIT_ONLY input-group-addon">
+      <span class="glyphicon glyphicon-trash"></span>
+    </span>
   </div>
-</div>
-
+{% endblock %}
+{% block question_customize_hook %}
+  <p id="addNewResponse" class="EDIT_ONLY text-center"><a>Add another response</a></p>
+{% endblock %}
+{% block js_bottom %}
 <script type="text/javascript">
   function addRadioResponse(ctx){
     console.log(ctx);
@@ -40,22 +30,5 @@
     $("#addNewResponse").click(addRadioResponse);
     $('#addNewResponse').attr('id', '');
   });
-  // function addRadioResponse(clickedButton){
-  //   var btn = clickedButton;
-  //   if(btn == null)
-  //     btn = $(this);
-  //   console.log(btn);
-  //   var toRet = function(){
-  //     btn.closest(".panel-body").append("<div><div class='input-group'>" + $(".radioResponse").first().html() + "</div><br><div>");
-  //     $(".glyphicon-trash").click(function(){
-  //       $(this).closest($("div")).parent().remove();
-  //     });
-  //   };
-  //   return toRet;
-  // };
-  // $(document).ready(function(){
-  //   addRadioResponse();
-  //   addRadioResponse();
-  //   $("#addNewResponse").click(addRadioResponse($(this)));
-  // });
-</script>
+  </script>
+  {% endblock %}

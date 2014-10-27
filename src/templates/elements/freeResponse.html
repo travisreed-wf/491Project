@@ -1,24 +1,4 @@
-
-<div class="row">
-  <div class="col-md-10 col-md-offset-1">
-    <div class="panel panel-default">
-      <div class="panel-body">
-        <input type="text" id="title" class="form-control" placeholder="Question Title"><br>
-        <textarea id="body" class="form-control" placeholder="Question Content"></textarea><br>
-          <div class="input-group">
-            <span class="input-group-addon"> <input type="radio" id="true"> </span>
-            <p class="form-control">True</p>
-          </div>
-          <br>
-          <div class="input-group">
-            <span class="input-group-addon"> <input type="radio" id="false"> </span>
-            <p class="form-control">False</p>
-          </div>
-      </div>
-      <div class="panel-footer">
-        <button type="button" class="btn btn-success pull-right">Submit</button>
-        <div class="clearfix"></div>
-      </div>
-    </div>
-  </div>
-</div>
+{% extends "layout-question.html" %}
+{% block answer_details %}
+  <textarea id="student-response" class="form-control" placeholder="Student Answer Here"></textarea><br>
+{% endblock %}

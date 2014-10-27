@@ -61,3 +61,13 @@ class RegisterView(MethodView):
             next_url = flask.request.args.get('next', url_for("home"))
             return json.dumps({"next_url": next_url})
         return render_template("register.html", failure=True)
+
+
+
+
+
+
+
+
+
+

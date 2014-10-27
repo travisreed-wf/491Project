@@ -11,5 +11,4 @@ class HomeScreenView(MethodView):
     decorators = [login_required]
 
     def get(self):
-        text = flask.request.args.get('text', "")
-        return render_template('home.html', text=text)
+        return render_template('home.html', text="")

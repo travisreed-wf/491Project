@@ -22,7 +22,7 @@ def login(email, password):
         return False
 
     if user.password == password:
-        flask.session['displayname'] = user.displayname
+        flask.session['email'] = user.email
         login_user(user)
         return True
     return False

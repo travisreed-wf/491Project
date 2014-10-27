@@ -25,3 +25,15 @@ class MultipleChoiceView(MethodView):
 
     def get(self):
         return render_template("elements/multipleChoice.html")
+
+
+class TrueFalseView(MethodView):
+
+    def get(self):
+        return render_template("elements/trueFalse.html")
+
+
+class FreeResponseView(MethodView):
+
+    def get(self):
+        return render_template("elements/freeResponse.html")

@@ -7,11 +7,10 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(255), unique=True)
     password = db.Column(db.String(128))
-    displayname = db.Column(db.String(255))
 
-    def __init__(self, email, displayname):
+    def __init__(self, email, password):
         self.email = email
-        self.displayname = displayname
+        self.password = password
         return
 
     def get_id(self):

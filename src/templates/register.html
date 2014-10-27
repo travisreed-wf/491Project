@@ -94,12 +94,10 @@
       }
     }
     if(errorCount == 0){
-      alert("Submitted");
       //call to python, validate again, and push to database
       submit();
       return true;
     }else{
-     alert("EROROROROR");
       return false;
     }
   }
@@ -128,8 +126,6 @@ var setErrorClass = function(element){
         'passwordConfirm': $("#passwordConfirm").val()
       }),
       success:  function(data) {
-        console.log($.parseJSON(data));
-        console.log($.parseJSON(data)["next_url"]);
         window.location.href=$.parseJSON(data)["next_url"];
       }
     });

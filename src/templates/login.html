@@ -3,7 +3,11 @@
 {% block title %}Login{% endblock %}
 
 {% block css %}
-super()
+<head>
+  <title>Login  </title>
+    
+  {{super()}}
+</head>
 {% endblock %}
 
 {% block body %}
@@ -12,13 +16,15 @@ super()
 
       <form class="form-signin" role="form", method="POST">
         <h2 class="form-signin-heading">Please sign in</h2>
-        <input id="email" type="email" name="email" class="form-control" placeholder="Email address" required autofocus>
+        <input id="email" type="email" name="email" class="form-control" placeholder="Email address"  required autofocus>
         <input id="password" name="password" type="password" class="form-control" placeholder="Password" required>
         <div class="row">
           <label class="checkbox">
             <input type="checkbox" value="remember-me"> Remember me
           </label>
           <button id="submit" class="btn btn-sm btn-primary" type="submit">Sign in</button>
+          <button id="register" class="btn btn-sm btn-primary" type=""><a href="{{ url_for('register') }}">Register</button>
+
         </div>
       </form>
 

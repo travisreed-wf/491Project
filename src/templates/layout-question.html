@@ -1,0 +1,29 @@
+<div class="row">
+  <div class="col-md-10 col-md-offset-1">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <input type="text" id="title" class="form-control" placeholder="Question Title"><br>
+        <textarea id="body" class="form-control" placeholder="Question Content"></textarea>
+        <hr>
+        {% block answer_details %}
+        {% endblock %}
+      </div>
+      {% block question_customize_hook %}
+      {% endblock %}
+      <div class="panel-footer">
+        <button type="button" class="EDIT_ONLY delete-question btn btn-danger pull-left">Delete Question</button>
+        <button type="button" class="btn btn-success pull-right">Submit</button>
+        <div class="clearfix"></div>
+      </div>
+    </div>
+  </div>
+</div>
+{% block js_bottom %}
+{% endblock %}
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.delete-question').click(function(){
+    $(this).closest('.row').remove();
+  });
+});
+</script>

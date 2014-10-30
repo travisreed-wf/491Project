@@ -57,11 +57,7 @@
         console.log("HIT AJAX");
         $.ajax({
             url         : '{{ url_for("test") }}',
-            type        : "GET",
-            contentType : 'application/json',
-            data        : JSON.stringify({
-                'test'  :'test'
-            })
+            type        : "GET"
         })
     });
     

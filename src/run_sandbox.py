@@ -8,6 +8,7 @@ from flask_login import login_required
 
 from auth import auth
 from auth import urls as auth_urls
+from course import urls as course_urls
 from home import urls as home_urls
 from questionBuilder import urls as questionBuilder_urls
 import models
@@ -26,7 +27,9 @@ def sandbox():
 
 auth.initialize(app)
 auth_urls.setup_urls(app)
+course_urls.setup_urls(app)
 home_urls.setup_urls(app)
+
 questionBuilder_urls.setup_urls(app)
 models.db.init_app(app)
 
@@ -36,4 +39,4 @@ with app.test_request_context():
         models.db.create_all()
 
 if __name__ == "__main__":
-    app.run(use_reloader=RELOADER_BOOL)
+    app.run(use_reloader=RELOADER_BOOL, host="192.168.1.142")

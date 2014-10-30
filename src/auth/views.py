@@ -12,6 +12,7 @@ import models
 import re
 import json
 
+
 class LoginView(MethodView):
 
     def get(self):
@@ -34,6 +35,7 @@ class LogoutView(MethodView):
     def get(self):
         flask_login.logout_user()
         return redirect(url_for("login"))
+
 
 class RegisterView(MethodView):
 

@@ -17,8 +17,10 @@ class User(db.Model):
     email = db.Column(db.String(255), unique=True)
     password = db.Column(db.String(128))
     courses = db.relationship("Course",
-                        secondary=association_table,
-                        backref="users")
+                              secondary=association_table,
+                              backref="users")
+    coursesTeaching = db.relationship('Course', backref='user',
+                                      lazy='dynamic')
 
     def __init__(self, email, password):
         self.email = email
@@ -40,10 +42,12 @@ class User(db.Model):
     def is_admin(self):
         return True
 
+
 class Course(db.Model):
     __tablename__ = 'course'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), unique=True)
+    teacher_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __init__(self, name):
         self.name = name

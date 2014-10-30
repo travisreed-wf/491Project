@@ -19,4 +19,9 @@ class CreateView(MethodView):
         return render_template("courseCreation.html")
 
     def post(self):
-        return 200
+        user = models.User("test@test.com", "pass")
+        user = models.db.session.query(models.User).filter_by(id=1).first()
+        user.courses.append(models.db.session.query(models.Course).filter_by(id=1).first())
+        models.db.session.commit()
+        print user.courses[0].name
+        print models.db.session.query(models.Course).filter_by(id=1).first()

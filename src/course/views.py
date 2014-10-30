@@ -19,9 +19,9 @@ class CreateView(MethodView):
         return render_template("courseCreation.html")
 
     def post(self):
-        user = models.User("test@test.com", "pass")
-        user = models.db.session.query(models.User).filter_by(id=1).first()
-        user.courses.append(models.db.session.query(models.Course).filter_by(id=1).first())
+        name = flask.request.form.get('name')
+        course = models.Course(name)
+        current_user.courses.append(course)
+        course.teacher_id = current_user.id
         models.db.session.commit()
-        print user.courses[0].name
-        print models.db.session.query(models.Course).filter_by(id=1).first()
+        return "Successful"

@@ -18,6 +18,8 @@
     <input id="emailConfirm" type="email" name="emailConfirm" class="form-control" placeholder="Confirm Email address"  autofocus>
     <input id="password" name="password" type="password" class="form-control" placeholder="Password" >
     <input id="passwordConfirm" name="passwordConfirm" type="password" class="form-control" placeholder="Confirm Password" >
+    <div id="errorField">
+    </div>
     <div class="row">
         <input type="hidden" id="errorText" value="errorText"> 
     </div>
@@ -27,6 +29,7 @@
       </label>
       <button id="register" class="btn btn-sm btn-primary">Register</button>
     </div>
+
 </div>
 {% endblock %}
 
@@ -36,9 +39,12 @@
 
   $("#register").click(function(){
     validate();
+    $("#errorField").hide();
+
   });
 
   function validate(){
+
     var results = new Array(5);
     var elements = new Array(4);
     results[0] = validateEmail($("#email"));
@@ -80,10 +86,12 @@
       else{
           //if the emails match remove error code
           //if the passwords mathc remove error code
-          if(i == 4){
+          if(i == 4 && results[0] != false && results[1] !=false){
+
             removeErrorClass(elements[0]);
             removeErrorClass(elements[1]);
-          }else if(i == 5){
+          }else if(i == 5 && results[2] != false && results[3] !=false){
+
             removeErrorClass(elements[2]);
             removeErrorClass(elements[3]);
 
@@ -126,7 +134,15 @@ var setErrorClass = function(element){
         'passwordConfirm': $("#passwordConfirm").val()
       }),
       success:  function(data) {
-        window.location.href=$.parseJSON(data)["next_url"];
+        if(data == "Failure"){  
+          setErrorClass($("#email"));
+          setErrorClass($("#emailConfirm"));
+          $("#errorField").append("Username already exists");
+          $("#errorField").show();
+
+        }else{
+          window.location.href=$.parseJSON(data)["next_url"];
+        }
       }
     });
   }

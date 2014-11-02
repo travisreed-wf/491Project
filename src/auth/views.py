@@ -44,12 +44,13 @@ class RegisterView(MethodView):
         data = flask.request.get_json()
         email = data.get('email')
         emailConfirm = data.get('emailConfirm')
+
+        if models.User.query.filter_by(email=email).first():
+            return "Failure"       
         password = data.get('password')
         passwordConfirm = data.get('passwordConfirm')
-        """print "Email is: " + email + "  Password is: " + password"""
         user = models.User(email, password)
         
-        temp = flask.request.form.get('email')
 
         models.db.session.add(user)
         models.db.session.commit()

@@ -20,13 +20,14 @@ class LoginView(MethodView):
         return render_template("login.html", failure=False)
 
     def post(self):
-        email = flask.request.form.get('email')
-        pw = flask.request.form.get('password')
+        data = flask.request.get_json()
+        email = data.get('email')
+        pw = data.get('password')
         auth.login(email, pw)
         if current_user.is_authenticated():
             next_url = flask.request.args.get('next', url_for("home"))
-            return redirect(next_url, code=302)
-        return render_template("login.html", failure=True)
+            return json.dumps({"next_url": next_url})
+        return "Failure"
 
 
 class LogoutView(MethodView):

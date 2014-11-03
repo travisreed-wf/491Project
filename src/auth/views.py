@@ -28,7 +28,6 @@ class LoginView(MethodView):
             return redirect(next_url, code=302)
         return render_template("login.html", failure=True)
 
-
 class LogoutView(MethodView):
 
     def get(self):

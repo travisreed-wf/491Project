@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% block header_css %}
+<head>
+    <title>Question Bulider</title>
+    {{ super() }}
+</head>
+{% endblock %}
+{% block body %}
+<div class="row">
+  <div class="col-md-10 col-md-offset-1">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <input type="text" id="title" class="form-control" placeholder="Question Title"><br>
+        <textarea id="body" class="form-control" placeholder="Question Content"></textarea><br>
+          <div id="radioResponse" class="input-group hidden">
+            <span class="input-group-addon"> <input type="radio"> </span>
+            <input type="text" class="form-control">
+            <span class="input-group-addon">
+              <span class="glyphicon glyphicon-trash"></span>
+            </span>
+          </div>
+      </div>
+      <p id="addNewResponse" class="text-center"><a>Add another response</a></p>
+      <div class="panel-footer">
+        <button type="button" class="btn btn-success pull-right">Submit</button>
+        <div class="clearfix"></div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block js_bottom %}
+{{ super() }}
+<script type="text/javascript">
+  function addRadioResponse(){
+    $(".panel-body").append("<div class='input-group'>" + $("#radioResponse").html() + "</div><br>");
+    $(".glyphicon-trash").click(function(){
+      $(this).closest($("br")).remove();
+      $(this).closest($(".input-group")).remove();
+    });
+  };
+  $(document).ready(function(){
+    addRadioResponse();
+    addRadioResponse();
+    $("#addNewResponse").click(addRadioResponse);
+  });
+</script>
+
+{% endblock %}

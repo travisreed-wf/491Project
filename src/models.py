@@ -71,12 +71,3 @@ class Course(db.Model):
                 db.session.commit()
         except:
             raise
-
-
-
-
-
-
-
-
-

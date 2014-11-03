@@ -16,6 +16,7 @@ class HomeScreenView(MethodView):
     decorators = [login_required]
 
     def get(self):
+        print current_user.courses
         return render_template('home.html')
 
 class ClassListView(MethodView):
@@ -28,6 +29,6 @@ class DBButtonView(MethodView):
         #user = models.db.session.query(models.User).filter_by(id=1).first()
         #user.courses.append(models.db.session.query(models.Course).filter_by(id=1).first())
         #models.db.session.commit()
-        #print user.courses[0].name
+
         #print models.db.session.query(models.Course).filter_by(id=1).first()
         return render_template('home.html')

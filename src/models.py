@@ -53,6 +53,29 @@ class Course(db.Model):
         self.name = name
         return
 
+    def set_students(self, student_file):
+        try:
+            lines = student_file.read()
+            students = lines.split(",")
+            for email in students:
+                print email
+                user = User.query.filter_by(email=email).first()
+                if user:
+                    if self not in user.courses:
+                        user.courses.append(user)
+                    else:
+                        print "Student already enrolled in course: %s\n" % email
+                else:
+                    user = User(email, None)
+                    user.courses.append(self)
+                db.session.commit()
+        except:
+            raise
+
+
+
+
+
 
 
 

@@ -20,8 +20,10 @@ class CreateView(MethodView):
 
     def post(self):
         name = flask.request.form.get('name')
+        f = flask.request.files.get('students')
         course = models.Course(name)
         current_user.courses.append(course)
         course.teacher_id = current_user.id
         models.db.session.commit()
+        course.set_students(f)
         return "Successful"

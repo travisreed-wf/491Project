@@ -5,6 +5,7 @@ from flask import render_template
 from flask import url_for
 from flask.views import MethodView
 from flask_login import login_required
+import flask_login
 from flask_login import current_user
 import models
 import re
@@ -18,6 +19,10 @@ class HomeScreenView(MethodView):
         print current_user.courses
         return render_template('home.html')
 
+class ClassListView(MethodView):
+    def get(self):
+        return flask.json.dumps([c.serialize for c in current_user.courses])
+            
 class DBButtonView(MethodView):
     def get(self):
         #user = models.User("test@test.com", "pass")

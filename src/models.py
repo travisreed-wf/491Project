@@ -53,6 +53,13 @@ class Course(db.Model):
         self.name = name
         return
 
+    @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name
+        }
+
     def set_students(self, student_file):
         try:
             lines = student_file.read()

@@ -30,11 +30,11 @@ class LoginView(MethodView):
             return json.dumps({"next_url": next_url})
         return "Failure"
 
-
 class LogoutView(MethodView):
 
     def get(self):
         flask_login.logout_user()
+        flask.session['email']=None
         return redirect(url_for("login"))
 
 

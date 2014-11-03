@@ -37,9 +37,3 @@ class FreeResponseView(MethodView):
 
     def get(self):
         return render_template("elements/freeResponse.html")
-
-
-class VideoView(MethodView):
-
-    def get(self):
-        return render_template("elements/video.html")

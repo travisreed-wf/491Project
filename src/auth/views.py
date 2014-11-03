@@ -24,11 +24,19 @@ class LoginView(MethodView):
         data = flask.request.get_json()
         email = data.get('email')
         pw = data.get('password')
+        if not pw:
+            new_users = models.User.query.filter_by(password=None).all()
+            new_usernames = [user.email for user in new_users]
+            if email in new_usernames:
+                return redirect("/register")
+            else:
+                return "Failure"
         auth.login(email, pw)
         if current_user.is_authenticated():
             next_url = flask.request.args.get('next', url_for("home"))
             return json.dumps({"next_url": next_url})
         return "Failure"
+
 
 class LogoutView(MethodView):
 
@@ -53,7 +61,6 @@ class RegisterView(MethodView):
         password = data.get('password')
         passwordConfirm = data.get('passwordConfirm')
         user = models.User(email, password)
-        
 
         models.db.session.add(user)
         models.db.session.commit()

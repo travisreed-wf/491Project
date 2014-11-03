@@ -26,4 +26,4 @@ class CreateView(MethodView):
         course.teacher_id = current_user.id
         models.db.session.commit()
         course.set_students(f)
-        return "Successful"
+        return redirect(url_for('home'))

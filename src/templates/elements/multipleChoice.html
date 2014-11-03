@@ -1,0 +1,34 @@
+{% extends "layout-question.html" %}
+{% block answer_details %}
+  <div class="input-group hidden radioResponse">
+    <span class="input-group-addon"> <input type="radio"> </span>
+    <input type="text" class="form-control">
+    <span class="EDIT_ONLY input-group-addon">
+      <span class="glyphicon glyphicon-trash"></span>
+    </span>
+  </div>
+{% endblock %}
+{% block question_customize_hook %}
+  <p id="addNewResponse" class="EDIT_ONLY text-center"><a>Add another response</a></p>
+{% endblock %}
+{% block js_bottom %}
+<script type="text/javascript">
+  function addRadioResponse(ctx){
+    console.log(ctx);
+    var textcon = $(this)
+    if (typeof ctx.first === 'function'){
+      textcon = ctx;
+    }
+    textcon.parent().find('.panel-body').append("<div><div class='input-group'>" + $(".radioResponse").first().html() + "</div><br><div>");
+      $(".glyphicon-trash").click(function(){
+        $(this).closest("div").parent().remove();
+      });
+  };
+  $(document).ready(function(){
+    addRadioResponse($('#addNewResponse'));
+    addRadioResponse($('#addNewResponse'));
+    $("#addNewResponse").click(addRadioResponse);
+    $('#addNewResponse').attr('id', '');
+  });
+  </script>
+  {% endblock %}

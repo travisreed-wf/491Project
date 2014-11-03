@@ -10,6 +10,7 @@ from auth import auth
 from auth import urls as auth_urls
 from home import urls as home_urls
 from gradebook import urls as gradebook_urls
+from questionBuilder import urls as questionBuilder_urls
 import models
 from settingslocal import DEBUG_MODE
 from settingslocal import RELOADER_BOOL
@@ -28,6 +29,7 @@ auth.initialize(app)
 auth_urls.setup_urls(app)
 home_urls.setup_urls(app)
 gradebook_urls.setup_urls(app)
+questionBuilder_urls.setup_urls(app)
 models.db.init_app(app)
 
 # Initialize sqlite db if necessary (for dev)

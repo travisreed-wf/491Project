@@ -1,14 +1,17 @@
 {% extends "layout-question.html" %}
 {% block answer_details %}
-  <div class="input-group hidden radioResponse">
-    <span class="input-group-addon"> <input type="radio"> </span>
-    <input type="text" class="form-control">
-    <span class="EDIT_ONLY input-group-addon">
-      <span class="glyphicon glyphicon-trash"></span>
-    </span>
+  <div class="panel-body">
+    <input type="text" id="title" class="form-control" placeholder="Question Title"><br>
+    <textarea id="body" class="form-control" placeholder="Question Content"></textarea>
+    <hr>
+    <div class="input-group hidden radioResponse">
+      <span class="input-group-addon"> <input type="radio"> </span>
+      <input type="text" class="form-control">
+      <span class="EDIT_ONLY input-group-addon">
+        <span class="glyphicon glyphicon-trash"></span>
+      </span>
+    </div>
   </div>
-{% endblock %}
-{% block question_customize_hook %}
   <p id="addNewResponse" class="EDIT_ONLY text-center"><a>Add another response</a></p>
 {% endblock %}
 {% block js_bottom %}

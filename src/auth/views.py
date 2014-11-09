@@ -48,6 +48,7 @@ class RegisterView(MethodView):
         email = data.get('email')
         emailConfirm = data.get('emailConfirm')
 
+        #Check if email/username is already registered
         if models.User.query.filter_by(email=email).first():
             return "Failure"       
         password = data.get('password')

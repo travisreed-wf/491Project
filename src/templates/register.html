@@ -122,7 +122,7 @@ var setErrorClass = function(element){
         element.css('border-style', 'solid');
         element.css('border-width', '2px');
     }
-
+  //Submit gets repoonse from python backend, failure means email already exists
   function submit(){
     $.ajax({
       url: '{{ url_for("register") }}',
@@ -147,6 +147,7 @@ var setErrorClass = function(element){
       }
     });
   }
+  
   function validateEmail(emailVal){
     var email = emailVal.val();
     var regex = /[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}/igm;

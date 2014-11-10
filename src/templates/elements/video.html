@@ -1,7 +1,7 @@
 {% extends "layout-question.html" %}
 {% block answer_details %}
   <div class="wp-video">
-    <div class="panel-body wp-video-panel" align="center">
+    <div class="panel-body wp-video-panel" align="center" onclick="clickVideo(this)">
       <h1>Watch Video</h1>
     </div>
     <input type="text" class="form-control EDIT_ONLY wp-video-src" placeholder="Post Video URL here"><br>
@@ -25,35 +25,4 @@
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal --> 
   </div>
-{% endblock %}
-
-{% block js_bottom %}
-<script type="text/javascript">
-function getVideoURL(original){
-  // will likely need to add more url handlers later, 
-  // for now we support youtube urls
-  if(original.indexOf("<iframe") >= 0){
-    var src = original.substring(original.indexOf('src="')+5);
-    src = src.substring(0,src.indexOf('"'));
-    return src;
-  } else if(original.indexOf("watch?v=") >= 0){
-    return original.replace("watch?v=","embed/")
-  } else {
-    return original;
-  }
-}
-// TODO still need to get 2 videos in 1 page working
-// the modals appear to be conflicting
-$(document).ready(function(){
-  $('.wp-video-panel').click(function(){
-    var src = $(this).parent().find('.wp-video-src').val();
-    src = getVideoURL(src);
-    $(this).parent().find('iframe').attr('src', src);
-    $(this).parent().find('.modal').modal('toggle');
-    $('.modal').on('hidden.bs.modal', function () {
-      $('iframe').attr('src', $('iframe').attr('src'));
-    })
-  });
-});
-</script>
 {% endblock %}

@@ -21,6 +21,7 @@ class User(db.Model):
                               backref="users")
     coursesTeaching = db.relationship('Course', backref='user',
                                       lazy='dynamic')
+    #permissions = db.Column(db.Integer, default=1)
 
     def __init__(self, email, password):
         self.email = email

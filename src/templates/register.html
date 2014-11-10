@@ -12,7 +12,7 @@
 
 {% block body %}
 
-<div class="container col-md-4 col-md-offset-3">
+<div id="registerInput"class="container col-md-4 col-md-offset-3">
     <h2 class="form-signin-heading">Please Register</h2>
     <input id="email" type="email" name="email" class="form-control" placeholder="Email address"  autofocus>
     <input id="emailConfirm" type="email" name="emailConfirm" class="form-control" placeholder="Confirm Email address"  autofocus>
@@ -37,6 +37,13 @@
 {% block js_bottom %}
 {{ super() }}
 <script type="text/javascript">
+
+  $("#registerInput").keypress(function(event) {
+      if (event.which == 13) {
+          event.preventDefault();
+          submit();
+      }
+  });
 
   $("#register").click(function(){
     validate();

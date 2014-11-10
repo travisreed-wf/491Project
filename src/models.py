@@ -14,6 +14,7 @@ association_table = db.Table('association', db.Model.metadata,
 class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255))
     email = db.Column(db.String(255), unique=True)
     password = db.Column(db.String(128))
     courses = db.relationship("Course",
@@ -47,6 +48,7 @@ class Course(db.Model):
     __tablename__ = 'course'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), unique=True)
+    title = db.Column(db.String(255))
     teacher_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __init__(self, name):

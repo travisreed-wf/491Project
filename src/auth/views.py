@@ -21,19 +21,21 @@ class LoginView(MethodView):
         return render_template("login.html", failure=False)
 
     def post(self):
-        email = flask.request.form.get('email')
-        pw = flask.request.form.get('password')
+        data = flask.request.get_json()
+        email = data.get('email')
+        pw = data.get('password')
         auth.login(email, pw)
         if current_user.is_authenticated():
             next_url = flask.request.args.get('next', url_for("home"))
-            return redirect(next_url, code=302)
-        return render_template("login.html", failure=True)
+            return json.dumps({"next_url": next_url})
+        return "Failure"
+
 
 class LogoutView(MethodView):
 
     def get(self):
         flask_login.logout_user()
-        flask.session['email']=None
+        flask.session['email'] = None
         return redirect(url_for("login"))
 
 
@@ -48,12 +50,16 @@ class RegisterView(MethodView):
         emailConfirm = data.get('emailConfirm')
         password = data.get('password')
         passwordConfirm = data.get('passwordConfirm')
-        """print "Email is: " + email + "  Password is: " + password"""
-        user = models.User(email, password)
-        
-        temp = flask.request.form.get('email')
 
-        models.db.session.add(user)
+        user = models.User.query.filter_by(email=email).first()
+        if user:
+            if user.password:
+                return "Failure, user already exists"
+            else:
+                user.password = password
+        else:
+            user = models.User(email, password)
+            models.db.session.add(user)
         models.db.session.commit()
 
         auth.login(email, password)

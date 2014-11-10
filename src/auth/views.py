@@ -30,11 +30,12 @@ class LoginView(MethodView):
             return json.dumps({"next_url": next_url})
         return "Failure"
 
+
 class LogoutView(MethodView):
 
     def get(self):
         flask_login.logout_user()
-        flask.session['email']=None
+        flask.session['email'] = None
         return redirect(url_for("login"))
 
 
@@ -47,16 +48,18 @@ class RegisterView(MethodView):
         data = flask.request.get_json()
         email = data.get('email')
         emailConfirm = data.get('emailConfirm')
-
-        #Check if email/username is already registered
-        if models.User.query.filter_by(email=email).first():
-            return "Failure"       
         password = data.get('password')
         passwordConfirm = data.get('passwordConfirm')
-        user = models.User(email, password)
-        
 
-        models.db.session.add(user)
+        user = models.User.query.filter_by(email=email).first()
+        if user:
+            if user.password:
+                return "Failure, user already exists"
+            else:
+                user.password = password
+        else:
+            user = models.User(email, password)
+            models.db.session.add(user)
         models.db.session.commit()
 
         auth.login(email, password)

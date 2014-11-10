@@ -10,8 +10,8 @@
     <div class="col-md-10 col-md-offset-2" style="width:800px;">
         <button id="testbtn" class="btn btn-sm btn-primary">TEST DB</button>
         <h3>Classes </h3>
-        <div class="list-group">
-            <a href="" class="list-group-item">CPRE 491</a>
+        <div id="class-list" class="list-group">
+            
         </div>
 
         <h3>Assignments </h3>
@@ -56,18 +56,30 @@
     $("#testbtn").click(function(){
         console.log("HIT AJAX");
         $.ajax({
-            url         : '{{ url_for("test") }}',
-            type        : "GET"
+            url         :'{{ url_for("test") }}',
+            type        :"GET"
         })
     });
     
-
+    function getClassList() {
+        $.ajax({
+            url         :'{{ url_for("class_list")}}',
+            type        :"GET",
+            success     :function(result) {
+                var classList = $.parseJSON(result);
+                var strClassList="";
+                for(var i=0; i < classList.length;i++){
+                    strClassList+="<a href='' class='list-group-item'>";
+                    strClassList+=classList[i].name;
+                    strClassList+="</a>";
+                }
+                $('#class-list').html(strClassList);
+            }
+        });
+    }
 
     $(document).ready(function() {
-        var myList = [];
-
-
-        
+        getClassList();
     })
 </script>
 {% endblock %}

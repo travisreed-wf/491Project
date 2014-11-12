@@ -18,7 +18,6 @@ from flask_login import login_required
 class LoginView(MethodView):
 
     def get(self):
-        print "HERE"
         logger.info("Testing")
         logger.error("Testing Error")
         if current_user is not None and current_user.is_authenticated():

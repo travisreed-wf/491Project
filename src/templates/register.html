@@ -42,7 +42,7 @@
   $("#registerInput").keypress(function(event) {
       if (event.which == 13) {
           event.preventDefault();
-          submit();
+          validate();
       }
   });
 
@@ -78,7 +78,6 @@
     elements[3] = $("#passwordConfirm");
     results[4] = validateDisplayName($("#displayName"));
     elements[4] = $("#displayName");
-    alert(results[4]);
     if(($("#email").val() == $("#emailConfirm").val()) && ($("#email").val() != "") && ($("#emailConfirm").val())){
       results[5] = true;
     }else{
@@ -181,7 +180,6 @@ var setErrorClass = function(element){
     }
   }
   function validateDisplayName(displayNameVal){
-    alert(displayNameVal.val());
     var displayName = displayNameVal.val();
     var regex = /[a-zA-Z]/;
     if (displayName == '' || !regex.test(displayName))

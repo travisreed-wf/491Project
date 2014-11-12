@@ -21,10 +21,10 @@ class User(db.Model):
                               backref="users")
     coursesTeaching = db.relationship('Course', backref='user',
                                       lazy='dynamic')
-    displayName = db.Column(db.String(128))
+    name = db.Column(db.String(255))
     permissions = db.Column(db.Integer, default=1)
 
-    def __init__(self, email, password,displayName):
+    def __init__(self, email, password,name):
         self.email = email
         self.password = password
         self.displayName = displayName
@@ -50,6 +50,7 @@ class Course(db.Model):
     __tablename__ = 'course'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), unique=True)
+    title = db.Column(db.String(255))
     teacher_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __init__(self, name):

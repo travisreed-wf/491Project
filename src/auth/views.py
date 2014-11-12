@@ -59,7 +59,7 @@ class RegisterView(MethodView):
             else:
                 user.password = password
         else:
-            user = models.User(email, password,name)
+            user = models.User(email, password, name)
             models.db.session.add(user)
         models.db.session.commit()
 

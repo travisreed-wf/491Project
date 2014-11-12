@@ -14,11 +14,12 @@
 
 <div id="registerInput"class="container col-md-4 col-md-offset-3">
     <h2 class="form-signin-heading">Please Register</h2>
+    <input id="displayName" name="displayName" class="form-control" placeholder="Full Name"  autofocus>
     <input id="email" type="email" name="email" class="form-control" placeholder="Email address"  autofocus>
     <input id="emailConfirm" type="email" name="emailConfirm" class="form-control" placeholder="Confirm Email address"  autofocus>
     <input id="password" name="password" type="password" class="form-control" placeholder="Password">
     <input id="passwordConfirm" name="passwordConfirm" type="password" class="form-control" placeholder="Confirm Password" >
-    <label display="">*Passwords must contain 1 number, 1 capital letter, and minimum of 6 characters </label>
+    <label display="">*Passwords must contain 1 number, 1 capital letter, <br>1 lower case letter, and minimum of 6 characters </label>
     <div id="errorField">
     </div>
     <div class="row">
@@ -51,6 +52,18 @@
 
   });
 
+  $("#displayName").keypress(function(evernt){
+    //only allow characters to be printed in displayname text field
+    if ((event.keyCode > 64 && event.keyCode < 91) || (event.keyCode > 96 && event.keyCode < 123) || 
+      event.keyCode == 8 || event.keyCode == 32){
+             return true;
+    }
+    else{
+           alert("Please enter letters A-Z");
+           return false;
+       }
+  });
+
   function validate(){
 
     var results = new Array(5);
@@ -63,15 +76,18 @@
     elements[2] = $("#password");
     results[3] = validatePassword($("#passwordConfirm"));
     elements[3] = $("#passwordConfirm");
+    results[4] = validateDisplayName($("#displayName"));
+    elements[4] = $("#displayName");
+    alert(results[4]);
     if(($("#email").val() == $("#emailConfirm").val()) && ($("#email").val() != "") && ($("#emailConfirm").val())){
-      results[4] = true;
-    }else{
-      results[4] = false;
-    }
-    if(($("#password").val() == $("#passwordConfirm").val()) && ($("#password").val() != "") && ($("#passwordConfirm").val())){
       results[5] = true;
     }else{
       results[5] = false;
+    }
+    if(($("#password").val() == $("#passwordConfirm").val()) && ($("#password").val() != "") && ($("#passwordConfirm").val())){
+      results[6] = true;
+    }else{
+      results[6] = false;
     }
     var errorCount = 0;
     for(var i = 0; i < results.length; i++){
@@ -81,12 +97,12 @@
             setErrorClass(elements[i]);
           }
           //if emails don't match, set the inputs as errored
-          if(i == 4){
+          if(i == 5){
             setErrorClass(elements[0]);
             setErrorClass(elements[1]);
           }
           //if passwords on't mathc, set the inputs as errored
-          if(i == 5){
+          if(i == 6){
             setErrorClass(elements[2]);
             setErrorClass(elements[3]);
           }
@@ -94,11 +110,11 @@
       else{
           //if the emails match remove error code
           //if the passwords mathc remove error code
-          if(i == 4 && results[0] != false && results[1] !=false){
+          if(i == 5 && results[0] != false && results[1] !=false){
 
             removeErrorClass(elements[0]);
             removeErrorClass(elements[1]);
-          }else if(i == 5 && results[2] != false && results[3] !=false){
+          }else if(i == 6 && results[2] != false && results[3] !=false){
 
             removeErrorClass(elements[2]);
             removeErrorClass(elements[3]);
@@ -136,6 +152,7 @@ var setErrorClass = function(element){
       type: 'POST',
       contentType: 'application/json',
       data: JSON.stringify({
+        'displayName': $("#displayName").val(),
         'email': $("#email").val(),
         'emailConfirm': $("#emailConfirm").val(),
         'password': $("#password").val(),
@@ -159,6 +176,15 @@ var setErrorClass = function(element){
     var email = emailVal.val();
     var regex = /[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}/igm;
     if (email == '' || !regex.test(email))
+    {
+        return false;
+    }
+  }
+  function validateDisplayName(displayNameVal){
+    alert(displayNameVal.val());
+    var displayName = displayNameVal.val();
+    var regex = /[a-zA-Z]/;
+    if (displayName == '' || !regex.test(displayName))
     {
         return false;
     }

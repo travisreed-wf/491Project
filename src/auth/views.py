@@ -46,6 +46,7 @@ class RegisterView(MethodView):
 
     def post(self):
         data = flask.request.get_json()
+        displayName = data.get('displayName')
         email = data.get('email')
         emailConfirm = data.get('emailConfirm')
         password = data.get('password')
@@ -58,7 +59,7 @@ class RegisterView(MethodView):
             else:
                 user.password = password
         else:
-            user = models.User(email, password)
+            user = models.User(email, password,displayName)
             models.db.session.add(user)
         models.db.session.commit()
 

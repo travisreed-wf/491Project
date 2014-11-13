@@ -12,7 +12,7 @@ def get_logger():
     if len(logger.handlers) == 0:
         debugHandler = logging.FileHandler(DEBUG_LOG)
         errorHandler = logging.FileHandler(ERROR_LOG)
-        formatter = logging.Formatter('%(asctime)s|%(levelname)7s|\t%(message)s|(%(lineno)d)')
+        formatter = logging.Formatter('%(asctime)s|%(levelname)7s|%(filename)20s (%(lineno)04d)|\t%(message)s')
         debugHandler.setFormatter(formatter)
         errorHandler.setFormatter(formatter)
         errorHandler.setLevel(logging.ERROR)

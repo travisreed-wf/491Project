@@ -18,7 +18,6 @@ from flask_login import login_required
 class LoginView(MethodView):
 
     def get(self):
-        logger.info("Testing")
         logger.error("Testing Error")
         if current_user is not None and current_user.is_authenticated():
             return redirect(url_for('home'))
@@ -31,6 +30,7 @@ class LoginView(MethodView):
         auth.login(email, pw)
         if current_user.is_authenticated():
             next_url = flask.request.args.get('next', url_for("home"))
+            logger.info("User: %s has logged in" % email)
             return json.dumps({"next_url": next_url})
         return "Failure"
 

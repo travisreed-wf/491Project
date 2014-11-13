@@ -23,10 +23,9 @@
   </div>
   <!-- Question List -->
   <div class="col-md-9 col-md-offset-2">
-
     <div class="row">
-      <div class="elementWell" style="border:1px;border-style:dashed;border-radius:5px;height:500px">
-        <br><br>Drag Element Here
+      <div class="elementWell" style="border:1px;border-style:dashed;border-radius:5px;height:500px" align="center">
+        <br><br>Drag new elements here
       </div>
     </div>
   </div>
@@ -47,7 +46,6 @@
   }
   function makeDroppable(element){
     element.droppable({
-      // hoverClass: 'ui-state-hover',
       drop: function(event, ui){
         var elementWell = $(this);
         var element = ui.draggable;
@@ -56,6 +54,30 @@
       }
     })
   }
+  function getVideoURL(original){
+    // will likely need to add more url handlers later, 
+    // for now we support youtube urls
+    if(original.indexOf("<iframe") >= 0){
+      var src = original.substring(original.indexOf('src="')+5);
+      src = src.substring(0,src.indexOf('"'));
+      return src;
+    } else if(original.indexOf("watch?v=") >= 0){
+      return original.replace("watch?v=","embed/")
+    } else {
+      return original;
+    }
+  }
+  function clickVideo(clkevent){
+    console.log($(clkevent).parent());
+    var src = $(clkevent).parent().find('.wp-video-src').val();
+    src = getVideoURL(src);
+    $(clkevent).parent().find('iframe').attr('src', src);
+    $(clkevent).parent().find('.modal').modal('toggle');
+    $('.modal').on('hidden.bs.modal', function () {
+      $('iframe').attr('src', $('iframe').attr('src'));
+    });
+  }
+
   $(document).ready(function(){
     
     makeDroppable($('div.elementWell'));
@@ -64,10 +86,8 @@
       scroll: true,
       revert: true,
       distance: 25,
-      stack: ".element"
+      stack: "div.element"
     });
-
-    
   });
 </script>
 

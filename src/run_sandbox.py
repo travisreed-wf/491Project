@@ -8,16 +8,17 @@ from flask_login import login_required
 
 from auth import auth
 from auth import urls as auth_urls
+from course import urls as course_urls
 from home import urls as home_urls
 from gradebook import urls as gradebook_urls
-from questionBuilder import urls as questionBuilder_urls
+from taskBuilder import urls as taskBuilder_urls 
 import models
 from settingslocal import DEBUG_MODE
 from settingslocal import RELOADER_BOOL
 
 app = Flask(__name__)
 app.debug = DEBUG_MODE
-app.config.from_pyfile('settingslocal.py')
+app.config.from_pyfile('../settingslocal.py')
 toolbar = DebugToolbarExtension(app)
 
 @app.route("/")
@@ -27,9 +28,10 @@ def sandbox():
 
 auth.initialize(app)
 auth_urls.setup_urls(app)
+course_urls.setup_urls(app)
 home_urls.setup_urls(app)
 gradebook_urls.setup_urls(app)
-questionBuilder_urls.setup_urls(app)
+taskBuilder_urls.setup_urls(app)
 models.db.init_app(app)
 
 # Initialize sqlite db if necessary (for dev)

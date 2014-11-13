@@ -38,6 +38,7 @@
 {% block js_bottom %}
 {{ super() }}
 <script type="text/javascript">
+  $("#page-nav").hide();
 
   $("#registerInput").keypress(function(event) {
       if (event.which == 13) {
@@ -50,18 +51,6 @@
     validate();
     $("#errorField").hide();
 
-  });
-
-  $("#displayName").keypress(function(evernt){
-    //only allow characters to be printed in displayname text field
-    if ((event.keyCode > 64 && event.keyCode < 91) || (event.keyCode > 96 && event.keyCode < 123) || 
-      event.keyCode == 8 || event.keyCode == 32){
-             return true;
-    }
-    else{
-           alert("Please enter letters A-Z");
-           return false;
-       }
   });
 
   function validate(){
@@ -181,7 +170,7 @@ var setErrorClass = function(element){
   }
   function validateDisplayName(displayNameVal){
     var displayName = displayNameVal.val();
-    var regex = /[a-zA-Z]/;
+    var regex = /^[a-zA-Z ]+$/;
     if (displayName == '' || !regex.test(displayName))
     {
         return false;

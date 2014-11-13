@@ -139,7 +139,7 @@ var setErrorClass = function(element){
       },
       error: function(data){
         setErrorClass($("#email"));
-        $("#errorField").append("<p style='color:red'>" + data.responseText + "</p>");
+        $("#errorField").html("<p style='color:red'>" + data.responseText + "</p>");
         $("#errorField").show();
       }
     });

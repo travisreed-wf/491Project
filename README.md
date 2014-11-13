@@ -6,13 +6,11 @@ ISU Web Portal
 * Jonathan Mielke
 * Lucas Rorhet
 * Travis Reed 
-
 ===
 ### Resources
 * [Trello Board](https://trello.com/b/kPAKvBao/senior-design)
 * [Group Website](http://may1518.ece.iastate.edu/)
 * [Project Plan](https://drive.google.com/a/iastate.edu/file/d/0B6mbCLySBSQxOUxYQ196eUY5cXc/view?usp=sharing)
-
 ===
 ### Deplyoment Instructions
 1. Package the source folder locally <br>

@@ -58,11 +58,11 @@ class RegisterView(MethodView):
         user = models.User.query.filter_by(email=email).first()
         if user:
             if user.password:
-                return "Failure, user already exists"
+                return "Failure, user already exists", 401
             else:
                 user.password = password
         else:
-            user = models.User(email, password,name)
+            user = models.User(email, password, name)
             models.db.session.add(user)
         models.db.session.commit()
 

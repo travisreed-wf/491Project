@@ -135,15 +135,13 @@ var setErrorClass = function(element){
         'passwordConfirm': $("#passwordConfirm").val()
       }),
       success:  function(data) {
-        if(data == "Failure"){  
-          setErrorClass($("#email"));
-          setErrorClass($("#emailConfirm"));
-          $("#errorField").append("Username already exists");
-          $("#errorField").show();
-
-        }else{
-          window.location.href=$.parseJSON(data)["next_url"];
-        }
+        window.location.href=$.parseJSON(data)["next_url"];
+      },
+      error: function(data){
+        console.log(data);
+        setErrorClass($("#email"));
+        $("#errorField").append("<p style='color:red'>" + data.responseText + "</p>");
+        $("#errorField").show();
       }
     });
   }

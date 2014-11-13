@@ -138,7 +138,6 @@ var setErrorClass = function(element){
         window.location.href=$.parseJSON(data)["next_url"];
       },
       error: function(data){
-        console.log(data);
         setErrorClass($("#email"));
         $("#errorField").append("<p style='color:red'>" + data.responseText + "</p>");
         $("#errorField").show();

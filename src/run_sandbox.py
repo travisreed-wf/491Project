@@ -17,7 +17,7 @@ from settingslocal import RELOADER_BOOL
 
 app = Flask(__name__)
 app.debug = DEBUG_MODE
-app.config.from_pyfile('settingslocal.py')
+app.config.from_pyfile('../settingslocal.py')
 toolbar = DebugToolbarExtension(app)
 
 @app.route("/")

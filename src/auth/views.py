@@ -18,7 +18,6 @@ from flask_login import login_required
 class LoginView(MethodView):
 
     def get(self):
-        logger.error("Testing Error")
         if current_user is not None and current_user.is_authenticated():
             return redirect(url_for('home'))
         return render_template("login.html", failure=False)
@@ -50,6 +49,7 @@ class RegisterView(MethodView):
 
     def post(self):
         data = flask.request.get_json()
+        name = data.get('displayName')
         email = data.get('email')
         emailConfirm = data.get('emailConfirm')
         password = data.get('password')
@@ -58,11 +58,11 @@ class RegisterView(MethodView):
         user = models.User.query.filter_by(email=email).first()
         if user:
             if user.password:
-                return "Failure, user already exists"
+                return "Failure, user already exists", 401
             else:
                 user.password = password
         else:
-            user = models.User(email, password)
+            user = models.User(email, password, name)
             models.db.session.add(user)
         models.db.session.commit()
 

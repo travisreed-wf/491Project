@@ -6,18 +6,60 @@
 </head>
 {% endblock %}
 {% block body %}
-	<div class= "row">
-		
-	</div>
-{% endblock %}
-
-<!-- <div style= "background-color:#999999" class= "col-md-2 col-lg-2">
-	<span style= "display:block; text-align:center; font-size:200%; color:black background-color:white;">Classes</span>
-	<div class= "btn-group-vertical.btn-block">
-		<button type= "button" class="btn btn-default btn-lg btn-block">Home</button>
-		<button type= "button" class="btn btn-default btn-lg btn-block">Registration</button>
+<div class= "row" id="course>
+	<div class="col-md-11">
+		<div class="panel panel-default">
+			<div class="panel-heading" style="text-align:center"><strong>Course 1</strong></div>
+			<table class="table">
+				<tr>
+					<td>Assignment 1</td>
+					<td>Graded:11/2/14</td>
+					<td>Grade:A</td>
+				</tr>
+				<tr>
+					<td>Assignment 2</td>
+					<td>Graded:11/2/14</td>
+					<td>Grade:B+</td>
+				</tr>
+			</table>
+		</div>
 	</div>
 </div>
-<div class= "col-md-10 col-lg-10">
-	Testing the width of this page fefefefefefefefefefefefefeeeeeeeeeeeeeeeeeffffffffffffffffffffffffffffffffffffffffffffff
-</div> -->
+<br>
+<div class= "row">
+	<div class="col-md-11">
+		<div class="panel panel-default">
+			<div class="panel-heading" style="text-align:center"><strong>Course 2</strong></div>
+			<table class="table">
+				<tr>
+					<td>Assignment 1</td>
+					<td>Graded:11/2/14</td>
+					<td>Grade:A</td>
+				</tr>
+				<tr>
+					<td>Assignment 2</td>
+					<td>Graded:11/2/14</td>
+					<td>Grade:B+</td>
+				</tr>
+			</table>
+		</div>
+	</div>	
+</div>
+
+<script type="text/javascript">
+	function getCourseList(){
+		.ajax{
+			
+		}
+	}
+</script>
+{% endblock %}
+
+
+<!--Need to know how many courses user has, can get from database-->
+<!--Each Course contains
+	course name
+	assignments
+		date graded
+		grade
+-->

@@ -1,9 +1,4 @@
-import re
-import json
-
 import auth
-import logs
-import models
 
 import flask
 from flask import redirect
@@ -13,12 +8,14 @@ from flask.views import MethodView
 import flask_login
 from flask_login import current_user
 from flask_login import login_required
+import models
+import re
+import json
 
 
 class LoginView(MethodView):
 
     def get(self):
-        logger.error("Testing Error")
         if current_user is not None and current_user.is_authenticated():
             return redirect(url_for('home'))
         return render_template("login.html", failure=False)
@@ -30,7 +27,6 @@ class LoginView(MethodView):
         auth.login(email, pw)
         if current_user.is_authenticated():
             next_url = flask.request.args.get('next', url_for("home"))
-            logger.info("User: %s has logged in" % email)
             return json.dumps({"next_url": next_url})
         return "Failure"
 
@@ -63,7 +59,7 @@ class RegisterView(MethodView):
             else:
                 user.password = password
         else:
-            user = models.User(email, password,name)
+            user = models.User(email, password, name)
             models.db.session.add(user)
         models.db.session.commit()
 
@@ -72,5 +68,3 @@ class RegisterView(MethodView):
             next_url = flask.request.args.get('next', url_for("home"))
             return json.dumps({"next_url": next_url})
         return render_template("register.html", failure=True)
-
-logger = logs.get_logger()

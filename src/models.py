@@ -24,7 +24,7 @@ class User(db.Model):
     name = db.Column(db.String(255))
     permissions = db.Column(db.Integer, default=1)
 
-    def __init__(self, email, password,name):
+    def __init__(self, email, password, name):
         self.email = email
         self.password = password
         self.name = name

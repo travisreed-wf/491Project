@@ -15,18 +15,19 @@ ISU Web Portal
 
 ===
 ### Deplyoment Instructions
-1. Package the source folder locally <br>
-`zip build-MM-DD.zip ./src`
-2. Transfer archive to vrac server <br>
+01. Package the source folder locally (except for the settingslocal)<br>
+`zip -r build-MM-DD.zip ./src -x '*/settingslocal.py'`
+02. Transfer archive to vrac server <br>
 `scp ./build-MM-DD.zip username@nirwebportal.vrac.iastate.edu:/home/nirwebportal/archives/`
-3. SSH into nirwebportal.vrac.iastate.edu <br>
-`ssh username@nirwebportal.vrac.iastate.edu`
-4. Stop currently running server process(es) <br>
-`ps -au<username>` then `kill <pid>`\
-5. Remove old source and extract new build archive <br>
+03. SSH into nirwebportal.vrac.iastate.edu <br>
+`ssh <yourusername>@nirwebportal.vrac.iastate.edu`
+04. Stop currently running server process(es) <br>
+`ps -au<yourusername>` then `kill <pid>`\
+05. Store the current settingslocal.py in a safe place.  Then remove old source and extract new build archive <br>
 `unzip build-MM-DD.zip`
-6. Replace the src folder with the new build
-7. Reset database if schema changes were made since last build
-8. Ensure database.db is writeable
-9. Start the server <br>
+06. Replace the src folder with the new build
+07. Move settingslocal.py from your safe place to the /src folder.
+08. Reset database if schema changes were made since last build
+09. Ensure database.db is writeable
+10. Start the server <br>
 `python run_sandbox.py &`

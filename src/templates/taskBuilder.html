@@ -8,7 +8,7 @@
 {% block body %}
 <div class="row">
   <!-- Sidebar -->
-  <div class="col-md-1" style="position:fixed">
+  <div class="col-md-1 EDIT_ONLY" style="position:fixed">
     {% for element in elements %}
       <div class="element" style="border:1px;border-style:outset;border-radius:5px" data-name="{{ element.name }}" data-filepath="{{ element.filePath }}">
         {% if element.image %}
@@ -22,11 +22,17 @@
     {% endfor %}
   </div>
   <!-- Question List -->
-  <div class="col-md-9 col-md-offset-2">
+  <div class="col-md-9 col-md-offset-2" id="questionList">
     <div class="row">
-      <div class="elementWell" style="border:1px;border-style:dashed;border-radius:5px;height:500px" align="center">
+      <div class="elementWell EDIT_ONLY" style="border:1px;border-style:dashed;border-radius:5px;height:300px" align="center">
         <br><br>Drag new elements here
       </div>
+    </div>
+    <br>
+    <div class="row">
+        <input type="button" value="Preview" class="btn btn-success btn-lg pull-right" id="preview">
+        <p class="pull-right">&nbsp;&nbsp;</p>
+        <input type="button" value="Delete All" class="btn btn-danger btn-lg pull-right EDIT_ONLY">
     </div>
   </div>
 </div>
@@ -78,6 +84,15 @@
     });
   }
 
+  function textChange(element){
+    var id_str = "#p_" + $(element).attr('id');
+    $(element).parent().find(id_str).text($(element).val());
+  }
+  function textChangeBySibling(element){
+    var id_str = "#p_" + $(element).attr('id');
+    $(element).next('p').text($(element).val());
+  }
+
   $(document).ready(function(){
     
     makeDroppable($('div.elementWell'));
@@ -88,6 +103,18 @@
       distance: 25,
       stack: "div.element"
     });
+
+    $('#preview').click(function(){
+      $('.EDIT_ONLY').toggle();
+      $('.TAKE_ONLY').toggle();
+      if ($(this).val() == "Preview"){
+        $(this).val("Edit");
+      }
+      else {
+        $(this).val("Preview");
+      }
+    });
+
   });
 </script>
 

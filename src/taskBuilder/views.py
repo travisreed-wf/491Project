@@ -1,3 +1,5 @@
+import re
+
 import flask
 from flask import redirect
 from flask import render_template
@@ -7,6 +9,7 @@ from flask_login import login_required
 
 import auth
 import helper_functions
+import models
 
 
 class TaskBuilderView(MethodView):
@@ -15,6 +18,25 @@ class TaskBuilderView(MethodView):
     def get(self):
         elements = helper_functions.get_elements()
         return render_template("taskBuilder.html", elements=elements)
+
+    def post(self):
+        task = models.Task()
+        pattern = r"<script.*?</script>"
+        content = flask.request.data
+        task.content = re.sub(pattern, "", content, flags=re.DOTALL)
+        models.db.session.add(task)
+        models.db.session.commit()
+        return ""
+
+
+class TaskView(MethodView):
+    decorators = [login_required]
+
+    def get(self, taskID):
+        task = models.Task.query.filter_by(id=taskID).first()
+        print task.content
+        content = "<div></div>"
+        return render_template("taskView.html", content=task.content.strip().replace('\n', ''))
 
 
 class MultipleChoiceView(MethodView):

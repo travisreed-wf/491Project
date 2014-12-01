@@ -28,8 +28,9 @@ class CreateView(MethodView):
         course.set_students(f)
         return "Successful"
 
+
 class CourseMasterView(MethodView):
-    def get(self,courseID):
+    def get(self, courseID):
         course = models.Course.query.filter_by(name=courseID).first()
         author = models.User.query.filter_by(id=course.teacher_id).first()
         return render_template("course.html", course=course, author=author)

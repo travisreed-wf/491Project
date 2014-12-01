@@ -30,12 +30,15 @@
                 <ul class="nav navbar-right navbar-nav">
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            {% if session.email %}
-                                {{ session.email }} 
+                            {% if session.name %}
+                                {{ session.name }} 
                                  <b class="caret"></b>
                             {% endif %}
                         </a>
                         <ul class="dropdown-menu">
+                            <li style="display: none" class="student"><a href="">Student Settings</a></li>
+                            <li style="display: none" class="author"><a href="">Author Settings</a></li>
+                            <li style="display: none" class="admin"><a href="">Admin Settings</a></li>
                             <li><a href="{{ url_for('logout') }}">Log Out</a></li>
                         </ul>
                     </li>
@@ -62,7 +65,22 @@
                     $(this).parent('li').addClass('active');
                 }
             });
+            var access = "{{session['permissions']}}";
+            if(access == 1){
+                $(".student").each(function(){
+                    $(this).show();
+                });
+            }else if(access == 2){
+                $(".author").each(function(){
+                    $(this).show();
+                });
+            }else if (access == 3){
+                $(".admin").each(function(){
+                    $(this).show();
+                });
+            }else{
 
+            }
 
         });
     </script>

@@ -24,10 +24,11 @@ class User(db.Model):
     name = db.Column(db.String(255))
     permissions = db.Column(db.Integer, default=1)
 
-    def __init__(self, email, password, name):
+    def __init__(self, email, password, name, permissions):
         self.email = email
         self.password = password
         self.name = name
+        self.permissions = permissions
         return
 
     def get_id(self):

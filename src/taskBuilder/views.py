@@ -38,8 +38,8 @@ class FreeResponseView(MethodView):
         return render_template("elements/freeResponse.html")
 
 
-class VideoView(MethodView):
+class SupplementaryView(MethodView):
     decorators = [login_required]
 
     def get(self):
-        return render_template("elements/video.html")
+        return render_template("elements/supplementary.html")

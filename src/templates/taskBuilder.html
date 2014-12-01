@@ -84,6 +84,16 @@
     });
   }
 
+  function addVideo(ctx){
+    $(ctx).closest('.panel-body').find('.supplementary-target').append($('#wp-video-template').html());
+  };
+  function addAudio(ctx){
+    $(ctx).closest('.panel-body').find('.supplementary-target').append($('#wp-audio-template').html());
+  };
+  function addText(ctx){
+    $(ctx).closest('.panel-body').find('.supplementary-target').append($('#wp-text-template').html());
+  };
+
   function textChange(element){
     var id_str = "#p_" + $(element).attr('id');
     $(element).parent().find(id_str).text($(element).val());

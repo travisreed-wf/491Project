@@ -24,10 +24,11 @@ class User(db.Model):
     name = db.Column(db.String(255))
     permissions = db.Column(db.Integer, default=1)
 
-    def __init__(self, email, password, name):
+    def __init__(self, email, password, name, permissions):
         self.email = email
         self.password = password
         self.name = name
+        self.permissions = permissions
         return
 
     def get_id(self):
@@ -52,6 +53,8 @@ class Course(db.Model):
     name = db.Column(db.String(255), unique=True)
     title = db.Column(db.String(255))
     teacher_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    tasks = db.relationship('Task', backref='course',
+                            lazy='dynamic')
 
     def __init__(self, name):
         self.name = name
@@ -77,8 +80,18 @@ class Course(db.Model):
                     else:
                         print "Student already enrolled in course: %s\n" % email
                 else:
-                    user = User(email, None)
+                    user = User(email, None, None)
                     user.courses.append(self)
                 db.session.commit()
         except:
             raise
+
+
+class Task(db.Model):
+    __tablename__ = 'task'
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text)
+    course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
+
+    def __init__(self):
+        return

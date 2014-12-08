@@ -53,10 +53,9 @@ class Course(db.Model):
     name = db.Column(db.String(255), unique=True)
     title = db.Column(db.String(255))
     teacher_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    tasks = db.relationship('Task', backref='course',
-                            lazy='dynamic')
+    tasks = db.relationship('Task', backref='course', lazy='dynamic')
 
-    def __init__(self, name):
+    def __init__(self, id, name):
         self.name = name
         return
 
@@ -86,12 +85,20 @@ class Course(db.Model):
         except:
             raise
 
-
 class Task(db.Model):
-    __tablename__ = 'task'
+    __tablename__='task'
     id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.Text)
+    title = db.Column(db.String(255))
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
+    content = db.Column(db.Text)
 
-    def __init__(self):
+    def __init__(self, title):
+        self.title = title
         return
+
+    @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'title': self.title
+        }

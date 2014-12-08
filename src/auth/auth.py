@@ -23,6 +23,31 @@ def login(email, password):
 
     if user.password == password:
         flask.session['email'] = user.email
+        flask.session['name'] = user.name
+        flask.session['permissions'] = user.permissions
         login_user(user)
         return True
     return False
+
+def permissions_student(f):
+    def decorated_function(*args, **kwargs):
+        if flask.session['permissions'] != 1:
+            return "Unauthorized", 401
+        return f(*args, **kwargs)
+    return decorated_function
+
+def permissions_author(f):
+    def decorated_function(*args, **kwargs):
+        if flask.session['permissions'] != 2:
+            print "author is true"
+            return "Unauthorized", 401
+        return f(*args, **kwargs)
+    return decorated_function
+
+def permissions_admin(f):
+    def decorated_function(*args, **kwargs):
+        if flask.session['permissions'] != 3:
+            print "admin is true"
+            return "Unauthorized", 401
+        return f(*args, **kwargs)
+    return decorated_function

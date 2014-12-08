@@ -1,12 +1,13 @@
 {% extends "layout-question.html" %}
 {% block answer_details %}
   <div class="panel-body">
-    <input type="text" id="title" class="form-control" placeholder="Question Title"><br>
-    <textarea id="body" class="form-control" placeholder="Question Content"></textarea>
+    <textarea id="body" class="form-control" placeholder="Question Content" onchange="textChange(this)"></textarea>
+    <p id="p_body" class="TAKE_ONLY"></p>
     <hr>
     <div class="input-group hidden radioResponse">
       <span class="input-group-addon"> <input type="radio"> </span>
-      <input type="text" class="form-control">
+      <input type="text" class="form-control EDIT_ONLY" onchange="textChangeBySibling(this)">
+      <p class='form-control TAKE_ONLY'></p>
       <span class="EDIT_ONLY input-group-addon">
         <span class="glyphicon glyphicon-trash"></span>
       </span>

@@ -39,6 +39,8 @@ class LogoutView(MethodView):
     def get(self):
         flask_login.logout_user()
         flask.session['email'] = None
+        flask.session['name'] = None
+        flask.session['permissiosn'] = None
         return redirect(url_for("login"))
 
 

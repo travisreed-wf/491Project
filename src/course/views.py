@@ -25,7 +25,8 @@ class CreateView(MethodView):
         current_user.courses.append(course)
         course.teacher_id = current_user.id
         models.db.session.commit()
-        course.set_students(f)
+        if f:
+            course.set_students(f)
         return "Successful"
 
 

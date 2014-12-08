@@ -19,16 +19,22 @@
     <input id="emailConfirm" type="email" name="emailConfirm" class="form-control" placeholder="Confirm Email address"  autofocus>
     <input id="password" name="password" type="password" class="form-control" placeholder="Password">
     <input id="passwordConfirm" name="passwordConfirm" type="password" class="form-control" placeholder="Confirm Password" >
+    <div class="checkbox">
+      <label>
+          <input id="author" name="author" type="checkbox">Author Level Permissions
+      </label>
+    </div>
     <label display="">*Passwords must contain 1 number, 1 capital letter, <br>1 lower case letter, and minimum of 6 characters </label>
     <div id="errorField">
     </div>
     <div class="row">
         <input type="hidden" id="errorText" value="errorText"> 
     </div>
-    <div class="row">
-      <label class="checkbox">
+    <!-- <div class="checkbox">
+      <label>
         <input type="checkbox" value="remember-me"> Remember me
       </label>
+    </div> -->
       <button id="register" class="btn btn-sm btn-primary">Register</button>
     </div>
 
@@ -144,7 +150,8 @@ var setErrorClass = function(element){
         'email': $("#email").val(),
         'emailConfirm': $("#emailConfirm").val(),
         'password': $("#password").val(),
-        'passwordConfirm': $("#passwordConfirm").val()
+        'passwordConfirm': $("#passwordConfirm").val(),
+        'author': $('#author').is(':checked')
       }),
       success:  function(data) {
         window.location.href=$.parseJSON(data)["next_url"];

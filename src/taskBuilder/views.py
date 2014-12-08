@@ -22,7 +22,7 @@ class TaskBuilderView(MethodView):
         return render_template("taskBuilder.html", elements=elements)
 
     def post(self):
-        task = models.Task()
+        task = models.Task("")
         pattern = r"<script.*?</script>"
         content = flask.request.data
         task.content = re.sub(pattern, "", content, flags=re.DOTALL)
@@ -35,8 +35,7 @@ class TaskView(MethodView):
     decorators = [login_required]
 
     def get(self, taskID):
-        task = models.Task.query.filter_by(id=taskID).first()
-        print task.content
+        task = models.Task.query.filter_by(id=int(taskID)).first()
         content = "<div></div>"
         return render_template("taskView.html", content=task.content.strip().replace('\n', ''))
 

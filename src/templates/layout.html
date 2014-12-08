@@ -74,7 +74,10 @@
                     var classList = $.parseJSON(result);
                     var strClassList="<li style='display: none' class='author'><a href='/course/create'>Create Course</a></li>";
                     for(var i=0; i < classList.length;i++){
-                        strClassList+="<li><a href='../course/view/" + classList[i].name + "'>";
+
+                        url = "{{url_for('view_course', courseID='')}}";
+                        url += classList[i].name;
+                        strClassList+="<li><a href='" + url + "'>";
                         strClassList+=classList[i].name;
                         strClassList+="</a></li>";
                     }

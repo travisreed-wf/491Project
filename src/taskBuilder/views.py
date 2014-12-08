@@ -25,9 +25,7 @@ class TaskBuilderView(MethodView):
         task = models.Task("")
         pattern = r"<script.*?</script>"
         content = flask.request.data
-        print content
         task.content = re.sub(pattern, "", content, flags=re.DOTALL)
-        print task.content
         models.db.session.add(task)
         models.db.session.commit()
         return ""
@@ -38,8 +36,6 @@ class TaskView(MethodView):
 
     def get(self, taskID):
         task = models.Task.query.filter_by(id=int(taskID)).first()
-        print taskID
-        print task.content
         content = "<div></div>"
         return render_template("taskView.html", content=task.content.strip().replace('\n', ''))
 

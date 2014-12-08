@@ -25,21 +25,5 @@ class ClassListView(MethodView):
 
 class TaskListView(MethodView):
     def get(self):
-        # print "adsfkhladkjghsldkfjhglsjkdfhglsdjfkhg"
-        # tasks=[c.tasks for c in current_user.courses]
-        # return flask.json.dumps([t.serialize for t in tasks])
-        hit = "hi"
         return flask.json.dumps(hit)
             
-class DBButtonView(MethodView):
-    def get(self):
-        #user = models.User("test@test.com", "pass")
-        #user = models.db.session.query(models.User).filter_by(id=1).first()
-        #user.courses.append(models.db.session.query(models.Course).filter_by(id=1).first())
-        #models.db.session.commit()
-        print "in python"
-        course = models.db.session.query(models.Course).filter_by(id=2).first()
-        course.tasks.append(models.Task("Assignment 1"))
-        models.db.session.commit()
-        #print models.db.session.query(models.Course).filter_by(id=1).first()
-        return render_template('home.html')

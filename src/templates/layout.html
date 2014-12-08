@@ -96,14 +96,11 @@
             });
             buildCoursesList();
             var access = "{{session['permissions']}}";
-            console.log(access);
             if(access == 1){
                 $(".student").each(function(){
                     $(this).show();
                 });
             }else if(access == 2){
-                console.log("here");
-                console.log($(".author"));
                 $(".author").each(function(){
                     $(this).show();
                 });

@@ -25,5 +25,6 @@ class ClassListView(MethodView):
 
 class TaskListView(MethodView):
     def get(self):
-        return flask.json.dumps(hit)
+        task = "task1"
+        return flask.json.dumps(task)
             

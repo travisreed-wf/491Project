@@ -1,7 +1,7 @@
 {% extends "layout-question.html" %}
 {% block answer_details %}
   <div class="panel-body">
-    <textarea id="body" class="form-control" placeholder="Question Content" onchange="textChange(this)"></textarea>
+    <textarea id="body" class="form-control EDIT_ONLY" placeholder="Question Content" onchange="textChange(this)"></textarea>
     <p id="p_body" class="TAKE_ONLY"></p>
     <hr>
     <div class="input-group hidden radioResponse">

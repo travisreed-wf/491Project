@@ -19,9 +19,11 @@ class HomeScreenView(MethodView):
         print current_user.courses
         return render_template('home.html')
 
+
 class ClassListView(MethodView):
     def get(self):
         return flask.json.dumps([c.serialize for c in current_user.courses])
+
 
 class TaskListView(MethodView):
     def get(self):

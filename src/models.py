@@ -55,8 +55,9 @@ class Course(db.Model):
     teacher_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     tasks = db.relationship('Task', backref='course', lazy='dynamic')
 
-    def __init__(self, name):
+    def __init__(self, name, title):
         self.name = name
+        self.title = title
         return
 
     @property

@@ -22,11 +22,6 @@ def allowed_file(filename):
         filename.rsplit('.', 1)[1] in config.ALLOWED_EXTENSIONS
 
 
-def allowed_image(filename):
-    return '.' in filename and \
-        filename.rsplit('.', 1)[1] in config.ALLOWED_IMAGE_EXTENSIONS
-
-
 def get_thumbnail(extension):
     if extension == "pdf":
         return models.Thumbnail.query.filter_by(id=1).first()
@@ -64,7 +59,6 @@ class TaskBuilderView(MethodView):
 
     def get(self):
         elements = helper_functions.get_elements()
-        print "GOT TO TAKSBUILDER"
         return render_template("taskBuilder.html", elements=elements)
 
     def post(self):

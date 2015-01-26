@@ -1,11 +1,14 @@
 <div class="row">
   <div class="col-md-10 col-md-offset-1">
-    <div class="panel panel-default">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 id="p_title" class="TAKE_ONLY"></h3>
+        <input type="text" id="title" class="form-control EDIT_ONLY" placeholder="Element Title" onchange="textChange(this)"><br>
+      </div>
       {% block answer_details %}
       {% endblock %}
       <div class="panel-footer">
         <button type="button" class="EDIT_ONLY delete-question btn btn-danger pull-left">Delete Element</button>
-        <button type="button" class="btn btn-success pull-right TAKE_ONLY">Submit</button>
         <div class="clearfix"></div>
       </div>
     </div>

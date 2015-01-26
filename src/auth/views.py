@@ -39,6 +39,8 @@ class LogoutView(MethodView):
     def get(self):
         flask_login.logout_user()
         flask.session['email'] = None
+        flask.session['name'] = None
+        flask.session['permissiosn'] = None
         return redirect(url_for("login"))
 
 
@@ -55,6 +57,7 @@ class RegisterView(MethodView):
         password = data.get('password')
         passwordConfirm = data.get('passwordConfirm')
 
+
         user = models.User.query.filter_by(email=email).first()
         if user:
             if user.password:
@@ -64,6 +67,9 @@ class RegisterView(MethodView):
         else:
             user = models.User(email, password, name)
             models.db.session.add(user)
+            if data.get("author"):
+                user.permissions = 2
+
         models.db.session.commit()
 
         auth.login(email, password)

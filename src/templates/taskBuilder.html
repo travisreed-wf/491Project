@@ -12,6 +12,7 @@
     {% for element in elements %}
       <div class="element" style="border:1px;border-style:outset;border-radius:5px" data-name="{{ element.name }}" data-filepath="{{ element.filePath }}">
         {% if element.image %}
+          <img src="{{ element.image }}" style="width:70px;height:70px">
         {% else %}
           <img src="../static/images/Manda-Pie-Back-To-School-Books.ico" alt="Mountain View" style="width:70px;height:70px">
         {% endif %}
@@ -24,15 +25,15 @@
   <!-- Question List -->
   <div class="col-md-9 col-md-offset-2" id="questionList">
     <div class="row">
-      <div class="elementWell EDIT_ONLY" style="border:1px;border-style:dashed;border-radius:5px;height:300px" align="center">
-        <br><br>Drag new elements here
+      <div id="elementWell" class="elementWell EDIT_ONLY" style="border:1px;border-style:dashed;border-radius:5px;height:300px" align="center">
+        <br><br>To begin, drag elements onto the screen.
       </div>
     </div>
     <br>
     <div class="row">
         <input type="button" value="Preview" class="btn btn-success btn-lg pull-right PREVIEW_ONLY" id="preview">
         <p class="pull-right PREVIEW_ONLY">&nbsp;&nbsp;</p>
-        <input type="button" value="Delete All" class="btn btn-danger btn-lg pull-right EDIT_ONLY">
+        <input type="button" value="Delete All" id="delete-all" class="btn btn-danger btn-lg pull-right EDIT_ONLY">
         <p class="pull-right PREVIEW_ONLY">&nbsp;&nbsp;</p>
         <input type="button" value="Submit" id="submit" class="btn btn-default btn-lg pull-right TAKE_ONLY PREVIEW_ONLY" style="display:None">
     </div>
@@ -44,6 +45,7 @@
 <link rel="stylesheet" href="{{url_for('static', filename='jquery-ui-1.10.3.custom/development-bundle/themes/smoothness/jquery-ui.css')}}" />
 <script src="{{url_for('static', filename='jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.min.js')}}"></script>
 <script type="text/javascript">
+  var radioGroupCount = 0;
 
   function createElement(elementWell, elementToCreate){
       elementWell.before("<div class='elementTarget'></div>");

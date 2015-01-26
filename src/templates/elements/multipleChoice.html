@@ -1,11 +1,11 @@
 {% extends "layout-question.html" %}
 {% block answer_details %}
-  <div class="panel-body">
+  <div class="panel-body multipleChoice">
     <textarea id="body" class="form-control EDIT_ONLY" placeholder="Question Content" onchange="textChange(this)"></textarea>
     <p id="p_body" class="TAKE_ONLY"></p>
     <hr>
     <div class="input-group hidden radioResponse">
-      <span class="input-group-addon"> <input type="radio"> </span>
+      <span class="input-group-addon"> <input class="unassignedName radio-template" type="radio" name="0"> </span>
       <input type="text" class="form-control EDIT_ONLY" onchange="textChangeBySibling(this)">
       <p class='form-control TAKE_ONLY'></p>
       <span class="EDIT_ONLY input-group-addon">
@@ -18,17 +18,21 @@
 {% block js_bottom %}
 <script type="text/javascript">
   function addRadioResponse(ctx){
-    console.log(ctx);
     var textcon = $(this)
     if (typeof ctx.first === 'function'){
       textcon = ctx;
     }
-    textcon.parent().find('.panel-body').append("<div><div class='input-group'>" + $(".radioResponse").first().html() + "</div><br><div>");
-      $(".glyphicon-trash").click(function(){
-        $(this).closest("div").parent().remove();
-      });
+    var toAdd = "<div><div class='input-group'>" 
+      + textcon.parent().find(".radioResponse").html() 
+      + "</div><br></div>";
+    textcon.parent().find('.multipleChoice').append(toAdd);
+    $(".glyphicon-trash").click(function(){
+      $(this).closest("div").parent().remove();
+    });
   };
   $(document).ready(function(){
+    $(".unassignedName").attr("name", "" + $(".multipleChoice").length);
+    $(".unassignedName").removeClass("unassignedName");
     addRadioResponse($('#addNewResponse'));
     addRadioResponse($('#addNewResponse'));
     $("#addNewResponse").click(addRadioResponse);

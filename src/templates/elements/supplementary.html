@@ -13,6 +13,7 @@
         <li role="presentation"><a role="menuitem" tabindex="-1" onclick="addVideo(this)">Video</a></li>
         <li role="presentation"><a role="menuitem" tabindex="-1" onclick="addAudio(this)">Audio</a></li>
         <li role="presentation"><a role="menuitem" tabindex="-1" onclick="addText(this)">Text</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" onclick="addImage(this)">Image</a></li>
       </ul>
     </div>
   </div>
@@ -49,8 +50,9 @@
       </div>
       <div class="EDIT_ONLY">
         <div class="row"/>
-        <input name="Audio file" type="file">
-        <br>
+        <span class="btn btn-default btn-file">
+          Audio File<input type="file" name="Audio file" class="wp-audio-src">
+        </span><br><br>
       </div>
       <!-- Audio modal -->
       <div class="modal fade">
@@ -80,10 +82,42 @@
       </div>
       <div class="EDIT_ONLY">
         <div class="row"/>
-        <input name="Text file" type="file">
-        <br>
+        <span class="btn btn-default btn-file">
+          Upload File<input type="file" name="Text file" class="wp-text-src">
+        </span><br><br>
       </div>
       <!-- Text modal -->
+      <div class="modal fade">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-body">
+            <div class="embed-responsive embed-responsive-16by9">
+              <iframe class="embed-responsive-item" width="420" height="315" src="" frameborder="0" allowfullscreen></iframe>
+            </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <div id="wp-image-template" style="display:none">
+    <div class="wp-image">
+      <div class="panel-body wp-video-panel col-md-3" align="center" onclick="clickImage(this)">
+        <img src="../static/images/image-button.png" style="width:140px;height:140px">
+      </div>
+      <div class="EDIT_ONLY">
+        <div class="row"/>
+        <form role="form", action="/upload" method="POST" enctype="multipart/form-data">
+          <span class="btn btn-default btn-file">
+            Upload File<input type="file" name="file_path" class="wp-img-src" onchange="uploadFile(this.parentNode.parentNode)">
+          </span>
+        </form>
+        <br><br>
+      </div>
+      <!-- Image modal -->
       <div class="modal fade">
         <div class="modal-dialog">
           <div class="modal-content">

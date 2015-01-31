@@ -65,7 +65,7 @@ class TaskBuilderView(MethodView):
     def get(self):
         elements = helper_functions.get_elements()
         print "GOT TO TAKSBUILDER"
-        return render_template("taskBuilder.html", elements=elements)
+        return render_template("tasks/taskBuilder.html", elements=elements)
 
     def post(self):
         task = models.Task("")
@@ -83,7 +83,7 @@ class TaskView(MethodView):
     def get(self, taskID):
         task = models.Task.query.filter_by(id=int(taskID)).first()
         content = "<div></div>"
-        return render_template("taskView.html", content=task.content.strip().replace('\n', ''))
+        return render_template("tasks/taskView.html", content=task.content.strip().replace('\n', ''))
 
 
 class MultipleChoiceView(MethodView):

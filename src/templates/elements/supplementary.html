@@ -14,6 +14,7 @@
         <li role="presentation"><a role="menuitem" tabindex="-1" onclick="addAudio(this)">Audio</a></li>
         <li role="presentation"><a role="menuitem" tabindex="-1" onclick="addText(this)">Text</a></li>
         <li role="presentation"><a role="menuitem" tabindex="-1" onclick="addImage(this)">Image</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" onclick="addOtherFile(this)">Other File Upload</a></li>
       </ul>
     </div>
     <br>Note: Currently only videos are supported as supplementary materials.
@@ -103,6 +104,7 @@
         </div>
       </div>
     </div>
+  </div>
 
   <div id="wp-image-template" style="display:none">
     <div class="wp-image">
@@ -113,7 +115,7 @@
         <div class="row"/>
         <form role="form", action="/upload" method="POST" enctype="multipart/form-data">
           <span class="btn btn-default btn-file">
-            Upload File<input type="file" name="file_path" class="wp-img-src" onchange="uploadFile(this.parentNode.parentNode)">
+            Upload File<input type="file" name="file_path" class="wp-img-src" onchange="uploadImageFile(this.parentNode.parentNode)">
           </span>
         </form>
         <br><br>
@@ -132,7 +134,40 @@
             </div>
           </div>
         </div>
+      </div>    
+    </div>
+  </div>
+
+  <div id="wp-file-template" style="display:none">
+    <div class="wp-file">
+      <div class="panel-body wp-file-panel col-md-3" align="center" onclick="clickFile(this)">
+        <h3 class="wp-file-title-label pull-left"></h3>
       </div>
+      <div class="EDIT_ONLY">
+        <div class="row"/>
+        <form role="form", action="/upload" method="POST" enctype="multipart/form-data">
+          Title:  <input type="text" name="material_title" class="wp-file-title" onchange="changeTitle(this)"><br><br>
+          <span class="btn btn-default btn-file">
+            Upload File<input type="file" name="file_path" class="wp-file-src" onchange="uploadFile(this.parentNode.parentNode)">
+          </span>
+        </form>
+        <br><br>
+      </div>
+      <!-- Other file modal -->
+      <div class="modal fade">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-body">
+            <div class="embed-responsive embed-responsive-16by9">
+              <iframe class="embed-responsive-item" width="420" height="315" src="" frameborder="0" allowfullscreen></iframe>
+            </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>    
     </div>
   </div>
 {% endblock %}

@@ -25,7 +25,7 @@
       <div class="panel-body wp-video-panel col-md-3" align="center" onclick="clickVideo(this)">
         <img src="../static/images/video-button.png" style="width:140px;height:140px">
       </div>
-      <input type="text" class="form-control EDIT_ONLY wp-video-src" placeholder="Post Video URL here">
+      <input type="text" class="form-control EDIT_ONLY wp-video-src" onchange="updateVideoSRC(this)" placeholder="Post Video URL here">
       <!-- Video modal -->
       <div class="modal fade">
         <div class="modal-dialog">

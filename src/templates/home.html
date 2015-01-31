@@ -17,8 +17,7 @@
         <div id="task-list" class="list-group">
             <a href="" class="list-group-item">
                 <div class="row">
-                    <div class="col-md-2">Asignment 1</div>
-                    <div class="col-md-2 col-md-offset-8">due on 10/3</div>
+                    <div class="col-md-2">No Tasks</div>
                 </div>
             </a>
         </div>
@@ -38,7 +37,7 @@
                 var strClassList="";
 
                 for(var i=0; i < classList.length;i++){
-                    strClassList+="<a href='../course/view/" + classList[i].name + "' class='list-group-item'>";
+                    strClassList+="<a href='../course/view/" + (parseInt(classList[i].id) + 1000) + "' class='list-group-item'>";
                     strClassList+=classList[i].name;
                     strClassList+="</a>";
                 }
@@ -57,7 +56,7 @@
                 var strTaskList="";
                 for(var i=0; i < taskList.length;i++){
                     strTaskList+="<a href='#" + "' class='list-group-item'>";
-                    strTaskList+="Assignment";
+                    strTaskList+=taskList[i].title;
                     strTaskList+="</a>";
                 }
                 $('#task-list').html(strTaskList);

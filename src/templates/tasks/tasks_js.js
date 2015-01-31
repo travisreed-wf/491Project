@@ -95,7 +95,6 @@
           processData: false,
           async: false,
           success: function(data) {
-            console.log(f);
             var src = $(f).find('input').val();
             var src = src.split("\\")[2]
             src = "/static/uploads/" + src;
@@ -105,7 +104,6 @@
   };
   function uploadFile(f) {
       var form_data = new FormData(f);
-      console.log("HERE")
       $.ajax({
           type: 'POST',
           url: '/upload',
@@ -118,14 +116,12 @@
             var src = $(f).find('input.wp-file-src').val();
             var src = src.split("\\")[2];
             src = "/static/uploads/" + src;
-            console.log();
             $(f).parent().parent().find('h3').first().attr("src", src);
           },
       });
   };
 
   function changeTitle(element){
-    console.log($(element).closest('div.wp-file'));
     $(element).closest('div.wp-file').find('h3').text($(element).val());
   }
 

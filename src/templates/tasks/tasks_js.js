@@ -1,9 +1,13 @@
 <script type="text/javascript">
 
   function createElement(elementWell, elementToCreate){
+      $('#elementWell').css("border","0px");
+      $('#elementWell').css("height","100px");
+      $('#elementWell').html("");
       elementWell.before("<div class='elementTarget'></div>");
       var target = elementWell.parent().find(".elementTarget").first();
       target.load(elementToCreate.data('filepath'));
+      target.hide().fadeIn(700);
       target.removeClass('elementTarget');
       return target;
   }
@@ -108,7 +112,6 @@
           processData: false,
           async: false,
           success: function(data) {
-            console.log(f);
             var src = $(f).find('input').val();
             var src = src.split("\\")[2]
             src = "/static/uploads/" + src;

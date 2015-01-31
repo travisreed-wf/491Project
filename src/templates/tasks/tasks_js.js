@@ -41,10 +41,8 @@
     });
   }
   function clickImage(clkevent){
-    console.log($(clkevent).parent());
-    var src = $(clkevent).parent().find('.wp-img-src').val();
-    src = src.split("\\")[2]
-    src = "/static/uploads/" + src;
+    console.log($(clkevent).parent().find('img').attr('src'));
+    var src = $(clkevent).parent().find('img').attr('src');
     $(clkevent).parent().find('iframe').attr('src', src);
     $(clkevent).parent().find('.modal').modal('toggle');
     $('.modal').on('hidden.bs.modal', function () {

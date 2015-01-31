@@ -22,11 +22,19 @@ class HomeScreenView(MethodView):
 
 class ClassListView(MethodView):
     def get(self):
-        return flask.json.dumps([c.serialize for c in current_user.courses])
+        if current_user.is_authenticated():
+            return flask.json.dumps([c.serialize for c in current_user.courses])
+        else:
+            return flask.json.dumps([])
 
 
 class TaskListView(MethodView):
     def get(self):
-        task = "task1"
-        return flask.json.dumps(task)
-            
+        tasks = []
+        for c in current_user.courses:
+            for t in c.tasks:
+                tasks.append(t.serialize)
+
+        return flask.json.dumps(tasks)
+
+        

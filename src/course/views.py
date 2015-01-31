@@ -21,17 +21,19 @@ class CreateView(MethodView):
     def post(self):
         name = flask.request.form.get('name')
         f = flask.request.files.get('students')
-        course = models.Course(name)
+        title = flask.request.form.get('title')
+        course = models.Course(name,title)
         current_user.courses.append(course)
         course.teacher_id = current_user.id
         models.db.session.commit()
+        author = models.User.query.filter_by(id=course.teacher_id).first()
         if f:
             course.set_students(f)
-        return "Successful"
+        return render_template("course.html", course=course, author=author)
 
 
 class CourseMasterView(MethodView):
     def get(self, courseID):
-        course = models.Course.query.filter_by(name=courseID).first()
+        course = models.Course.query.filter_by(id=int(courseID) - 1000).first()
         author = models.User.query.filter_by(id=course.teacher_id).first()
         return render_template("course.html", course=course, author=author)

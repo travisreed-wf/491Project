@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row question-parent">
   <div class="col-md-10 col-md-offset-1">
     <div class="panel panel-primary">
       <div class="panel-heading">
@@ -20,6 +20,12 @@
 $(document).ready(function(){
   $('.delete-question').click(function(){
     $(this).closest('.row').remove();
+    if($(".question-parent").length == 0){
+      $('#elementWell').css("border","1px");
+      $('#elementWell').css("border-style","dashed");
+      $('#elementWell').css("height","300px");
+      $('#elementWell').html("<br><br>To begin, drag elements onto the screen.");
+    }
   });
   $('.TAKE_ONLY').hide();
 });

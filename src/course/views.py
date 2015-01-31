@@ -39,4 +39,4 @@ class CourseMasterView(MethodView):
         if course in current_user.courses:
             return render_template("course.html", course=course, author=author)
         else:
-            return render_template("home.html");
+            return render_template("home.html")

@@ -19,7 +19,7 @@ class User(db.Model):
     courses = db.relationship("Course",
                               secondary=association_table,
                               backref="users")
-    coursesTeaching = db.relationship('Course', backref='user',
+    coursesTeaching = db.relationship('Course', backref='author',
                                       lazy='dynamic')
     name = db.Column(db.String(255))
     permissions = db.Column(db.Integer, default=1)

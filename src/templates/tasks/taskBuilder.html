@@ -68,6 +68,12 @@
       }
     });
 
+    $('#delete-all').click(function(){
+      $('button.delete-question').each(function(){
+        deleteAllQuestions();
+      });
+    });
+
     $('#submit').click(function(){
       $('.EDIT_ONLY').remove();
       $('.PREVIEW_ONLY').remove();

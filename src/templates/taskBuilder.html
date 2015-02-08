@@ -35,6 +35,7 @@
         <p class="pull-right PREVIEW_ONLY">&nbsp;&nbsp;</p>
         <input type="button" value="Delete All" id="delete-all" class="btn btn-danger btn-lg pull-right EDIT_ONLY">
         <p class="pull-right PREVIEW_ONLY">&nbsp;&nbsp;</p>
+        <!-- MAKE THIS BUTTON A DROP DOWN FOR WHICH COURSE TO SUBMIT TO -->
         <input type="button" value="Submit" id="submit" class="btn btn-default btn-lg pull-right TAKE_ONLY PREVIEW_ONLY" style="display:None">
     </div>
   </div>
@@ -144,9 +145,29 @@
     $(element).next('p').text($(element).val());
   }
 
+  function getVisibleCourses(){
+    $.ajax({
+      url         :'{{ url_for("courses_visible")}}',
+      type        :"GET",
+      success     :function(result) {
+          var coursesList = $.parseJSON(result);
+          
+          var strCoursesList="";
+          for(var i=0; i < coursesList.length;i++){
+              
+          }
+          if(coursesList.length == 0){
+              strCoursesList+="<a href='#' class='list-group-item'>No Tasks</a>";
+          }
+          $('#task-list').html(strCoursesList);
+      }
+    });
+  }
+
   $(document).ready(function(){
     
     makeDroppable($('div.elementWell'));
+    getVisibleCourses();
 
     $("div.element").draggable({
       scroll: true,
@@ -183,6 +204,8 @@
         }
       });
     });
+
+
 
   });
 </script>

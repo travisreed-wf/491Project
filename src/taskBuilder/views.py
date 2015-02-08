@@ -4,6 +4,7 @@ from flask import render_template
 from flask import url_for
 from flask.views import MethodView
 from flask_login import login_required
+from flask_login import current_user
 from werkzeug import secure_filename
 
 import os
@@ -112,3 +113,9 @@ class SupplementaryView(MethodView):
 
     def get(self):
         return render_template("elements/supplementary.html")
+
+class CoursesVisibleView(MethodView):
+
+    def get(seld):
+        return flask.json.dumps(current_user.coursesTeaching)
+

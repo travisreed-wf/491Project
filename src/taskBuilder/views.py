@@ -23,11 +23,6 @@ def allowed_file(filename):
         filename.rsplit('.', 1)[1] in config.ALLOWED_EXTENSIONS
 
 
-def allowed_image(filename):
-    return '.' in filename and \
-        filename.rsplit('.', 1)[1] in config.ALLOWED_IMAGE_EXTENSIONS
-
-
 def get_thumbnail(extension):
     if extension == "pdf":
         return models.Thumbnail.query.filter_by(id=1).first()
@@ -65,8 +60,7 @@ class TaskBuilderView(MethodView):
 
     def get(self):
         elements = helper_functions.get_elements()
-        print "GOT TO TAKSBUILDER"
-        return render_template("taskBuilder.html", elements=elements)
+        return render_template("tasks/taskBuilder.html", elements=elements)
 
     def post(self):
         task = models.Task("")
@@ -84,7 +78,7 @@ class TaskView(MethodView):
     def get(self, taskID):
         task = models.Task.query.filter_by(id=int(taskID)).first()
         content = "<div></div>"
-        return render_template("taskView.html", content=task.content.strip().replace('\n', ''))
+        return render_template("tasks/taskView.html", content=task.content.strip().replace('\n', ''))
 
 
 class MultipleChoiceView(MethodView):

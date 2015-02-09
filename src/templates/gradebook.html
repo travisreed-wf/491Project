@@ -33,13 +33,14 @@
 					strClassList += '<div id=class' + i;
 					strClassList += ' class="panel-heading" style="text-align:center"><strong>';
 					strClassList += classList[i].name;
-					strClassList += '</strong></div><br>';
+					strClassList += '</strong></div><table id=task' + i;
+					strClassList += ' class="table"></table>';
 				}
 				$('#courses').html(strClassList);
 			}
 		});
 	}
-/*
+
 	function getTaskList(){
 		$.ajax({
             url         :'{{ url_for("task_list")}}',
@@ -47,16 +48,20 @@
             success     :function(result) {
                 var taskList = $.parseJSON(result);
                 var strTaskList="";
+                
                 for(var i=0; i < taskList.length;i++){
-                    strTaskList+=
-                }
-                $('#task-list').html(strTaskList);
+                    strTaskList = '<tr><td>' + taskList[i].title + '</td>';
+                    strTaskList += '<td>Due: 4/4/15</td>';
+                    strTaskList += '<td>Grade: A+</td></tr>'
+                    $('#task' + i).html(strTaskList);
+                }                
             }
         });
 	}
-*/
+
 	$(document).ready(function() {
         getClassList();
+        getTaskList();
     })	
 	
 </script>

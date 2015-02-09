@@ -66,21 +66,25 @@
     });
   }
 
+  function addSuppElement(ctx, appendID){
+    var toAppend = $(ctx).closest('.panel-body').find('.supplementary-target');
+    toAppend.append($(appendID).html());
+  }
   function addVideo(ctx){
-    $(ctx).closest('.panel-body').find('.supplementary-target').append($('#wp-video-template').html());
+    addSuppElement(ctx, '#wp-video-template')
   };
   function addAudio(ctx){
-    $(ctx).closest('.panel-body').find('.supplementary-target').append($('#wp-audio-template').html());
+    addSuppElement(ctx, '#wp-audio-template')
   };
   function addText(ctx){
-    $(ctx).closest('.panel-body').find('.supplementary-target').append($('#wp-text-template').html());
+    addSuppElement(ctx, '#wp-text-template')
   };
   //Also used for other file upload
   function addImage(ctx){
-    $(ctx).closest('.panel-body').find('.supplementary-target').append($('#wp-image-template').html());
+    addSuppElement(ctx, '#wp-image-template')
   };
   function addOtherFile(ctx){
-    $(ctx).closest('.panel-body').find('.supplementary-target').append($('#wp-file-template').html());
+    addSuppElement(ctx, '#wp-file-template')
   };
 
   function uploadImageFile(f) {
@@ -124,7 +128,10 @@
     $(element).closest('div.wp-file').find('h3').text($(element).val());
   }
 
-
+  function textChange1Parent(element){
+    var id_str = "#p_" + $(element).attr('id');
+    $(element).parent().find(id_str).text($(element).val());
+  }
   function textChange(element){
     var id_str = "#p_" + $(element).attr('id');
     $(element).parent().parent().find(id_str).text($(element).val());

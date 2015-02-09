@@ -91,7 +91,6 @@ class TaskView(MethodView):
         task_response.student_id = current_user.id
         models.db.session.add(task_response)
         models.db.session.commit()
-        print taskID
         return "success"
 
 

@@ -15,11 +15,6 @@
         </div>
         <h3>Tasks </h3>
         <div id="task-list" class="list-group">
-            <a href="" class="list-group-item">
-                <div class="row">
-                    <div class="col-md-2">No Tasks</div>
-                </div>
-            </a>
         </div>
     </div>
 </div>
@@ -58,6 +53,9 @@
                     strTaskList+="<a href='#" + "' class='list-group-item'>";
                     strTaskList+=taskList[i].title;
                     strTaskList+="</a>";
+                }
+                if(taskList.length == 0){
+                    strTaskList+="<a href='#' class='list-group-item'>No Tasks</a>";
                 }
                 $('#task-list').html(strTaskList);
             }

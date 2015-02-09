@@ -46,7 +46,8 @@
 <link rel="stylesheet" href="{{url_for('static', filename='jquery-ui-1.10.3.custom/development-bundle/themes/smoothness/jquery-ui.css')}}" />
 <script src="{{url_for('static', filename='jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.min.js')}}"></script>
 <script type="text/javascript">
-
+  var nextChoiceID = "choice" + 0;
+  var nextQuestionID = "question" + 0;
   $(document).ready(function(){
     
     makeDroppable($('div.elementWell'));
@@ -69,15 +70,35 @@
       }
     });
 
+    $('#delete-all').click(function(){
+      $('button.delete-question').each(function(){
+        deleteAllQuestions();
+      });
+    });
+
     $('#submit').click(function(){
       $('.EDIT_ONLY').remove();
       $('.PREVIEW_ONLY').remove();
-      console.log($('#questionList').html());
+      var questions = [];
+      $('.automatic-grading').each(function(){
+        var question = $(this);
+        var data = {};
+        data['options'] = [];
+        data['questionID'] = question.attr('id');
+        question.find(':radio:visible').each(function(){
+          data['options'].push($(this).attr('id'));
+        });
+        data['correctOption'] = question.find(':radio:checked').attr('id');
+        questions.push(data);
+      })
+      var data = {};
+      data['html'] = $('#questionList').html();
+      data['questions'] = questions;
       $.ajax({
         url: '{{ url_for("taskBuilder") }}',
         type: 'POST',
-        contentType: 'text/plain',
-        data: $('#questionList').html(),
+        contentType: 'application/json',
+        data: JSON.stringify(data),
         success:  function(data) {
           window.location.href='{{url_for("home")}}'
         },

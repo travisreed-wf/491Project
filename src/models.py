@@ -19,7 +19,7 @@ class User(db.Model):
     courses = db.relationship("Course",
                               secondary=association_table,
                               backref="users")
-    coursesTeaching = db.relationship('Course', backref='user',
+    coursesTeaching = db.relationship('Course', backref='author',
                                       lazy='dynamic')
     name = db.Column(db.String(255))
     permissions = db.Column(db.Integer, default=1)
@@ -86,12 +86,14 @@ class Course(db.Model):
         except:
             raise
 
+
 class Task(db.Model):
     __tablename__='task'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255))
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
     content = db.Column(db.Text)
+    questions = db.Column(db.Text)
 
     def __init__(self, title):
         self.title = title

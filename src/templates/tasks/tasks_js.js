@@ -1,9 +1,8 @@
 <script type="text/javascript">
 
   function createElement(elementWell, elementToCreate){
-      $('#elementWell').css("border","0px");
       $('#elementWell').css("height","100px");
-      $('#elementWell').html("");
+      $('#elementWell').html("<br><br>Add more elements here.");
       elementWell.before("<div class='elementTarget'></div>");
       var target = elementWell.parent().find(".elementTarget").first();
       target.load(elementToCreate.data('filepath'));
@@ -34,9 +33,14 @@
       return original;
     }
   }
+
+  function updateVideoSRC(changeEvent){
+    var src = getVideoURL($(changeEvent).val());
+    $(changeEvent).parent().find('.wp-video-panel').attr("src", src)
+  }
+
   function clickVideo(clkevent){
-    var src = $(clkevent).parent().find('.wp-video-src').val();
-    src = getVideoURL(src);
+    var src = $(clkevent).parent().find('.wp-video-panel').attr('src');
     $(clkevent).parent().find('iframe').attr('src', src);
     $(clkevent).parent().find('.modal').modal('toggle');
     $('.modal').on('hidden.bs.modal', function () {
@@ -53,10 +57,8 @@
     });
   }
   function clickFile(clkevent){
-    var src = $(clkevent).parent().find('.wp-file-src').val();
+    var src = $(clkevent).parent().find('.wp-file-title-label').attr('src');
     console.log(src);
-    src = src.split("\\")[2]
-    src = "/static/uploads/" + src;
     $(clkevent).parent().find('iframe').attr('src', src);
     $(clkevent).parent().find('.modal').modal('toggle');
     $('.modal').on('hidden.bs.modal', function () {
@@ -92,7 +94,6 @@
           processData: false,
           async: false,
           success: function(data) {
-            console.log(f);
             var src = $(f).find('input').val();
             var src = src.split("\\")[2]
             src = "/static/uploads/" + src;
@@ -102,7 +103,6 @@
   };
   function uploadFile(f) {
       var form_data = new FormData(f);
-      console.log("HERE")
       $.ajax({
           type: 'POST',
           url: '/upload',
@@ -112,16 +112,15 @@
           processData: false,
           async: false,
           success: function(data) {
-            var src = $(f).find('input').val();
-            var src = src.split("\\")[2]
+            var src = $(f).find('input.wp-file-src').val();
+            var src = src.split("\\")[2];
             src = "/static/uploads/" + src;
-            $(f).closest('div.wp-image').find('img').first().attr("src", src);
+            $(f).parent().parent().find('h3').first().attr("src", src);
           },
       });
   };
 
   function changeTitle(element){
-    console.log($(element).closest('div.wp-file'));
     $(element).closest('div.wp-file').find('h3').text($(element).val());
   }
 
@@ -133,5 +132,14 @@
   function textChangeBySibling(element){
     var id_str = "#p_" + $(element).attr('id');
     $(element).next('p').text($(element).val());
+  }
+
+  function deleteAllQuestions(){
+    $('#questionList').find('.question-parent').each(function(){
+      var toDel = $(this);
+      toDel.fadeOut(200, function(){toDel.remove()});
+    });
+    $('#elementWell').css("height","300px");
+    $('#elementWell').html("<br><br>To begin, drag elements onto the screen.");
   }
 </script>

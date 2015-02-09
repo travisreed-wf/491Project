@@ -19,7 +19,7 @@ class User(db.Model):
     courses = db.relationship("Course",
                               secondary=association_table,
                               backref="users")
-    coursesTeaching = db.relationship('Course', backref='user',
+    coursesTeaching = db.relationship('Course', backref='author',
                                       lazy='dynamic')
     name = db.Column(db.String(255))
     permissions = db.Column(db.Integer, default=1)
@@ -52,10 +52,12 @@ class Course(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), unique=True)
     title = db.Column(db.String(255))
+    securityCode = db.Column(db.String(6))
     teacher_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     tasks = db.relationship('Task', backref='course', lazy='dynamic')
 
-    def __init__(self, name, title):
+    def __init__(self, name, title,securityCode = 123456):
+        self.securityCode = securityCode
         self.name = name
         self.title = title
         return
@@ -64,7 +66,8 @@ class Course(db.Model):
     def serialize(self):
         return {
             'id': self.id,
-            'name': self.name
+            'name': self.name,
+            'teacher_name': self.author.name
         }
 
     def set_students(self, student_file):

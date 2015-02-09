@@ -10,14 +10,13 @@
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-        <li role="presentation"><a role="menuitem" tabindex="-1" onclick="addVideo(this)">Video</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" onclick="addVideo(this)">Youtube Video</a></li>
         <li role="presentation"><a role="menuitem" tabindex="-1" onclick="addAudio(this)">Audio</a></li>
         <li role="presentation"><a role="menuitem" tabindex="-1" onclick="addText(this)">Text</a></li>
         <li role="presentation"><a role="menuitem" tabindex="-1" onclick="addImage(this)">Image</a></li>
         <li role="presentation"><a role="menuitem" tabindex="-1" onclick="addOtherFile(this)">Other File Upload</a></li>
       </ul>
     </div>
-    <br>Note: Currently only videos are supported as supplementary materials.
   </div>
 
   <div id="wp-video-template" style="display:none">
@@ -25,7 +24,7 @@
       <div class="panel-body wp-video-panel col-md-3" align="center" onclick="clickVideo(this)">
         <img src="../static/images/video-button.png" style="width:140px;height:140px">
       </div>
-      <input type="text" class="form-control EDIT_ONLY wp-video-src" onchange="updateVideoSRC(this)" placeholder="Post Video URL here">
+      <input type="text" class="form-control EDIT_ONLY wp-video-src" onchange="updateVideoSRC(this)" placeholder="Post a Youtube Video URL here">
       <!-- Video modal -->
       <div class="modal fade">
         <div class="modal-dialog">

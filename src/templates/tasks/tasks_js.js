@@ -1,9 +1,8 @@
 <script type="text/javascript">
 
   function createElement(elementWell, elementToCreate){
-      $('#elementWell').css("border","0px");
       $('#elementWell').css("height","100px");
-      $('#elementWell').html("");
+      $('#elementWell').html("<br><br>Add more elements here.");
       elementWell.before("<div class='elementTarget'></div>");
       var target = elementWell.parent().find(".elementTarget").first();
       target.load(elementToCreate.data('filepath'));
@@ -156,5 +155,14 @@
           $('#taskbuilder_viewable_courses').html(strCoursesList);
       }
     });
+
+  function deleteAllQuestions(){
+    $('#questionList').find('.question-parent').each(function(){
+      var toDel = $(this);
+      toDel.fadeOut(200, function(){toDel.remove()});
+    });
+    $('#elementWell').css("height","300px");
+    $('#elementWell').html("<br><br>To begin, drag elements onto the screen.");
   }
+  
 </script>

@@ -73,6 +73,7 @@ class TaskBuilderView(MethodView):
         task.content = re.sub(pattern, "", content, flags=re.DOTALL)
         task.questions = json.dumps(questions)
         task.course = models.Course.query.filter_by(id=courseID).first()
+        task.title = "Placeholder for task title"
         models.db.session.add(task)
         models.db.session.commit()
         return ""

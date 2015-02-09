@@ -59,7 +59,7 @@
     
     makeDroppable($('div.elementWell'));
 
-    getVisibleCourses();
+    getCoursesTeaching();
 
     $("div.element").draggable({
       scroll: true,
@@ -71,11 +71,11 @@
     $('#preview').click(function(){
       $('.EDIT_ONLY').toggle();
       $('.TAKE_ONLY').toggle();
-      if ($(this).val() == "Preview"){
-        $(this).val("Edit");
+      if ($(this).text() == "Preview"){
+        $(this).text("Edit");
       }
       else {
-        $(this).val("Preview");
+        $(this).text("Preview");
       }
     });
 

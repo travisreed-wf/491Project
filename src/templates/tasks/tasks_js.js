@@ -134,7 +134,7 @@
     $(element).next('p').text($(element).val());
   }
 
-  function getVisibleCourses(){
+  function getCoursesTeaching(){
     $.ajax({
       url         :'{{ url_for("courses_teaching")}}',
       type        :"GET",

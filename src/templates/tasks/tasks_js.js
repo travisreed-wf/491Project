@@ -127,7 +127,7 @@
 
   function textChange(element){
     var id_str = "#p_" + $(element).attr('id');
-    $(element).parent().find(id_str).text($(element).val());
+    $(element).parent().parent().find(id_str).text($(element).val());
   }
   function textChangeBySibling(element){
     var id_str = "#p_" + $(element).attr('id');
@@ -135,11 +135,11 @@
   }
 
   function deleteAllQuestions(){
+    $('#elementWell').css("height","300px");
+    $('#elementWell').html("<br><br>To begin, drag elements onto the screen.");
     $('#questionList').find('.question-parent').each(function(){
       var toDel = $(this);
       toDel.fadeOut(200, function(){toDel.remove()});
     });
-    $('#elementWell').css("height","300px");
-    $('#elementWell').html("<br><br>To begin, drag elements onto the screen.");
   }
 </script>

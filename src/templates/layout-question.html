@@ -1,9 +1,14 @@
 <div class="row question-parent">
   <div class="col-md-10 col-md-offset-1">
     <div class="panel panel-primary">
-      <div class="panel-heading">
+      <div class="panel-heading delete-if-empty">
         <h3 id="p_title" class="TAKE_ONLY"></h3>
-        <input type="text" id="title" class="form-control EDIT_ONLY" placeholder="Element Title" onchange="textChange(this)"><br>
+        <div class="EDIT_ONLY input-group">
+          <input type="text" id="title" class="form-control" placeholder="Element Title" onchange="textChange(this)">
+          <span class="input-group-addon">
+            <span class="glyphicon glyphicon-trash delete-header" />
+          </span>
+        </div>
       </div>
       {% block answer_details %}
       {% endblock %}
@@ -25,6 +30,9 @@ $(document).ready(function(){
       $('#elementWell').css("height","300px");
       $('#elementWell').html("<br><br>To begin, drag elements onto the screen.");
     }
+  });
+  $('.delete-header').click(function(){
+    $(this).closest('.panel-heading').fadeOut();
   });
   $('.TAKE_ONLY').hide();
 });

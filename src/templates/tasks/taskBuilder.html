@@ -31,13 +31,14 @@
       </div>
     </div>
     <br>
-    <div class="row">
-        <input type="button" value="Preview" class="btn btn-success btn-lg pull-right PREVIEW_ONLY" id="preview">
-        <p class="pull-right PREVIEW_ONLY">&nbsp;&nbsp;</p>
-        <input type="button" value="Delete All" id="delete-all" class="btn btn-danger btn-lg pull-right EDIT_ONLY">
-        <p class="pull-right PREVIEW_ONLY">&nbsp;&nbsp;</p>
-        <input type="button" value="Submit" id="submit" class="btn btn-default btn-lg pull-right TAKE_ONLY PREVIEW_ONLY" style="display:None">
-    </div>
+      <div class="row">
+          <button type="button" class="btn btn-default btn-lg dropdown-toggle pull-right TAKE_ONLY PREVIEW_ONLY" data-toggle="dropdown" aria-expanded="false" style="display:None">Submit <span class="caret"></span></button>
+          <ul class="dropdown-menu pull-right PREVIEW_ONLY" role="menu" id="taskbuilder_viewable_courses"></ul>
+          <p class="pull-right PREVIEW_ONLY">&nbsp;&nbsp;</p>
+          <button type="button" class="btn btn-danger btn-lg pull-right EDIT_ONLY" aria-expanded="false" id="delete-all">Delete All</button>
+          <p class="pull-right PREVIEW_ONLY">&nbsp;&nbsp;</p>
+          <button type="button" class="btn btn-lg btn-success pull-right PREVIEW_ONLY" aria-expanded="false" id="preview">Preview</button>
+      </div>
   </div>
 </div>
 {% endblock %}
@@ -52,6 +53,8 @@
     
     makeDroppable($('div.elementWell'));
 
+    getCoursesTeaching();
+
     $("div.element").draggable({
       scroll: true,
       revert: true,
@@ -62,49 +65,17 @@
     $('#preview').click(function(){
       $('.EDIT_ONLY').toggle();
       $('.TAKE_ONLY').toggle();
-      if ($(this).val() == "Preview"){
-        $(this).val("Edit");
+      if ($(this).text() == "Preview"){
+        $(this).text("Edit");
       }
       else {
-        $(this).val("Preview");
+        $(this).text("Preview");
       }
     });
 
     $('#delete-all').click(function(){
       $('button.delete-question').each(function(){
         deleteAllQuestions();
-      });
-    });
-
-    $('#submit').click(function(){
-      $('.EDIT_ONLY').remove();
-      $('.PREVIEW_ONLY').remove();
-      var questions = [];
-      $('.automatic-grading').each(function(){
-        var question = $(this);
-        var data = {};
-        data['options'] = [];
-        data['questionID'] = question.attr('id');
-        question.find(':radio:visible').each(function(){
-          data['options'].push($(this).attr('id'));
-        });
-        data['correctOption'] = question.find(':radio:checked').attr('id');
-        questions.push(data);
-      })
-      var data = {};
-      data['html'] = $('#questionList').html();
-      data['questions'] = questions;
-      $.ajax({
-        url: '{{ url_for("taskBuilder") }}',
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(data),
-        success:  function(data) {
-          window.location.href='{{url_for("home")}}'
-        },
-        error: function(data){
-          console.log(data);
-        }
       });
     });
 

@@ -134,6 +134,29 @@
     $(element).next('p').text($(element).val());
   }
 
+  function getCoursesTeaching(){
+    $.ajax({
+      url         :'{{ url_for("courses_teaching")}}',
+      type        :"GET",
+      success     :function(result) {
+          var coursesList = $.parseJSON(result);
+          
+          var strCoursesList="";
+          for(var i=0; i < coursesList.length;i++){
+              url = "{{url_for('view_course', courseID='')}}";
+              url += coursesList[i].id + 1000;
+              strCoursesList+="<li class='submit-task' id='" + coursesList[i].id + "' onclick='submitClicked(this)''><a target='" + url + "'>";
+              strCoursesList+=coursesList[i].name;
+              strCoursesList+="</a></li>";
+          }
+          if(coursesList.length == 0){
+              strCoursesList+="<a href='#' class='list-group-item'>No Courses</a>";
+          }
+          $('#taskbuilder_viewable_courses').html(strCoursesList);
+      }
+    });
+  }
+
   function deleteAllQuestions(){
     $('#questionList').find('.question-parent').each(function(){
       var toDel = $(this);
@@ -142,4 +165,40 @@
     $('#elementWell').css("height","300px");
     $('#elementWell').html("<br><br>To begin, drag elements onto the screen.");
   }
+
+  function submitClicked(element) {
+      console.log("click hit");
+      $('.EDIT_ONLY').remove();
+      $('.PREVIEW_ONLY').remove();
+      var questions = [];
+      $('.automatic-grading').each(function(){
+          var question = $(this);
+          var data = {};
+          data['options'] = [];
+          data['questionID'] = question.attr('id');
+          question.find(':radio:visible').each(function(){
+            data['options'].push($(this).attr('id'));
+          });
+          data['correctOption'] = question.find(':radio:checked').attr('id');
+          questions.push(data);
+      })
+      var data = {};
+      data['html'] = $('#questionList').html();
+      data['questions'] = questions;
+      console.log($(element).attr('id'));
+      data['course_id'] = $(element).attr('id');
+      $.ajax({
+          url: '{{ url_for("taskBuilder") }}',
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify(data),
+          success: function(data){
+            window.location.href='{{url_for("home")}}';
+          },
+          error: function(data){
+              console.log(data);
+          }
+      });
+  }
+
 </script>

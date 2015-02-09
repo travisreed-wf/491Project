@@ -5,6 +5,7 @@ from flask import url_for
 from flask.views import MethodView
 from flask_login import current_user
 from flask_login import login_required
+from flask_login import current_user
 from werkzeug import secure_filename
 
 import datetime
@@ -68,9 +69,13 @@ class TaskBuilderView(MethodView):
         pattern = r"<script.*?</script>"
         content = flask.request.get_json().get('html')
         questions = flask.request.get_json().get('questions')
+        courseID = flask.request.get_json().get('course_id')
         task.content = re.sub(pattern, "", content, flags=re.DOTALL)
         task.questions = json.dumps(questions)
+        task.course = models.Course.query.filter_by(id=courseID).first()
         models.db.session.add(task)
+        models.db.session.commit()
+        task.title = "Task #%s" % task.id
         models.db.session.commit()
         return ""
 
@@ -120,3 +125,9 @@ class SupplementaryView(MethodView):
 
     def get(self):
         return render_template("elements/supplementary.html")
+
+class CoursesTeachingView(MethodView):
+
+    def get(self):
+        return flask.json.dumps([c.serialize for c in current_user.coursesTeaching])
+

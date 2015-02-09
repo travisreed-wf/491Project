@@ -50,7 +50,7 @@
                 
                 var strTaskList="";
                 for(var i=0; i < taskList.length;i++){
-                    strTaskList+="<a href='#" + "' class='list-group-item'>";
+                    strTaskList+="<a href='" + "{{url_for('task_view', taskID='')}}" + taskList[i].id + "' class='list-group-item'>";
                     strTaskList+=taskList[i].title;
                     strTaskList+="</a>";
                 }

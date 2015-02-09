@@ -67,8 +67,10 @@ class TaskBuilderView(MethodView):
         pattern = r"<script.*?</script>"
         content = flask.request.get_json().get('html')
         questions = flask.request.get_json().get('questions')
+        courseID = flask.request.get_json().get('course_id')
         task.content = re.sub(pattern, "", content, flags=re.DOTALL)
         task.questions = json.dumps(questions)
+        task.course = models.Course.query.filter_by(id=courseID).first()
         models.db.session.add(task)
         models.db.session.commit()
         return ""

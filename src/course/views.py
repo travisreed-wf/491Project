@@ -34,9 +34,12 @@ class CreateView(MethodView):
 
 class CourseMasterView(MethodView):
     def get(self, courseID):
-        course = models.Course.query.filter_by(name=courseID).first()
+        course = models.Course.query.filter_by(id=int(courseID) - 1000).first()
         author = models.User.query.filter_by(id=course.teacher_id).first()
-        return render_template("course.html", course=course, author=author)
+        if course in current_user.courses:
+            return render_template("course.html", course=course, author=author)
+        else:
+            return render_template("home.html")
 
 
 class RegisterForCourseView(MethodView):
@@ -89,7 +92,8 @@ class securityCode(MethodView):
                 current_user.courses.append(course)
                 models.db.session.commit()
                 author = models.User.query.filter_by(id=course.teacher_id).first()
-                return "Redirect to:%s" % (url_for("view_course", courseID=course.name))
+                print course.id
+                return "Redirect to:%s" % (url_for("view_course", courseID=course.id+1000))
         else:
             return "Security Code Incorrect"
 

@@ -1,0 +1,69 @@
+{% include "tasks/tasks_js.js" %}
+{% extends "layout.html" %}
+{% block header_css %}
+<head>
+    <title>Task</title>
+    {{ super() }}
+</head>
+{% endblock %}
+{% block body %}
+<div class="row">
+  <!-- Question List -->
+  <div class="col-md-9 col-md-offset-2" id="questionList">
+  </div>
+</div>
+<div class="row col-md-8 col-md-offset-2">
+<input type="button" value="Submit" id="submit" class="btn btn-success btn-lg pull-right">
+
+</div>
+{% endblock %}
+{% block js_bottom %}
+{{ super() }}
+<link rel="stylesheet" href="{{url_for('static', filename='jquery-ui-1.10.3.custom/development-bundle/themes/smoothness/jquery-ui.css')}}" />
+<script src="{{url_for('static', filename='jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.min.js')}}"></script>
+<script type="text/javascript">
+
+  $(document).ready(function(){
+    $('#questionList').html('{{content|safe}}');
+    $('#submit').click(function(){
+      var automaticQuestions = [];
+      var manualQuestions = [];
+      $('.automatic-grading').each(function(){
+        var question = $(this);
+        var data = {};
+        data['options'] = [];
+        data['questionID'] = question.attr('id');
+        question.find(':radio:visible').each(function(){
+          data['options'].push($(this).attr('id'));
+        });
+        data['selectedOption'] = question.find(':radio:checked').attr('id');
+        automaticQuestions.push(data);
+      });
+      $('.manual-grading').each(function(){
+        var question = $(this);
+        var data = {};
+        data['questionID'] = question.attr('id');
+        data['response'] = question.find('#student-response').val();
+        manualQuestions.push(data);
+      });
+      var data = {};
+      data['automatic_questions'] = automaticQuestions;
+      data['manual_questions'] = manualQuestions;
+      $.ajax({
+        url: window.location.pathname,
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(data),
+        success:  function(data) {
+          window.location.href='{{url_for("home")}}'
+        },
+        error: function(data){
+          console.log(data);
+        }
+      });
+    });
+
+  });
+</script>
+
+{% endblock %}

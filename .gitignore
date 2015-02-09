@@ -1,5 +1,6 @@
 *.py[cod]
 settingslocal.py
+src/static/uploads/*
 
 # Virtual environment
 venv

@@ -3,11 +3,13 @@ from flask import redirect
 from flask import render_template
 from flask import url_for
 from flask.views import MethodView
+from flask_login import current_user
 from flask_login import login_required
 from werkzeug import secure_filename
 
-import os
+import datetime
 import json
+import os
 import re
 
 import auth
@@ -80,6 +82,16 @@ class TaskView(MethodView):
         task = models.Task.query.filter_by(id=int(taskID)).first()
         content = "<div></div>"
         return render_template("tasks/taskView.html", content=task.content.strip().replace('\n', ''))
+
+    def post(self, taskID):
+        print flask.request.get_json()
+        task_response = models.TaskResponse(json.dumps(flask.request.get_json()))
+        task_response.datetime = datetime.datetime.now()
+        task_response.task_id = int(taskID)
+        task_response.student_id = current_user.id
+        models.db.session.add(task_response)
+        models.db.session.commit()
+        return "success"
 
 
 class MultipleChoiceView(MethodView):

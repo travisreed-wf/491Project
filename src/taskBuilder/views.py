@@ -75,6 +75,8 @@ class TaskBuilderView(MethodView):
         task.course = models.Course.query.filter_by(id=courseID).first()
         models.db.session.add(task)
         models.db.session.commit()
+        task.title = "Task #%s" % task.id
+        models.db.session.commit()
         return ""
 
 

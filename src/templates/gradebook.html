@@ -6,56 +6,62 @@
 </head>
 {% endblock %}
 {% block body %}
-<div class= "row" id="course>
-	<div class="col-md-11">
-		<div class="panel panel-default">
-			<div class="panel-heading" style="text-align:center"><strong>Course 1</strong></div>
-			<table class="table">
-				<tr>
-					<td>Assignment 1</td>
-					<td>Graded:11/2/14</td>
-					<td>Grade:A</td>
-				</tr>
-				<tr>
-					<td>Assignment 2</td>
-					<td>Graded:11/2/14</td>
-					<td>Grade:B+</td>
-				</tr>
-			</table>
+<div class= "row">
+	<div class="col-md-10 col-md-offset-2" style="width:800px;">
+		<div id="courses" class="panel panel-default">
+			
 		</div>
 	</div>
 </div>
-<br>
-<div class= "row">
-	<div class="col-md-11">
-		<div class="panel panel-default">
-			<div class="panel-heading" style="text-align:center"><strong>Course 2</strong></div>
-			<table class="table">
-				<tr>
-					<td>Assignment 1</td>
-					<td>Graded:11/2/14</td>
-					<td>Grade:A</td>
-				</tr>
-				<tr>
-					<td>Assignment 2</td>
-					<td>Graded:11/2/14</td>
-					<td>Grade:B+</td>
-				</tr>
-			</table>
-		</div>
-	</div>	
-</div>
 
-<script type="text/javascript">
-	function getCourseList(){
-		.ajax{
-			
-		}
-	}
-</script>
 {% endblock %}
 
+{% block js_bottom %}
+{{ super() }}
 
+<script type="text/javascript">
+	
+	function getClassList(){
+		$.ajax({
+            url         :'{{ url_for("class_list")}}',
+			type	: "GET",
+			success	: function(result){
+				var classList = $.parseJSON(result);
+				var strClassList = "";
+				
+				for(var i = 0;i < classList.length;i++){
+					strClassList += '<div id=class' + i;
+					strClassList += ' class="panel-heading" style="text-align:center"><strong>';
+					strClassList += classList[i].name;
+					strClassList += '</strong></div><br>';
+				}
+				$('#courses').html(strClassList);
+			}
+		});
+	}
+/*
+	function getTaskList(){
+		$.ajax({
+            url         :'{{ url_for("task_list")}}',
+            type        :"GET",
+            success     :function(result) {
+                var taskList = $.parseJSON(result);
+                var strTaskList="";
+                for(var i=0; i < taskList.length;i++){
+                    strTaskList+=
+                }
+                $('#task-list').html(strTaskList);
+            }
+        });
+	}
+*/
+	$(document).ready(function() {
+        getClassList();
+    })	
+	
+</script>
+
+{% endblock %}
 <!--Need to know how many courses user has, can get from database-->
 <!--Each Course contains
 	course name

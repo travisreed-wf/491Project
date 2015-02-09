@@ -136,7 +136,7 @@
 
   function getVisibleCourses(){
     $.ajax({
-      url         :'{{ url_for("courses_visible")}}',
+      url         :'{{ url_for("courses_teaching")}}',
       type        :"GET",
       success     :function(result) {
           var coursesList = $.parseJSON(result);

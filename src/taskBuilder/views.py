@@ -124,7 +124,7 @@ class SupplementaryView(MethodView):
     def get(self):
         return render_template("elements/supplementary.html")
 
-class CoursesVisibleView(MethodView):
+class CoursesTeachingView(MethodView):
 
     def get(self):
         return flask.json.dumps([c.serialize for c in current_user.coursesTeaching])

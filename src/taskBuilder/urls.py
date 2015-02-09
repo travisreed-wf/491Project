@@ -10,4 +10,4 @@ def setup_urls(app):
     app.add_url_rule('/elements/supplementary', view_func=views.SupplementaryView.as_view('elements/supplementary'))
     app.add_url_rule('/upload', view_func=views.UploadView.as_view('upload'))
     app.add_url_rule('/uploads/<filename>', view_func=views.UploadedFileView.as_view('uploaded_file')) 
-    app.add_url_rule('/taskBuilder/coursesVisible', view_func=views.CoursesVisibleView.as_view('courses_visible'))
+    app.add_url_rule('/taskBuilder/coursesTeaching', view_func=views.CoursesTeachingView.as_view('courses_teaching'))

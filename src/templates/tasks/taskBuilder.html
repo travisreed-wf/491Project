@@ -48,7 +48,6 @@
 <script type="text/javascript">
   var nextChoiceID = "choice" + 0;
   var nextQuestionID = "question" + 0;
-
   $(document).ready(function(){
     
     makeDroppable($('div.elementWell'));
@@ -69,6 +68,12 @@
       else {
         $(this).val("Preview");
       }
+    });
+
+    $('#delete-all').click(function(){
+      $('button.delete-question').each(function(){
+        deleteAllQuestions();
+      });
     });
 
     $('#submit').click(function(){

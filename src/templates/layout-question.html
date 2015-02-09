@@ -7,8 +7,8 @@
       </div>
       {% block answer_details %}
       {% endblock %}
-      <div class="panel-footer">
-        <button type="button" class="EDIT_ONLY delete-question btn btn-danger pull-left">Delete Element</button>
+      <div class="panel-footer EDIT_ONLY">
+        <button type="button" class="delete-question btn btn-danger pull-left">Delete Element</button>
         <div class="clearfix"></div>
       </div>
     </div>
@@ -19,10 +19,9 @@
 <script type="text/javascript">
 $(document).ready(function(){
   $('.delete-question').click(function(){
-    $(this).closest('.row').remove();
-    if($(".question-parent").length == 0){
-      $('#elementWell').css("border","1px");
-      $('#elementWell').css("border-style","dashed");
+    var row = $(this).closest('.row');
+    row.fadeOut(200, function(){row.remove()});
+    if($(".question-parent").length <= 1){
       $('#elementWell').css("height","300px");
       $('#elementWell').html("<br><br>To begin, drag elements onto the screen.");
     }

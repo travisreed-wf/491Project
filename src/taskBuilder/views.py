@@ -110,6 +110,6 @@ class SupplementaryView(MethodView):
 
 class CoursesVisibleView(MethodView):
 
-    def get(seld):
-        return flask.json.dumps(current_user.coursesTeaching)
+    def get(self):
+        return flask.json.dumps([c.serialize for c in current_user.coursesTeaching])
 

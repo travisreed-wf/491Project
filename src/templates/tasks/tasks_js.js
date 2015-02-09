@@ -134,4 +134,27 @@
     var id_str = "#p_" + $(element).attr('id');
     $(element).next('p').text($(element).val());
   }
+
+  function getVisibleCourses(){
+    $.ajax({
+      url         :'{{ url_for("courses_visible")}}',
+      type        :"GET",
+      success     :function(result) {
+          var coursesList = $.parseJSON(result);
+          
+          var strCoursesList="";
+          for(var i=0; i < coursesList.length;i++){
+              url = "{{url_for('view_course', courseID='')}}";
+              url += coursesList[i].id + 1000;
+              strCoursesList+="<li class='submit_task'><a href='" + url + "'>";
+              strCoursesList+=coursesList[i].name;
+              strCoursesList+="</a></li>";
+          }
+          if(coursesList.length == 0){
+              strCoursesList+="<a href='#' class='list-group-item'>No Courses</a>";
+          }
+          $('#taskbuilder_viewable_courses').html(strCoursesList);
+      }
+    });
+  }
 </script>

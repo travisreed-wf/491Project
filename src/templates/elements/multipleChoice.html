@@ -1,6 +1,6 @@
 {% extends "layout-question.html" %}
 {% block answer_details %}
-  <div class="panel-body multipleChoice">
+  <div class="panel-body multipleChoice automatic-grading" id="notSet">
     <textarea id="body" class="form-control EDIT_ONLY" placeholder="Question Content" onchange="textChange(this)"></textarea>
     <p id="p_body" class="TAKE_ONLY"></p>
     <hr>
@@ -26,9 +26,11 @@
       + textcon.parent().find(".radioResponse").html() 
       + "</div><br></div>";
     textcon.parent().find('.multipleChoice').append(toAdd);
+    textcon.parent().find('.multipleChoice').find(":radio").last().attr('id', nextChoiceID);
     $(".glyphicon-trash").click(function(){
       $(this).closest("div").parent().remove();
     });
+    nextChoiceID = "choice" + (parseInt(nextChoiceID.split("choice")[1]) + 1);
   };
   $(document).ready(function(){
     $(".unassignedName").attr("name", "" + $(".multipleChoice").length);
@@ -37,6 +39,8 @@
     addRadioResponse($('#addNewResponse'));
     $("#addNewResponse").click(addRadioResponse);
     $('#addNewResponse').attr('id', '');
+    $('#notSet').attr('id', nextQuestionID);
+    nextQuestionID = "question" + (parseInt(nextQuestionID.split("question")[1]) + 1);
   });
   </script>
   {% endblock %}

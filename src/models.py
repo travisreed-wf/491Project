@@ -23,6 +23,8 @@ class User(db.Model):
                                       lazy='dynamic')
     name = db.Column(db.String(255))
     permissions = db.Column(db.Integer, default=1)
+    task_responses = db.relationship('TaskResponse', backref='user',
+                                     lazy='dynamic')
 
     def __init__(self, email, password, name, permissions=1):
         self.email = email
@@ -88,12 +90,14 @@ class Course(db.Model):
 
 
 class Task(db.Model):
-    __tablename__='task'
+    __tablename__ = 'task'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(255))
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
     content = db.Column(db.Text)
     questions = db.Column(db.Text)
+    task_responses = db.relationship('TaskResponse', backref='task',
+                                     lazy='dynamic')
 
     def __init__(self, title):
         self.title = title
@@ -105,3 +109,15 @@ class Task(db.Model):
             'id': self.id,
             'title': self.title
         }
+
+
+class TaskResponse(db.Model):
+    __tablename__ = "task_response"
+    id = db.Column(db.Integer, primary_key=True)
+    task_id = db.Column(db.Integer, db.ForeignKey('task.id'))
+    student_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    response = db.Column(db.Text)
+    datetime = db.Column(db.DateTime())
+
+    def __init__(self, response):
+        self.response = response

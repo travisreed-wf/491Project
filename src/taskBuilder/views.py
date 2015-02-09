@@ -3,11 +3,14 @@ from flask import redirect
 from flask import render_template
 from flask import url_for
 from flask.views import MethodView
+from flask_login import current_user
 from flask_login import login_required
+from flask_login import current_user
 from werkzeug import secure_filename
 
-import os
+import datetime
 import json
+import os
 import re
 
 import auth
@@ -66,9 +69,13 @@ class TaskBuilderView(MethodView):
         pattern = r"<script.*?</script>"
         content = flask.request.get_json().get('html')
         questions = flask.request.get_json().get('questions')
+        courseID = flask.request.get_json().get('course_id')
         task.content = re.sub(pattern, "", content, flags=re.DOTALL)
         task.questions = json.dumps(questions)
+        task.course = models.Course.query.filter_by(id=courseID).first()
         models.db.session.add(task)
+        models.db.session.commit()
+        task.title = "Task #%s" % task.id
         models.db.session.commit()
         return ""
 
@@ -80,6 +87,16 @@ class TaskView(MethodView):
         task = models.Task.query.filter_by(id=int(taskID)).first()
         content = "<div></div>"
         return render_template("tasks/taskView.html", content=task.content.strip().replace('\n', ''))
+
+    def post(self, taskID):
+        print flask.request.get_json()
+        task_response = models.TaskResponse(json.dumps(flask.request.get_json()))
+        task_response.datetime = datetime.datetime.now()
+        task_response.task_id = int(taskID)
+        task_response.student_id = current_user.id
+        models.db.session.add(task_response)
+        models.db.session.commit()
+        return "success"
 
 
 class MultipleChoiceView(MethodView):
@@ -108,3 +125,9 @@ class SupplementaryView(MethodView):
 
     def get(self):
         return render_template("elements/supplementary.html")
+
+class CoursesTeachingView(MethodView):
+
+    def get(self):
+        return flask.json.dumps([c.serialize for c in current_user.coursesTeaching])
+

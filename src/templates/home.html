@@ -32,7 +32,7 @@
                 var strClassList="";
 
                 for(var i=0; i < classList.length;i++){
-                    strClassList+="<a href='../course/view/" + (parseInt(classList[i].id) + 1000) + "' class='list-group-item'>";
+                    strClassList+="<a href='{{url_for('view_course', courseID='')}}" + (parseInt(classList[i].id) + 1000) + "' class='list-group-item'>";
                     strClassList+=classList[i].name;
                     strClassList+="</a>";
                 }
@@ -50,7 +50,7 @@
                 
                 var strTaskList="";
                 for(var i=0; i < taskList.length;i++){
-                    strTaskList+="<a href='#" + "' class='list-group-item'>";
+                    strTaskList+="<a href='" + "{{url_for('task_view', taskID='')}}" + taskList[i].id + "' class='list-group-item'>";
                     strTaskList+=taskList[i].title;
                     strTaskList+="</a>";
                 }

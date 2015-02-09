@@ -32,18 +32,12 @@
     </div>
     <br>
       <div class="row">
-          <button type="button" class="btn btn-default btn-lg dropdown-toggle pull-right TAKE_ONLY PREVIEW_ONLY" data-toggle="dropdown" aria-expanded="false">
-            Submit <span class="caret"></span>
-          </button>
+          <button type="button" class="btn btn-default btn-lg dropdown-toggle pull-right TAKE_ONLY PREVIEW_ONLY" data-toggle="dropdown" aria-expanded="false" style="display:None">Submit <span class="caret"></span></button>
           <ul class="dropdown-menu pull-right" role="menu" id="taskbuilder_viewable_courses"></ul>
           <p class="pull-right PREVIEW_ONLY">&nbsp;&nbsp;</p>
-          <button type="button" class="btn btn-lg btn-success pull-right PREVIEW_ONLY" aria-expanded="false" id="preview">
-            Preview
-          </button>
+          <button type="button" class="btn btn-danger btn-lg pull-right EDIT_ONLY" aria-expanded="false" id="delete-all">Delete All</button>
           <p class="pull-right PREVIEW_ONLY">&nbsp;&nbsp;</p>
-          <button type="button" class="btn btn-danger btn-lg pull-right EDIT_ONLY" aria-expanded="false" id="delete-all">
-            Delete All
-          </button>
+          <button type="button" class="btn btn-lg btn-success pull-right PREVIEW_ONLY" aria-expanded="false" id="preview">Preview</button>
       </div>
   </div>
 </div>
@@ -71,6 +65,7 @@
     $('#preview').click(function(){
       $('.EDIT_ONLY').toggle();
       $('.TAKE_ONLY').toggle();
+      console.log($(this).text());
       if ($(this).text() == "Preview"){
         $(this).text("Edit");
       }

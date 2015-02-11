@@ -40,3 +40,14 @@ class CourseMasterView(MethodView):
             return render_template("course.html", course=course, author=author)
         else:
             return render_template("home.html")
+
+class CourseTaskListView(MethodView):
+    def get(self, courseID):
+        tasks = []
+        print int(courseID) - 1000
+        course = models.Course.query.filter_by(id=int(courseID) - 1000).first()
+        
+        for t in course.tasks:
+            tasks.append(t.serialize)
+
+        return flask.json.dumps(tasks)

@@ -44,7 +44,6 @@ class CourseMasterView(MethodView):
 class CourseTaskListView(MethodView):
     def get(self, courseID):
         tasks = []
-        print int(courseID) - 1000
         course = models.Course.query.filter_by(id=int(courseID) - 1000).first()
         
         for t in course.tasks:

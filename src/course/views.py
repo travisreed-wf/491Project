@@ -43,6 +43,15 @@ class CourseMasterView(MethodView):
         else:
             return render_template("home.html")
 
+class CourseTaskListView(MethodView):
+    def get(self, courseID):
+        tasks = []
+        course = models.Course.query.filter_by(id=int(courseID) - 1000).first()
+        
+        for t in course.tasks:
+            tasks.append(t.serialize)
+
+        return flask.json.dumps(tasks)
 
 class RegisterForCourseView(MethodView):
     decorators = [login_required, auth.permissions_student]
@@ -98,6 +107,3 @@ class securityCode(MethodView):
                 return "Redirect to:%s" % (url_for("view_course", courseID=course.id+1000))
         else:
             return "Security Code Incorrect"
-
-
-

@@ -26,13 +26,12 @@
 {% block js_bottom %}
 {{ super() }}
 <script>    
-    function getTaskList() {
+    function getCourseTaskList() {
         $.ajax({
-            url         :'{{ url_for("task_list")}}',
+            url         :"{{ url_for('course_task_list', courseID='')}}" + (parseInt("{{course.id}}") + 1000),
             type        :"GET",
             success     :function(result) {
                 var taskList = $.parseJSON(result);
-                
                 var strTaskList="";
                 for(var i=0; i < taskList.length;i++){
                     strTaskList+="<a href='" + "{{url_for('task_view', taskID='')}}" + taskList[i].id + "' class='list-group-item'>";
@@ -47,7 +46,7 @@
         });
     }
     $(document).ready(function() {
-        getTaskList();
+        getCourseTaskList();
     })
 </script>
 {% endblock %}

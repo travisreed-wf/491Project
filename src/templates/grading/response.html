@@ -21,12 +21,15 @@
       Question ID: {{manual_question['questionID']}}<br>
       Question Content: <i>Coming soon</i><br>
       Response: {{manual_question['response']}}
+      <br>
     {% endfor %}<br>
     <h3>Automatically Graded</h3>
     {% for automatic_question in response['automatic_questions'] %}
       Question ID: {{automatic_question['questionID']}}<br>
       Question Content: <i>Coming soon</i><br>
       Response: {{automatic_question['selectedOption']}}<br>
+      Correct Response: {{automatic_question['correctOption']}}<br>
+      <br>
     {% endfor %}
 </div>
 {% endblock %}

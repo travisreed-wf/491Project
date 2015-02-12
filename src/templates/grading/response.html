@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block header_css %}
+<head>
+    <title>Response View</title>
+    {{ super() }}
+</head>
+{% endblock %}
+{% block body %}
+<br>
+<div class="col-md-10 col-md-offset-2" style="width:800px;">
+    <h2>Student Response</h2>
+    Student: {{ student.name }}<br>
+    Student Email: {{ student.email }}<br>
+    Task ID: {{ task.id }}<br>
+    Task Title: {{ task.title }}
+</div>
+<div class="col-md-10 col-md-offset-2" style="width:800px;">
+</div>
+{% endblock %}
+{% block js_bottom %}
+{{ super() }}
+<script type="text/javascript">
+
+
+  $(document).ready(function() {
+  });
+</script>
+{% endblock %}

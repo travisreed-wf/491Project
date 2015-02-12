@@ -33,6 +33,8 @@ class CreateView(MethodView):
 
 
 class CourseMasterView(MethodView):
+    decorators = [login_required]
+
     def get(self, courseID):
         course = models.Course.query.filter_by(id=int(courseID) - 1000).first()
         author = models.User.query.filter_by(id=course.teacher_id).first()
@@ -44,8 +46,8 @@ class CourseMasterView(MethodView):
 
 class RegisterForCourseView(MethodView):
     decorators = [login_required, auth.permissions_student]
-    def get(self):
 
+    def get(self):
         return render_template("RegisterForCourse.html")
 
     def post(self):

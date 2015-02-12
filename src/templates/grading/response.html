@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{% block header_css %}
+<head>
+    <title>Response View</title>
+    {{ super() }}
+</head>
+{% endblock %}
+{% block body %}
+<br>
+<div class="col-md-10 col-md-offset-2" style="width:800px;">
+    <h3>Summary</h3>
+    Student: {{ student.name }}<br>
+    Student Email: {{ student.email }}<br>
+    Task ID: {{ task.id }}<br>
+    Task Title: {{ task.title }}<br>
+    Date of Response: {{ task_response.datetime }}
+</div><br>
+<div class="col-md-10 col-md-offset-2" style="width:800px;">
+    <h3>Manual Grading Required</h3>
+    {% for manual_question in response['manual_questions'] %}
+      Question ID: {{manual_question['questionID']}}<br>
+      Question Content: <i>Coming soon</i><br>
+      Response: {{manual_question['response']}}
+    {% endfor %}<br>
+    <h3>Automatically Graded</h3>
+    {% for automatic_question in response['automatic_questions'] %}
+      Question ID: {{automatic_question['questionID']}}<br>
+      Question Content: <i>Coming soon</i><br>
+      Response: {{automatic_question['selectedOption']}}<br>
+    {% endfor %}
+</div>
+{% endblock %}
+{% block js_bottom %}
+{{ super() }}
+<script type="text/javascript">
+
+
+  $(document).ready(function() {
+  });
+</script>
+{% endblock %}

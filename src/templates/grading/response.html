@@ -12,9 +12,14 @@
     Student: {{ student.name }}<br>
     Student Email: {{ student.email }}<br>
     Task ID: {{ task.id }}<br>
-    Task Title: {{ task.title }}
+    Task Title: {{ task.title }}<br>
+    Date of Response: {{ response.datetime }}
 </div>
 <div class="col-md-10 col-md-offset-2" style="width:800px;">
+{{response.response}}
+{% for manual_question in response.response['manual_questions'] %}
+  manual_question['questionID']
+{% endfor %}
 </div>
 {% endblock %}
 {% block js_bottom %}

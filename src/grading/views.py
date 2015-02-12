@@ -15,8 +15,9 @@ class ResponseView(MethodView):
     decorators = [login_required]
 
     def get(self, responseID):
-        response = models.TaskResponse.query.filter_by(id=responseID).first()
-        print response.user
+        task_response = models.TaskResponse.query.filter_by(id=responseID).first()
+        response = json.loads(task_response.response)
         return render_template("grading/response.html", response=response,
-                               student=response.user, task=response.task)
+                               student=task_response.user, task=task_response.task,
+                               task_response=task_response)
         

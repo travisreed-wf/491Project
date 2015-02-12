@@ -65,6 +65,19 @@
     $('#preview').click(function(){
       $('.EDIT_ONLY').toggle();
       $('.TAKE_ONLY').toggle();
+      $('.delete-if-empty').each(function(){
+        var toCheck;
+        if($(this).hasClass('panel-heading')){
+          toCheck = $(this).find('h3');
+        } else if($(this).hasClass('question-content')){
+          toCheck = $(this).find('textarea')
+        } else{
+          toCheck = $(this)
+        }
+        if(toCheck.html().trim().length == 0){
+          $(this).hide();
+        }
+      });
       if ($(this).text() == "Preview"){
         $(this).text("Edit");
       }

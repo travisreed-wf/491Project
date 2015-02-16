@@ -120,6 +120,7 @@ class TaskResponse(db.Model):
     task_id = db.Column(db.Integer, db.ForeignKey('task.id'))
     student_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     response = db.Column(db.Text)
+    graded_response = db.Column(db.Text)
     datetime = db.Column(db.DateTime())
 
     def __init__(self, response):

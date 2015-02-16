@@ -1,9 +1,11 @@
 {% extends "layout-question.html" %}
 {% block answer_details %}
   <div class="panel-body manual-grading" id="notSet">
-    <textarea id="body" class="form-control EDIT_ONLY" placeholder="Question Content" onchange="textChange(this)"></textarea>
-    <p id="p_body" class="TAKE_ONLY"></p>
-    <hr>
+  	<div class="question-content">
+    	<textarea id="body" class="form-control EDIT_ONLY" placeholder="Question Content" onchange="textChange(this)"></textarea>
+    	<p id="p_body" class="TAKE_ONLY"></p>
+    	<hr>
+    </div>
     <textarea id="student-response" class="form-control" placeholder="Student Answer Here" onchange="textChange(this)"></textarea><br>
   </div>
 {% endblock %}

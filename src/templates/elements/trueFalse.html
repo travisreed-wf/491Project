@@ -1,18 +1,20 @@
 {% extends "layout-question.html" %}
 {% block answer_details %}
   <div class="panel-body automatic-grading" id="notSet">
-    <textarea id="body" class="form-control EDIT_ONLY" placeholder="Question Content" onchange="textChange(this)"></textarea>
-    <p id="p_body" class="TAKE_ONLY"></p>
-    <hr>
-      <div class="input-group">
-        <span class="input-group-addon"> <input type="radio" name="tf" id="true"> </span>
-        <p class="form-control">True</p>
-      </div>
-      <br>
-      <div class="input-group">
-        <span class="input-group-addon"> <input type="radio" name="tf" id="false"> </span>
-        <p class="form-control">False</p>
-      </div>
+    <div class="question-content">
+      <textarea id="body" class="form-control EDIT_ONLY" placeholder="Question Content" onchange="textChange(this)"></textarea>
+      <p id="p_body" class="TAKE_ONLY"></p>
+      <hr>
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon"> <input type="radio" name="tf" id="true"> </span>
+      <p class="form-control">True</p>
+    </div>
+    <br>
+    <div class="input-group">
+      <span class="input-group-addon"> <input type="radio" name="tf" id="false"> </span>
+      <p class="form-control">False</p>
+    </div>
   </div>
 {% endblock %}
 {% block js_bottom %}

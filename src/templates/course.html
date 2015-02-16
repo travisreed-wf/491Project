@@ -13,11 +13,10 @@
             <p class="text-muted">{{author.name}}: <a href="mailto:{{author.email}}">{{author.email}}</a></p>
         </div>
         <h3>Tasks </h3>
-        <div id="task-list" class="list-group">
+        <div id="course-task-list" class="list-group">
             <a href="" class="list-group-item">
                 <div class="row">
-                    <div class="col-md-2">Asignment 2</div>
-                    <div class="col-md-2 col-md-offset-8">due on 10/3</div>
+                    <div class="col-md-2">No Tasks</div>
                 </div>
             </a>
         </div>
@@ -27,6 +26,27 @@
 {% block js_bottom %}
 {{ super() }}
 <script>    
-    
+    function getCourseTaskList() {
+        $.ajax({
+            url         :"{{ url_for('course_task_list', courseID='')}}" + (parseInt("{{course.id}}") + 1000),
+            type        :"GET",
+            success     :function(result) {
+                var taskList = $.parseJSON(result);
+                var strTaskList="";
+                for(var i=0; i < taskList.length;i++){
+                    strTaskList+="<a href='" + "{{url_for('task_view', taskID='')}}" + taskList[i].id + "' class='list-group-item'>";
+                    strTaskList+=taskList[i].title;
+                    strTaskList+="</a>";
+                }
+                if(taskList.length == 0){
+                    strTaskList+="<a href='#' class='list-group-item'>No Tasks</a>";
+                }
+                $('#course-task-list').html(strTaskList);
+            }
+        });
+    }
+    $(document).ready(function() {
+        getCourseTaskList();
+    })
 </script>
 {% endblock %}

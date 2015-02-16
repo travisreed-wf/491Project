@@ -54,10 +54,12 @@ class Course(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
     title = db.Column(db.String(255))
+    securityCode = db.Column(db.String(6))
     teacher_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     tasks = db.relationship('Task', backref='course', lazy='dynamic')
 
-    def __init__(self, name, title):
+    def __init__(self, name, title,securityCode = 123456):
+        self.securityCode = securityCode
         self.name = name
         self.title = title
         return
@@ -66,7 +68,8 @@ class Course(db.Model):
     def serialize(self):
         return {
             'id': self.id,
-            'name': self.name
+            'name': self.name,
+            'teacher_name': self.author.name
         }
 
     def set_students(self, student_file):
@@ -117,6 +120,7 @@ class TaskResponse(db.Model):
     task_id = db.Column(db.Integer, db.ForeignKey('task.id'))
     student_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     response = db.Column(db.Text)
+    graded_response = db.Column(db.Text)
     datetime = db.Column(db.DateTime())
 
     def __init__(self, response):

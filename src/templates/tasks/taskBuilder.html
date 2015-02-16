@@ -23,6 +23,7 @@
       <br>
     {% endfor %}
   </div>
+
   <!-- Question List -->
   <div class="col-md-9 col-md-offset-2" id="questionList">
     <div class="row">
@@ -32,8 +33,8 @@
     </div>
     <br>
       <div class="row">
-          <button type="button" class="btn btn-default btn-lg dropdown-toggle pull-right TAKE_ONLY PREVIEW_ONLY" data-toggle="dropdown" aria-expanded="false" style="display:None">Submit <span class="caret"></span></button>
-          <ul class="dropdown-menu pull-right PREVIEW_ONLY" role="menu" id="taskbuilder_viewable_courses"></ul>
+          <button type="button" class="btn btn-default btn-lg pull-right TAKE_ONLY PREVIEW_ONLY" style="display:None" onclick="showModal('submission-modal')">Create Task</button>
+          <!-- <ul class="dropdown-menu pull-right PREVIEW_ONLY" role="menu" id="taskbuilder_viewable_courses"></ul> -->
           <p class="pull-right PREVIEW_ONLY">&nbsp;&nbsp;</p>
           <button type="button" class="btn btn-danger btn-lg pull-right EDIT_ONLY" aria-expanded="false" id="delete-all">Delete All</button>
           <p class="pull-right PREVIEW_ONLY">&nbsp;&nbsp;</p>
@@ -41,11 +42,54 @@
       </div>
   </div>
 </div>
+
+<!-- Submission modal -->
+<div id="submission-modal">
+  <div class="modal fade">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Create Task</h4>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label for="taskTitle">Task Title</label>
+              <input type="text" class="form-control" id="taskTitle" placeholder="Task Title">
+            </div>
+            <style>
+              #taskDueDate{z-index:1151 !important;}
+            </style>
+            <div class="form-group">
+              <label for="taskDueDate">Due Date</label><br>
+              <div class="col-xs-6">
+              <input id='taskDueDate' type='text' class="form-control" placeholder="mm/dd/yyyy"/>
+              </div>
+              <div class="col-xs-6">
+              <input id='taskDueTime' type='text' class="form-control time ui-timepicker-input" placeholder="HH:MM(pm|am)"/>
+              </div><br><br>
+            </div>
+            <div class="form-group">
+              <label for="taskForCourse">Associate with Course</label><br>
+              <button id="taskForCourse" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select a course<span class="caret"></span></button>
+              <ul class="dropdown-menu" aria-labelledby="dLabel" role="menu" id="taskbuilder_viewable_courses"></ul>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> <!-- end submission modal -->
 {% endblock %}
 {% block js_bottom %}
 {{ super() }}
 <link rel="stylesheet" href="{{url_for('static', filename='jquery-ui-1.10.3.custom/development-bundle/themes/smoothness/jquery-ui.css')}}" />
 <script src="{{url_for('static', filename='jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.min.js')}}"></script>
+<script type="text/javascript" src="/static/jquery.timepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/jquery.timepicker.css" />
 <script type="text/javascript">
   var nextChoiceID = "choice" + 0;
   var nextQuestionID = "question" + 0;
@@ -92,6 +136,8 @@
       });
     });
 
+    $("#taskDueDate").datepicker();
+    $("#taskDueTime").timepicker();
   });
 </script>
 

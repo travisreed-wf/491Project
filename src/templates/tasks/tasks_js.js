@@ -39,6 +39,9 @@
     $(changeEvent).parent().find('.wp-video-panel').attr("src", src)
   }
 
+  function showModal(idToShow){
+    $("#"+idToShow).find('.modal').modal('toggle');
+  }
   function clickVideo(clkevent){
     var src = $(clkevent).parent().find('.wp-video-panel').attr('src');
     $(clkevent).parent().find('iframe').attr('src', src);

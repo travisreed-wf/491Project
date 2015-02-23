@@ -30,10 +30,10 @@
 				var strClassList = "";
 				
 				for(var i = 0;i < classList.length;i++){
-					strClassList += '<div id=class' + i;
+					strClassList += '<div id="class' + i + '"';
 					strClassList += ' class="panel-heading" style="text-align:center"><strong>';
 					strClassList += classList[i].name;
-					strClassList += '</strong></div><table id=task' + i;
+					strClassList += '</strong></div><table id="' + classList[i].name.replace(" ", "_") + '"';
 					strClassList += ' class="table"></table>';
 				}
 				$('#courses').html(strClassList);
@@ -48,13 +48,14 @@
             success     :function(result) {
                 var taskList = $.parseJSON(result);
                 var strTaskList="";
-                
+
                 for(var i=0; i < taskList.length;i++){
-                    strTaskList = '<tr><td>' + taskList[i].title + '</td>';
-                    strTaskList += '<td>Due: 4/4/15</td>';
-                    strTaskList += '<td>Grade: A+</td></tr>'
-                    $('#task' + i).html(strTaskList);
-                }                
+                		var courseName = taskList[i].course_name;
+                		strTaskList = $('#' + courseName.replace(" ", "_")).html();
+                		strTaskList += '<tr><td>' + taskList[i].title + '</td>';
+                    	strTaskList += '<td>Due: ' + taskList[i].due_date + '</td>';
+                    	strTaskList += '<td>Grade: A+</td></tr>';
+                    	$('#' + courseName.replace(" ", "_")).html(strTaskList);                }                
             }
         });
 	}

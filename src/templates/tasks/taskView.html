@@ -38,6 +38,7 @@
           data['options'].push($(this).attr('id'));
         });
         data['selectedOption'] = question.find(':radio:checked').attr('id');
+        data['selectedOptionText'] = question.find(':radio:checked').parent().next('p').text();
         automaticQuestions.push(data);
       });
       $('.manual-grading').each(function(){

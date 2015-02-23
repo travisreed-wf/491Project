@@ -27,8 +27,8 @@
     {% for automatic_question in response['automatic_questions'] %}
       Question ID: {{automatic_question['questionID']}}<br>
       Question Content: {{automatic_question['questionContent']}}<br>
-      Response: {{automatic_question['selectedOption']}}<br>
-      Correct Response: {{automatic_question['correctOption']}}<br>
+      Response: {{automatic_question['selectedOptionText']}}<br>
+      Correct Response: {{automatic_question['correctOptionText']}}<br>
       Correct: {{automatic_question['correct']}}<br>
       <br>
     {% endfor %}

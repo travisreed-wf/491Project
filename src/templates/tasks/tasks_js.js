@@ -190,6 +190,7 @@
             data['options'].push($(this).attr('id'));
           });
           data['correctOption'] = question.find(':radio:checked').attr('id');
+          data['correctOptionText'] = question.find(':radio:checked').parent().next('p').text();
           questions.push(data);
       })
       var data = {};

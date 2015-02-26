@@ -85,13 +85,13 @@ class TaskView(MethodView):
 
     def get(self, taskID):
         task = models.Task.query.filter_by(id=int(taskID)).first()
-        content = task.content.strip().replace('\n', '')
-        print content
-        return render_template("tasks/taskView.html", content=content)
+        content = "<div></div>"
+        return render_template("tasks/taskView.html", content=task.content.strip().replace('\n', ''))
 
     def post(self, taskID):
         print flask.request.get_json()
         task_response = models.TaskResponse(json.dumps(flask.request.get_json()))
+        print task_response
         task_response.datetime = datetime.datetime.now()
         task_response.task_id = int(taskID)
         task_response.student_id = current_user.id

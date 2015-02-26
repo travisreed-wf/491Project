@@ -85,8 +85,9 @@ class TaskView(MethodView):
 
     def get(self, taskID):
         task = models.Task.query.filter_by(id=int(taskID)).first()
-        content = "<div></div>"
-        return render_template("tasks/taskView.html", content=task.content.strip().replace('\n', ''))
+        content = task.content.strip().replace('\n', '')
+        print content
+        return render_template("tasks/taskView.html", content=content)
 
     def post(self, taskID):
         print flask.request.get_json()

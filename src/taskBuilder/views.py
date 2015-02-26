@@ -91,7 +91,6 @@ class TaskView(MethodView):
     def post(self, taskID):
         print flask.request.get_json()
         task_response = models.TaskResponse(json.dumps(flask.request.get_json()))
-        print task_response
         task_response.datetime = datetime.datetime.now()
         task_response.task_id = int(taskID)
         task_response.student_id = current_user.id

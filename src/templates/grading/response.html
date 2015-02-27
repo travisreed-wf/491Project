@@ -7,38 +7,60 @@
 {% endblock %}
 {% block body %}
 <br>
-<div class="col-md-10 col-md-offset-2" style="width:800px;">
-    <h3>Summary</h3>
-    Student: {{ student.name }}<br>
-    Student Email: {{ student.email }}<br>
-    Task ID: {{ task.id }}<br>
-    Task Title: {{ task.title }}<br>
-    Date of Response: {{ task_response.datetime }}
-</div><br>
-<div class="col-md-10 col-md-offset-2" style="width:800px;">
-    <h3>Manual Grading Required</h3>
-    {% for manual_question in response['manual_questions'] %}
-      <div class="panel panel-warning">
-        <div class="panel-heading">{{manual_question['questionID']}}</div>
-        <div class="panel-body">
-          Question Content: {{manual_question['questionContent']}}<br>
-          Response: {{manual_question['response']}}
+<div class="row">
+  <div class="col-md-2 vertical-line">
+      <h4>Summary</h4>
+      Student: <p class="text-muted">{{ student.name }}</p>
+      Student Email: <p class="text-muted">{{ student.email }}</p>
+      Task Title: <p class="text-muted">{{ task.title }}</p>
+      Date of Response: <p class="text-muted">{{ time }}</p>
+  </div>
+  <div class="col-md-5 vertical-line">
+      <h4>Manual Grading Required</h4>
+      {% for manual_question in response['manual_questions'] %}
+        <div class="panel panel-warning">
+          <div class="panel-heading">{{manual_question['questionID']}}</div>
+          <div class="panel-body">
+            Question Content: {{manual_question['questionContent']}}<br>
+            Response: {{manual_question['response']}}
+          </div>
         </div>
-      </div>
-    {% endfor %}<br>
-    <h3>Automatically Graded</h3>
-    {% for automatic_question in response['automatic_questions'] %}
-      <div class="panel {% if automatic_question['correct'] %}panel-success{% else %}panel-danger{% endif %}">
-        <div class="panel-heading">{{automatic_question['questionID']}}</div>
-        <div class="panel-body">
-          Question Content: {{automatic_question['questionContent']}}<br>
-          Response: {{automatic_question['selectedOptionText']}}<br>
-          Correct Response: {{automatic_question['correctOptionText']}}<br>
-          Correct: {{automatic_question['correct']}}<br>
-          <br>
+      {% endfor %}<br>
+      <h4>Automatically Graded</h4>
+      {% for automatic_question in response['automatic_questions'] %}
+        <div class="panel {% if automatic_question['correct'] %}panel-success{% else %}panel-danger{% endif %}">
+          <div class="panel-heading">{{automatic_question['questionID']}}</div>
+          <div class="panel-body">
+            Question Content: {{automatic_question['questionContent']}}<br>
+            Correct Answer: {{automatic_question['correctOptionText']}}<br>
+            Response: {{automatic_question['selectedOptionText']}}<br>
+          </div>
         </div>
-      </div>
-    {% endfor %}
+      {% endfor %}
+  </div>
+  <div class="col-md-5 vertical-line">
+      <h4>Manual Grading Required</h4>
+      {% for manual_question in response['manual_questions'] %}
+        <div class="panel panel-warning">
+          <div class="panel-heading">{{manual_question['questionID']}}</div>
+          <div class="panel-body">
+            Question Content: {{manual_question['questionContent']}}<br>
+            Response: {{manual_question['response']}}
+          </div>
+        </div>
+      {% endfor %}<br>
+      <h4>Automatically Graded</h4>
+      {% for automatic_question in response['automatic_questions'] %}
+        <div class="panel {% if automatic_question['correct'] %}panel-success{% else %}panel-danger{% endif %}">
+          <div class="panel-heading">{{automatic_question['questionID']}}</div>
+          <div class="panel-body">
+            Question Content: {{automatic_question['questionContent']}}<br>
+            Correct Answer: {{automatic_question['correctOptionText']}}<br>
+            Response: {{automatic_question['selectedOptionText']}}<br>
+          </div>
+        </div>
+      {% endfor %}
+  </div>
 </div>
 {% endblock %}
 {% block js_bottom %}

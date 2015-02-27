@@ -53,7 +53,6 @@
                     strTaskList+="<a href='" + "{{url_for('task_view', taskID='')}}" + taskList[i].id + "' class='list-group-item";
                     var curTime = new Date(new Date().getTime() + new Date().getTimezoneOffset()*1000); // remove timezone
                     var msTillDue = (new Date(taskList[i].duedate).getTime() - curTime) / 86400;
-                    console.log(msTillDue);
                     if(msTillDue < 0)
                         strTaskList+=" list-group-item-danger'>"; // item overdue
                     else if(msTillDue < 1000)

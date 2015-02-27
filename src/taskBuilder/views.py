@@ -68,11 +68,12 @@ class TaskBuilderView(MethodView):
     def post(self):
         task = models.Task("")
         pattern = r"<script.*?</script>"
-        content = flask.request.get_json().get('html')
-        questions = flask.request.get_json().get('questions')
-        courseID = flask.request.get_json().get('course_id')
-        taskTitle = flask.request.get_json().get('taskTitle')
-        taskDueDate = flask.request.get_json().get('taskDue');
+        data = flask.request.get_json()
+        content = data.get('html')
+        questions = data.get('questions')
+        courseID = data.get('course_id')
+        taskTitle = data.get('taskTitle')
+        taskDueDate = data.get('taskDue');
         task.title = taskTitle
         task.content = re.sub(pattern, "", content, flags=re.DOTALL)
         task.questions = json.dumps(questions)

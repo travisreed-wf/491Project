@@ -22,6 +22,7 @@ class Grader:
                     correct = (question['selectedOption'] == correctOption)
                     question['correctOption'] = correctOption
                     question['correct'] = correct
+                    question['correctOptionText'] = task_question['correctOptionText']
         task_response.graded_response = json.dumps(response)
         models.db.session.commit()
         return response['automatic_questions']

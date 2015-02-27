@@ -9,6 +9,7 @@ from flask_login import current_user
 from werkzeug import secure_filename
 
 import datetime
+import time
 import json
 import os
 import re
@@ -70,12 +71,14 @@ class TaskBuilderView(MethodView):
         content = flask.request.get_json().get('html')
         questions = flask.request.get_json().get('questions')
         courseID = flask.request.get_json().get('course_id')
+        taskTitle = flask.request.get_json().get('taskTitle')
+        taskDueDate = flask.request.get_json().get('taskDue');
+        task.title = taskTitle
         task.content = re.sub(pattern, "", content, flags=re.DOTALL)
         task.questions = json.dumps(questions)
         task.course = models.Course.query.filter_by(id=courseID).first()
+        task.duedate = datetime.datetime.fromtimestamp(taskDueDate/1000.0)
         models.db.session.add(task)
-        models.db.session.commit()
-        task.title = "Task #%s" % task.id
         models.db.session.commit()
         return ""
 

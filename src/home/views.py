@@ -32,7 +32,8 @@ class TaskListView(MethodView):
     def get(self):
         tasks = []
         for c in current_user.courses:
-            for t in c.tasks:
+            sorted_tasks = sorted(c.tasks, key=lambda t: t.duedate)
+            for t in sorted_tasks:
                 tasks.append(t.serialize)
 
         return flask.json.dumps(tasks)

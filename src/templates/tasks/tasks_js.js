@@ -1,5 +1,22 @@
 <script type="text/javascript">
 
+  function answerKeyCompleted(){
+    var ret = true;
+    $('.automatic-grading').each(function(){
+          var question = $(this);
+          if (question.find(':radio:checked').length == 0){
+            ret = false;
+          }
+    })
+    return ret;
+  }
+
+  function hideAnswerKeyAlertIfAppropriate(){
+    if (answerKeyCompleted()){
+      $("#key_alert").hide();
+    }
+  }
+
   function createElement(elementWell, elementToCreate){
       $('#elementWell').css("height","100px");
       $('#elementWell').html("<br><br>Add more elements here.");
@@ -40,7 +57,12 @@
   }
 
   function showModal(idToShow){
-    $("#"+idToShow).find('.modal').modal('toggle');
+    if (answerKeyCompleted() == true){
+      $("#"+idToShow).find('.modal').modal('toggle');
+    }
+    else{
+      $('#key_alert').show();
+    }
   }
   function clickVideo(clkevent){
     var src = $(clkevent).parent().find('.wp-video-panel').attr('src');

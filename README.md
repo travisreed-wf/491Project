@@ -30,4 +30,4 @@ ISU Web Portal
 08. Reset database if schema changes were made since last build
 09. Ensure database.db is writeable
 10. Start the server <br>
-`python run_sandbox.py &`
+`python src/run_sandbox.py 2> stderr.log &`

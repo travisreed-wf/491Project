@@ -50,8 +50,20 @@
                 
                 var strTaskList="";
                 for(var i=0; i < taskList.length;i++){
-                    strTaskList+="<a href='" + "{{url_for('task_view', taskID='')}}" + taskList[i].id + "' class='list-group-item'>";
+                    strTaskList+="<a href='" + "{{url_for('task_view', taskID='')}}" + taskList[i].id + "' class='list-group-item";
+                    var curTime = new Date(new Date().getTime() + new Date().getTimezoneOffset()*1000); // remove timezone
+                    var msTillDue = (new Date(taskList[i].duedate).getTime() - curTime) / 86400;
+                    if(msTillDue < 0)
+                        strTaskList+=" list-group-item-danger'>"; // item overdue
+                    else if(msTillDue < 1000)
+                        strTaskList+=" list-group-item-warning'>"; // due in <1 day
+                    else
+                        strTaskList+="'>"; // due in >= 1 day
                     strTaskList+=taskList[i].title;
+                    strTaskList+='<div class="pull-right">due on ';
+                    strTaskList+=taskList[i].duedate.substring(0,11);
+                    strTaskList+=' at ' + taskList[i].duedate.substring(17,22);
+                    strTaskList+='</div>';
                     strTaskList+="</a>";
                 }
                 if(taskList.length == 0){

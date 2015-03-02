@@ -7,10 +7,8 @@
 {% endblock %}
 {% block body %}
 <div class= "row">
-	<div class="col-md-10 col-md-offset-2" style="width:800px;">
-		<div id="courses" class="panel panel-default">
-			
-		</div>
+	<div id= "coursePanels" class="col-md-10 col-md-offset-2" style="width:800px;">
+		
 	</div>
 </div>
 
@@ -30,13 +28,14 @@
 				var strClassList = "";
 				
 				for(var i = 0;i < classList.length;i++){
+					strClassList +='<div id="courses" class="panel panel-default">';
 					strClassList += '<div id="class' + i + '"';
 					strClassList += ' class="panel-heading" style="text-align:center"><strong>';
 					strClassList += classList[i].name;
 					strClassList += '</strong></div><table id="' + classList[i].name.replace(" ", "_") + '"';
-					strClassList += ' class="table"></table>';
+					strClassList += ' class="table"></table></div>';
 				}
-				$('#courses').html(strClassList);
+				$('#coursePanels').html(strClassList);
 			}
 		});
 	}

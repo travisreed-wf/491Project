@@ -112,8 +112,8 @@ class Task(db.Model):
         return {
             'id': self.id,
             'title': self.title,
-            'course_name': name
-            'duedate' : self.duedate
+            'course_name': name,
+            'duedate': self.duedate
         }
 
 

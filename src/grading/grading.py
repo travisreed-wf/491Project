@@ -47,5 +47,5 @@ class Grader:
                 'expected_time': expected_time,
                 'sufficient': time >= expected_time
             }
-        task_response.graded_supplementary = graded_response
+        task_response.graded_supplementary = json.dumps(graded_response)
         models.db.session.commit()

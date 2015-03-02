@@ -45,8 +45,6 @@
     var endTime = endDate.getTime();
     var duration = endTime - event.data.startTime;
     $('.modal').data("supplementaryDuration",duration/1000);
-    alert($('.modal').data("supplementaryDuration"));
-    alert(event.data.modalID);
     if(supplementaryInformationTimes[event.data.modalID]){
           supplementaryInformationTimes[event.data.modalID] = supplementaryInformationTimes[event.data.modalID] + duration/1000;
     }else{

@@ -1,5 +1,6 @@
 <script type="text/javascript">
-
+  
+  var supplementaryInformationTimes = {}; 
   function createElement(elementWell, elementToCreate){
       $('#elementWell').css("height","100px");
       $('#elementWell').html("<br><br>Add more elements here.");
@@ -39,36 +40,74 @@
     $(changeEvent).parent().find('.wp-video-panel').attr("src", src)
   }
 
+  function modalTiming(event){
+    var endDate = new Date();
+    var endTime = endDate.getTime();
+    var duration = endTime - event.data.startTime;
+    $('.modal').data("supplementaryDuration",duration/1000);
+    alert($('.modal').data("supplementaryDuration"));
+    alert(event.data.modalID);
+    if(supplementaryInformationTimes[event.data.modalID]){
+          supplementaryInformationTimes[event.data.modalID] = supplementaryInformationTimes[event.data.modalID] + duration/1000;
+    }else{
+          supplementaryInformationTimes[event.data.modalID] = duration/1000;
+    }
+    alert(supplementaryInformationTimes[event.data.modalID] + "  :alsdjfl;aksdf;lakd");
+    $('.modal').off('hide.bs.modal');       
+    
+  }
+
   function clickVideo(clkevent){
     var src = $(clkevent).parent().find('.wp-video-panel').attr('src');
     $(clkevent).parent().find('iframe').attr('src', src);
-    $(clkevent).parent().find('.modal').modal('toggle');
+    var modal = $(clkevent).parent().find('.modal');
+    modal.modal('toggle');
+    var startDate = new Date();
+    $('.modal').data("supplementaryDuration",startTime);
     $('.modal').on('hidden.bs.modal', function () {
       $('iframe').attr('src', $('iframe').attr('src'));
-    });
+    }); 
+    var modalID = $(modal).attr('id');
+    var startTime = startDate.getTime();
+    $('.modal').on('hide.bs.modal', {startTime: startTime, modalID: modalID}, modalTiming);
   }
   function clickImage(clkevent){
     console.log($(clkevent).parent().find('img').attr('src'));
     var src = $(clkevent).parent().find('img').attr('src');
     $(clkevent).parent().find('iframe').attr('src', src);
-    $(clkevent).parent().find('.modal').modal('toggle');
+    var modal = $(clkevent).parent().find('.modal');
+    modal.modal('toggle');    
+    var startDate = new Date();
     $('.modal').on('hidden.bs.modal', function () {
       $('iframe').attr('src', $('iframe').attr('src'));
     });
+    var modalID = $(modal).attr('id');
+    var startTime = startDate.getTime();
+    $('.modal').on('hide.bs.modal', {startTime: startTime, modalID: modalID}, modalTiming);
+
   }
   function clickFile(clkevent){
     var src = $(clkevent).parent().find('.wp-file-title-label').attr('src');
     console.log(src);
     $(clkevent).parent().find('iframe').attr('src', src);
-    $(clkevent).parent().find('.modal').modal('toggle');
+    var modal = $(clkevent).parent().find('.modal');
+    modal.modal('toggle');    
+    var startDate = new Date();    
     $('.modal').on('hidden.bs.modal', function () {
       $('iframe').attr('src', $('iframe').attr('src'));
     });
+    var modalID = $(modal).attr('id');
+    var startTime = startDate.getTime();
+    $('.modal').on('hide.bs.modal', {startTime: startTime, modalID: modalID}, modalTiming);
+
   }
 
   function addSuppElement(ctx, appendID){
     var toAppend = $(ctx).closest('.panel-body').find('.supplementary-target');
-    toAppend.append($(appendID).html());
+    var html = $(appendID).html();
+    html = html.replace("nextID", nextSupplementaryID);
+    nextSupplementaryID = "supplementary" + (parseInt(nextSupplementaryID.split("supplementary")[1]) + 1);
+    toAppend.append(html);
   }
   function addVideo(ctx){
     addSuppElement(ctx, '#wp-video-template')
@@ -194,6 +233,7 @@
       data['questions'] = questions;
       console.log($(element).attr('id'));
       data['course_id'] = $(element).attr('id');
+      data['supplementary'] = supplementaryInformationTimes;
       $.ajax({
           url: '{{ url_for("taskBuilder") }}',
           type: 'POST',

@@ -36,16 +36,16 @@ class Grader:
         task_response = models.TaskResponse.query.filter_by(id=response_id).first()
         if task_response.graded_supplementary:
             return
-        response = json.loads(task_response.response)
+        response_supplementary = json.loads(task_response.supplementary)
+        graded_response = {}
         task = task_response.task
         task_supplementary = json.loads(task.supplementary)
-        for question in response['automatic_questions']:
-            for task_question in task_questions:
-                if task_question['questionID'] == question['questionID']:
-                    correctOption = task_question['correctOption']
-                    correct = (question['selectedOption'] == correctOption)
-                    question['correctOption'] = correctOption
-                    question['correct'] = correct
-                    question['correctOptionText'] = task_question['correctOptionText']
-                    total_responses += 1
-                    correct_responses += 1 if correct else 0
+        for sup_id, expected_time in task_supplementary:
+            time = graded_response.get(sup_id)
+            graded_response[sup_id] = {
+                'time': time,
+                'expected_time': expected_time
+                'sufficient': time >= expected_time
+            }
+        task_response.graded_supplementary = graded_response
+        models.db.session.commit()

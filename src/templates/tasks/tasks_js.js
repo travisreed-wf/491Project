@@ -1,6 +1,21 @@
-<script type="text/javascript">
-  
+<script type="text/javascript">  
   var supplementaryInformationTimes = {}; 
+  function answerKeyCompleted(){
+    var ret = true;
+    $('.automatic-grading').each(function(){
+          var question = $(this);
+          if (question.find(':radio:checked').length == 0){
+            ret = false;
+          }
+    })
+    return ret;
+  }
+
+  function hideAnswerKeyAlertIfAppropriate(){
+    if (answerKeyCompleted()){
+      $("#key_alert").hide();
+    }
+  }
   function createElement(elementWell, elementToCreate){
       $('#elementWell').css("height","100px");
       $('#elementWell').html("<br><br>Add more elements here.");
@@ -39,7 +54,6 @@
     var src = getVideoURL($(changeEvent).val());
     $(changeEvent).parent().find('.wp-video-panel').attr("src", src)
   }
-
   function modalTiming(event){
     var endDate = new Date();
     var endTime = endDate.getTime();
@@ -54,7 +68,14 @@
     $('.modal').off('hide.bs.modal');       
     
   }
-
+  function showModal(idToShow){
+    if (answerKeyCompleted() == true){
+      $("#"+idToShow).find('.modal').modal('toggle');
+    }
+    else{
+      $('#key_alert').show();
+    }
+  }
   function clickVideo(clkevent){
     var src = $(clkevent).parent().find('.wp-video-panel').attr('src');
     $(clkevent).parent().find('iframe').attr('src', src);
@@ -211,7 +232,6 @@
   }
 
   function submitClicked(element) {
-      console.log("click hit");
       $('.EDIT_ONLY').remove();
       $('.PREVIEW_ONLY').remove();
       var questions = [];
@@ -224,14 +244,26 @@
             data['options'].push($(this).attr('id'));
           });
           data['correctOption'] = question.find(':radio:checked').attr('id');
+          data['correctOptionText'] = question.find(':radio:checked').parent().next('p').text();
           questions.push(data);
       })
       var data = {};
       data['html'] = $('#questionList').html();
       data['questions'] = questions;
       console.log($(element).attr('id'));
-      data['course_id'] = $(element).attr('id');
       data['supplementary'] = supplementaryInformationTimes;
+      data['course_id'] = $(element).attr('id')
+      data['taskTitle'] = $('#taskTitle').val()
+
+      // Construct a JS date object
+      var date = $('#taskDueDate').val().split('/');
+      var hoursMins = $('#taskDueTime').val().split(':');
+      var hours = parseInt(hoursMins[0]);
+      if(hoursMins[1].indexOf('pm') > -1 || hoursMins[1].indexOf('PM') > -1)
+        hours = 12 + parseInt(hoursMins[0]);
+      var mins = parseInt(hoursMins[1].substring(0,2));
+      var dueOn = new Date(date[2], parseInt(date[0])-1, date[1], hours, mins, 0, 0).getTime();
+      data['taskDue'] = dueOn;
       $.ajax({
           url: '{{ url_for("taskBuilder") }}',
           type: 'POST',

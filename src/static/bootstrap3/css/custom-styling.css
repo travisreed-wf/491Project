@@ -17,3 +17,6 @@
     cursor: inherit;
     display: block;
 }
+.vertical-line {
+    border-left: solid #f0f0f0;
+}

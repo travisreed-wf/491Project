@@ -44,7 +44,6 @@
                     strCurrentTaskList+=taskList.current[i].title;
                     if(taskList.current[i].title == "")
                         strCurrentTaskList+="no title";
-                    strCurrentTaskList+=" - " + taskList.current[i].courseName;
                     strCurrentTaskList+='<div class="pull-right">due on ';
                     strCurrentTaskList+=taskList.current[i].duedate.substring(0,11);
                     strCurrentTaskList+=' at ' + taskList.current[i].duedate.substring(17,22);
@@ -61,7 +60,6 @@
                     strCompleteTaskList+="<a href='{{url_for('task_view', taskID='')}}" 
                     + taskList.complete[i].id + "' class='list-group-item'>";
                     strCompleteTaskList+=taskList.complete[i].title;
-                    strCompleteTaskList+=" - " + taskList.complete[i].courseName;
                     strCompleteTaskList+='<div class="pull-right">due on ';
                     strCompleteTaskList+=taskList.complete[i].duedate.substring(0,11);
                     strCompleteTaskList+=' at ' + taskList.complete[i].duedate.substring(17,22);

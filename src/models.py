@@ -81,7 +81,7 @@ class Course(db.Model):
                 user = User.query.filter_by(email=email).first()
                 if user:
                     if self not in user.courses:
-                        user.courses.append(user)
+                        user.courses.append(self)
                     else:
                         print "Student already enrolled in course: %s\n" % email
                 else:
@@ -99,8 +99,8 @@ class Task(db.Model):
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'))
     content = db.Column(db.Text)
     questions = db.Column(db.Text)
-    task_responses = db.relationship('TaskResponse', backref='task',
-                                     lazy='dynamic')
+    duedate = db.Column(db.DateTime())
+    task_responses = db.relationship('TaskResponse',backref='task',lazy='dynamic')
 
     def __init__(self, title):
         self.title = title
@@ -110,7 +110,9 @@ class Task(db.Model):
     def serialize(self):
         return {
             'id': self.id,
-            'title': self.title
+            'title': self.title,
+            'duedate': self.duedate,
+            'courseName': self.course.name
         }
 
 
@@ -122,6 +124,7 @@ class TaskResponse(db.Model):
     response = db.Column(db.Text)
     graded_response = db.Column(db.Text)
     datetime = db.Column(db.DateTime())
+    correctness_grade = db.Column(db.Float)
 
     def __init__(self, response):
         self.response = response

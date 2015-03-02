@@ -33,10 +33,12 @@
         var data = {};
         data['options'] = [];
         data['questionID'] = question.attr('id');
+        data['questionContent'] = question.find(".question-content").text();
         question.find(':radio:visible').each(function(){
           data['options'].push($(this).attr('id'));
         });
         data['selectedOption'] = question.find(':radio:checked').attr('id');
+        data['selectedOptionText'] = question.find(':radio:checked').parent().next('p').text();
         automaticQuestions.push(data);
       });
       $('.manual-grading').each(function(){
@@ -44,6 +46,7 @@
         var data = {};
         data['questionID'] = question.attr('id');
         data['response'] = question.find('#student-response').val();
+        data['questionContent'] = question.find(".question-content").text();
         manualQuestions.push(data);
       });
       var data = {};

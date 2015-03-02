@@ -1,13 +1,13 @@
 {% extends "layout-question.html" %}
 {% block answer_details %}
   <div class="panel-body multipleChoice automatic-grading" id="notSet">
-    <div class="question-content">
+    <div>
       <textarea id="body" class="form-control EDIT_ONLY" placeholder="Question Content" onchange="textChange(this)"></textarea>
-      <p id="p_body" class="TAKE_ONLY"></p>
+      <p id="p_body" class="TAKE_ONLY question-content"></p>
       <hr>
     </div>
     <div class="input-group hidden radioResponse">
-      <span class="input-group-addon"> <input class="unassignedName radio-template" type="radio" name="0"> </span>
+      <span class="input-group-addon"> <input class="unassignedName radio-template" type="radio" name="0" onchange="hideAnswerKeyAlertIfAppropriate()"> </span>
       <input type="text" class="form-control EDIT_ONLY" onchange="textChangeBySibling(this)">
       <p class='form-control TAKE_ONLY'></p>
       <span class="EDIT_ONLY input-group-addon">

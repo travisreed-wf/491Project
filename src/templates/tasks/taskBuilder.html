@@ -26,6 +26,11 @@
 
   <!-- Question List -->
   <div class="col-md-9 col-md-offset-2" id="questionList">
+    <div id="key_alert" class="alert alert-danger" style="display:none" role="alert">
+      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+      <span class="sr-only">Error:</span>
+      Finish the answer key by filling out all radio buttons
+    </div>
     <div class="row">
       <div id="elementWell" class="elementWell EDIT_ONLY" style="border:1px;border-style:dashed;border-radius:5px;height:300px" align="center">
         <br><br>To begin, drag elements onto the screen.
@@ -106,27 +111,32 @@
     });
 
     $('#preview').click(function(){
-      $('.EDIT_ONLY').toggle();
-      $('.TAKE_ONLY').toggle();
-      $('.delete-if-empty').each(function(){
-        var toCheck;
-        if($(this).hasClass('panel-heading')){
-          toCheck = $(this).find('h3');
-        } else if($(this).hasClass('question-content')){
-          toCheck = $(this).find('textarea')
-        } else{
-          toCheck = $(this)
-        }
-        if(toCheck.html().trim().length == 0){
-          $(this).hide();
-        }
-      });
-      if ($(this).text() == "Preview"){
-        $(this).text("Edit");
+      if (answerKeyCompleted() == false){
+        $("#key_alert").show();
       }
       else {
-        $(this).text("Preview");
-      }
+        $('.EDIT_ONLY').toggle();
+        $('.TAKE_ONLY').toggle();
+        $('.delete-if-empty').each(function(){
+          var toCheck;
+          if($(this).hasClass('panel-heading')){
+            toCheck = $(this).find('h3');
+          } else if($(this).hasClass('question-content')){
+            toCheck = $(this).find('textarea')
+          } else{
+            toCheck = $(this)
+          }
+          if(toCheck.html().trim().length == 0){
+            $(this).hide();
+          }
+        });
+        if ($(this).text() == "Preview"){
+          $(this).text("Edit");
+        }
+        else {
+          $(this).text("Preview");
+        }
+      }      
     });
 
     $('#delete-all').click(function(){

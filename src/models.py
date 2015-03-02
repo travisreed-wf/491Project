@@ -81,7 +81,7 @@ class Course(db.Model):
                 user = User.query.filter_by(email=email).first()
                 if user:
                     if self not in user.courses:
-                        user.courses.append(user)
+                        user.courses.append(self)
                     else:
                         print "Student already enrolled in course: %s\n" % email
                 else:
@@ -113,8 +113,8 @@ class Task(db.Model):
         return {
             'id': self.id,
             'title': self.title,
-            'course_name': name,
-            'duedate': self.duedate
+            'duedate': self.duedate,
+            'courseName': self.course.name
         }
 
 

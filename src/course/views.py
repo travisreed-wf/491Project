@@ -45,12 +45,16 @@ class CourseMasterView(MethodView):
 
 class CourseTaskListView(MethodView):
     def get(self, courseID):
-        tasks = []
+        tasks = {'current':[], 'complete':[]}
         course = models.Course.query.filter_by(id=int(courseID) - 1000).first()
-        
+        userResponseIDs = [tr.task_id for tr in current_user.task_responses]
         for t in course.tasks:
-            tasks.append(t.serialize)
-
+            if(t.id in userResponseIDs):
+                tasks['complete'].append(t.serialize)
+            else:
+                tasks['current'].append(t.serialize)
+        tasks['complete'] = sorted(tasks['complete'], key=lambda k: k['duedate'])
+        tasks['current'] = sorted(tasks['current'], key=lambda k: k['duedate'])
         return flask.json.dumps(tasks)
 
 class RegisterForCourseView(MethodView):

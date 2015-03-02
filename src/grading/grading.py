@@ -36,11 +36,11 @@ class Grader:
         task_response = models.TaskResponse.query.filter_by(id=response_id).first()
         if task_response.graded_supplementary:
             return
-        response_supplementary = json.loads(task_response.supplementary)
+        response_supplementary = json.loads(task_response.supplementary) if task_response.supplementary else {}
         graded_response = {}
         task = task_response.task
-        task_supplementary = json.loads(task.supplementary)
-        for sup_id, expected_time in task_supplementary:
+        task_supplementary = json.loads(task.supplementary) if task.supplementary else {}
+        for sup_id, expected_time in task_supplementary.items():
             time = graded_response.get(sup_id)
             graded_response[sup_id] = {
                 'time': time,

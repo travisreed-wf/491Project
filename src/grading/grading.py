@@ -36,7 +36,8 @@ class Grader:
         task_response = models.TaskResponse.query.filter_by(id=response_id).first()
         if task_response.graded_supplementary:
             return
-        response_supplementary = json.loads(task_response.supplementary) if task_response.supplementary else {}
+        response = json.loads(task_response.response)
+        response_supplementary = response.get('supplementary', {})
         graded_response = {}
         task = task_response.task
         task_supplementary = json.loads(task.supplementary) if task.supplementary else {}

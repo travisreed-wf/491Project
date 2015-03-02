@@ -101,6 +101,7 @@ class Task(db.Model):
     questions = db.Column(db.Text)
     duedate = db.Column(db.DateTime())
     task_responses = db.relationship('TaskResponse',backref='task',lazy='dynamic')
+    supplementary = db.Column(db.Text)
 
     def __init__(self, title):
         self.title = title
@@ -111,7 +112,7 @@ class Task(db.Model):
         return {
             'id': self.id,
             'title': self.title,
-            'duedate' : self.duedate
+            'duedate': self.duedate
         }
 
 
@@ -124,6 +125,7 @@ class TaskResponse(db.Model):
     graded_response = db.Column(db.Text)
     datetime = db.Column(db.DateTime())
     correctness_grade = db.Column(db.Float)
+    supplementary = db.Column(db.Text)
 
     def __init__(self, response):
         self.response = response

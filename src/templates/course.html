@@ -13,12 +13,9 @@
             <p class="text-muted">{{author.name}}: <a href="mailto:{{author.email}}">{{author.email}}</a></p>
         </div>
         <h3>Tasks </h3>
-        <div id="course-task-list" class="list-group">
-            <a href="" class="list-group-item">
-                <div class="row">
-                    <div class="col-md-2">No Tasks</div>
-                </div>
-            </a>
+        <div id="course-task-list-current" class="list-group">
+        </div>
+        <div id="course-task-list-complete" class="list-group">
         </div>
     </div>
 </div>
@@ -32,16 +29,51 @@
             type        :"GET",
             success     :function(result) {
                 var taskList = $.parseJSON(result);
-                var strTaskList="";
-                for(var i=0; i < taskList.length;i++){
-                    strTaskList+="<a href='" + "{{url_for('task_view', taskID='')}}" + taskList[i].id + "' class='list-group-item'>";
-                    strTaskList+=taskList[i].title;
-                    strTaskList+="</a>";
+                var strCurrentTaskList="";
+                strCurrentTaskList+="<li class='list-group-item active'>Current</li>";
+                for(var i=0; i < taskList.current.length;i++){
+                    strCurrentTaskList+="<a href='{{url_for('task_view', taskID='')}}" + taskList.current[i].id + "' class='list-group-item";
+                    var curTime = new Date(new Date().getTime() + new Date().getTimezoneOffset()*1000); // remove timezone
+                    var msTillDue = (new Date(taskList.current[i].duedate).getTime() - curTime) / 86400;
+                    if(msTillDue < 0)
+                        strCurrentTaskList+=" list-group-item-danger'>"; // item overdue
+                    else if(msTillDue < 1000)
+                        strCurrentTaskList+=" list-group-item-warning'>"; // due in <1 day
+                    else
+                        strCurrentTaskList+="'>"; // due in >= 1 day
+                    strCurrentTaskList+=taskList.current[i].title;
+                    if(taskList.current[i].title == "")
+                        strCurrentTaskList+="no title";
+                    strCurrentTaskList+=" - " + taskList.current[i].courseName;
+                    strCurrentTaskList+='<div class="pull-right">due on ';
+                    strCurrentTaskList+=taskList.current[i].duedate.substring(0,11);
+                    strCurrentTaskList+=' at ' + taskList.current[i].duedate.substring(17,22);
+                    strCurrentTaskList+='</div>';
+                    strCurrentTaskList+="</a>";
                 }
-                if(taskList.length == 0){
-                    strTaskList+="<a href='#' class='list-group-item'>No Tasks</a>";
+                if(taskList.current.length == 0){
+                    strCurrentTaskList+="<li class='list-group-item'>No Tasks</li>";
                 }
-                $('#course-task-list').html(strTaskList);
+
+                var strCompleteTaskList="";
+                strCompleteTaskList+="<li class='list-group-item active'>Complete</li>";
+                for(var i=0; i < taskList.complete.length;i++){
+                    strCompleteTaskList+="<a href='{{url_for('task_view', taskID='')}}" 
+                    + taskList.complete[i].id + "' class='list-group-item'>";
+                    strCompleteTaskList+=taskList.complete[i].title;
+                    strCompleteTaskList+=" - " + taskList.complete[i].courseName;
+                    strCompleteTaskList+='<div class="pull-right">due on ';
+                    strCompleteTaskList+=taskList.complete[i].duedate.substring(0,11);
+                    strCompleteTaskList+=' at ' + taskList.complete[i].duedate.substring(17,22);
+                    strCompleteTaskList+='</div>';
+                    strCompleteTaskList+="</a>";
+                }
+                if(taskList.complete.length == 0){
+                    strCompleteTaskList+="<li class='list-group-item'>No Tasks</li>";
+                }
+
+                $('#course-task-list-current').html(strCurrentTaskList);
+                $('#course-task-list-complete').html(strCompleteTaskList);
             }
         });
     }

@@ -108,9 +108,11 @@ class Task(db.Model):
 
     @property
     def serialize(self):
+        name = (Course.query.filter_by(id=self.course_id).first()).name if self.course_id else None
         return {
             'id': self.id,
             'title': self.title,
+            'course_name': name
             'duedate' : self.duedate
         }
 

@@ -64,7 +64,6 @@
     }else{
           supplementaryInformationTimes[event.data.modalID] = duration/1000;
     }
-    alert(supplementaryInformationTimes[event.data.modalID] + "  :alsdjfl;aksdf;lakd");
     $('.modal').off('hide.bs.modal');       
     
   }

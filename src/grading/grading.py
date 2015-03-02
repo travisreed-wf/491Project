@@ -31,3 +31,21 @@ class Grader:
         task_response.correctness_grade = int(float(100 * correct_responses) / total_responses)
         models.db.session.commit()
         return response['automatic_questions']
+
+    def grade_supplementary_material(self, response_id):
+        task_response = models.TaskResponse.query.filter_by(id=response_id).first()
+        if task_response.graded_supplementary:
+            return
+        response_supplementary = json.loads(task_response.supplementary) if task_response.supplementary else {}
+        graded_response = {}
+        task = task_response.task
+        task_supplementary = json.loads(task.supplementary) if task.supplementary else {}
+        for sup_id, expected_time in task_supplementary.items():
+            time = graded_response.get(sup_id)
+            graded_response[sup_id] = {
+                'time': time,
+                'expected_time': expected_time,
+                'sufficient': time >= expected_time
+            }
+        task_response.graded_supplementary = json.dumps(graded_response)
+        models.db.session.commit()

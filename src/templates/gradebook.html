@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+{% block header_css %}
+<head>
+    <title>Personal Gradebook - Student</title>
+    {{ super() }}
+</head>
+{% endblock %}
+{% block body %}
+<div class= "row">
+	<div class="col-md-10 col-md-offset-2" style="width:800px;">
+		<div id="courses" class="panel panel-default">
+			
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block js_bottom %}
+{{ super() }}
+
+<script type="text/javascript">
+	
+	function getClassList(){
+		$.ajax({
+            url         :'{{ url_for("class_list")}}',
+			type	: "GET",
+			success	: function(result){
+				var classList = $.parseJSON(result);
+				var strClassList = "";
+				
+				for(var i = 0;i < classList.length;i++){
+					strClassList += '<div id="class' + i + '"';
+					strClassList += ' class="panel-heading" style="text-align:center"><strong>';
+					strClassList += classList[i].name;
+					strClassList += '</strong></div><table id="' + classList[i].name.replace(" ", "_") + '"';
+					strClassList += ' class="table"></table>';
+				}
+				$('#courses').html(strClassList);
+			}
+		});
+	}
+
+	function getTaskList(){
+		$.ajax({
+            url         :'{{ url_for("task_list")}}',
+            type        :"GET",
+            success     :function(result) {
+                var taskList = $.parseJSON(result);
+                var strTaskList="";
+
+                for(var i=0; i < taskList.length;i++){
+                		var courseName = taskList[i].courseName;
+                		strTaskList = $('#' + courseName.replace(" ", "_")).html();
+                		strTaskList += '<tr><td width="50%">' + taskList[i].title + '</td>';
+                    	strTaskList += '<td width="25%">Due: ' + taskList[i].due_date + '</td>';
+                    	strTaskList += '<td with="25%">Grade: A+</td></tr>';
+                    	$('#' + courseName.replace(" ", "_")).html(strTaskList);                }                
+            }
+        });
+	}
+
+	$(document).ready(function() {
+        getClassList();
+        getTaskList();
+    })	
+	
+</script>
+
+{% endblock %}

@@ -44,7 +44,7 @@ class Grader:
             time = graded_response.get(sup_id)
             graded_response[sup_id] = {
                 'time': time,
-                'expected_time': expected_time
+                'expected_time': expected_time,
                 'sufficient': time >= expected_time
             }
         task_response.graded_supplementary = graded_response

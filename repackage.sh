@@ -1,7 +1,8 @@
 #!/bin/bash
 
 if [ $# -ne 2 ]; then
-  echo "Usage: $0 <zipname> <username>"
+  echo "Usage:   $0 <zipname>   <username>"
+  echo "example: $0 build-02-05 aguibert"
   exit 1
 fi
 

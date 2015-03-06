@@ -50,7 +50,7 @@
                 var strTaskList="";
 
                 for(var i=0; i < taskList.length;i++){
-                		var courseName = taskList[i].course_name;
+                		var courseName = taskList[i].courseName;
                 		strTaskList = $('#' + courseName.replace(" ", "_")).html();
                 		strTaskList += '<tr><td width="50%">' + taskList[i].title + '</td>';
                     	strTaskList += '<td width="25%">Due: ' + taskList[i].due_date + '</td>';

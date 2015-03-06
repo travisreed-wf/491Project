@@ -43,4 +43,4 @@ with app.test_request_context():
         models.db.create_all()
 
 if __name__ == "__main__":
-    app.run(use_reloader=RELOADER_BOOL, host=app.config['SERVER_NAME'])
+    app.run(use_reloader=RELOADER_BOOL, host=app.config['SANDBOX_HOST'])

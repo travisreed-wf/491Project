@@ -13,4 +13,7 @@ echo "Transferrring $1.zip to nirwebportal. . ."
 
 scp ./$1.zip $2@nirwebportal.vrac.iastate.edu:/home/nirwebportal/archives
 
+echo "Removing local build zip."
+rm $1.zip
+
 ssh $2@nirwebportal.vrac.iastate.edu

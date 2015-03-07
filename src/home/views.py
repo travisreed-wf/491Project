@@ -31,7 +31,10 @@ class ClassListView(MethodView):
 class TaskListView(MethodView):
     def get(self):
         tasks = {'current':[], 'complete':[]}
-        userResponseIDs = [tr.task_id for tr in current_user.task_responses]
+        try:
+            userResponseIDs = [tr.task_id for tr in current_user.task_responses]
+        except:
+            userResponseIDs = []
         for c in current_user.courses:
             for t in c.tasks:
                 if(t.id in userResponseIDs):

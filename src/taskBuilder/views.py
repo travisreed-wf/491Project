@@ -130,11 +130,11 @@ class SupplementaryView(MethodView):
     def get(self):
         return render_template("elements/supplementary.html")
 
-class QuestionContentView(MethodView):
+class TextContentView(MethodView):
     decorators = [login_required, auth.permissions_author]
 
     def get(self):
-        return render_template("elements/questionContent.html")
+        return render_template("elements/textContent.html")
 
 class CoursesTeachingView(MethodView):
 

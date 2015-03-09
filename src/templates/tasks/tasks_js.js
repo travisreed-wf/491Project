@@ -236,9 +236,11 @@
 
   function submitClicked(element) {
       var numSupplementaryMinTimes = parseInt(nextSupplementaryMinTimeID.split("minTime")[1]);
+      console.log(numSupplementaryMinTimes);
       for(i = 0 ; i < numSupplementaryMinTimes; i++){
-        supplementaryInformationMinTimes[i] = $("#minTime" +i).val();
+        supplementaryInformationMinTimes["supplementary" + i] = parseInt($("#minTime" +i).val());
       }
+      console.log(supplementaryInformationMinTimes);
       $('.EDIT_ONLY').remove();
       $('.PREVIEW_ONLY').remove();
       var questions = [];

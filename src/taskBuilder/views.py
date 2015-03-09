@@ -79,6 +79,8 @@ class TaskBuilderView(MethodView):
         task.course = models.Course.query.filter_by(id=courseID).first()
         task.duedate = datetime.datetime.fromtimestamp(taskDueDate/1000.0)
         task.supplementary = json.dumps(data.get('supplementary'))
+        print data.get('supplementary')
+        print data.keys()
         models.db.session.add(task)
         models.db.session.commit()
         return ""

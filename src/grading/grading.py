@@ -28,7 +28,7 @@ class Grader:
                     total_responses += 1
                     correct_responses += 1 if correct else 0
         task_response.graded_response = json.dumps(response)
-        task_response.correctness_grade = int(float(100 * correct_responses) / total_responses)
+        task_response.correctness_grade = int(float(100 * correct_responses) / total_responses) if total_responses else 0
         models.db.session.commit()
         return response['automatic_questions']
 
@@ -37,15 +37,20 @@ class Grader:
         if task_response.graded_supplementary:
             return
         response_supplementary = json.loads(task_response.supplementary) if task_response.supplementary else {}
-        graded_response = {}
+        graded_response = []
         task = task_response.task
         task_supplementary = json.loads(task.supplementary) if task.supplementary else {}
-        for sup_id, expected_time in task_supplementary.items():
-            time = graded_response.get(sup_id)
-            graded_response[sup_id] = {
+        sufficient_materials = 0
+        for sup_id, sup_data in task_supplementary.items():
+            time = response_supplementary.get(sup_id)
+            graded_response.append({
                 'time': time,
-                'expected_time': expected_time,
-                'sufficient': time >= expected_time
-            }
+                'expected_time': sup_data.get('time'),
+                'sufficient': time >= sup_data.get('time'),
+                'id': sup_id,
+                'title': sup_data.get('title')
+            })
+            sufficient_materials += 1 if time >= sup_data.get('time') else 0
+        task_response.cognitive_grade = int(float(100 * sufficient_materials) / len(graded_response))
         task_response.graded_supplementary = json.dumps(graded_response)
         models.db.session.commit()

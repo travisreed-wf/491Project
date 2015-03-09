@@ -127,6 +127,7 @@ class TaskResponse(db.Model):
     graded_response = db.Column(db.Text)
     datetime = db.Column(db.DateTime())
     correctness_grade = db.Column(db.Float)
+    cognitive_grade = db.Column(db.Float)
     supplementary = db.Column(db.Text)
     graded_supplementary = db.Column(db.Text)
     start_time = db.Column(db.DateTime())

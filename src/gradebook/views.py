@@ -27,12 +27,11 @@ class GradebookScreenView(MethodView):
                     models.TaskResponse.datetime.desc()).first()
                 t = {
                     'task': task,
-                    'responses': response
+                    'response': response
                 }
                 tasks.append(t)
             d['tasks'] = tasks
             data.append(d)
-        print data
         return render_template('studentGradebook.html',
                                courses=current_user.courses,
                                tasks=data)

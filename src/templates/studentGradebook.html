@@ -14,17 +14,18 @@
                     <strong>{{d['course'].name}}</strong>
                 </div>
                 <div class="panel-body">
-                    <table width="90%">
+                    <table width="100%">
                         <tr>
                             <th width="50%">Title</th>
                             <th width="25%">Due Date</th>
                             <th width="25%">Grade</th>
                         </tr>
+                        <tr></tr>
                         {% for task in d['tasks'] %}
                             <tr>
-                                <td width="50%">{{ task['task'].title }}</td>
+                                <td width="50%"><a href="{{url_for('response', responseID=task['response'].id)}}">{{ task['task'].title }}</a></td>
                                 <td width="25%">{{ task['task'].duedate }}</td>
-                                <td with="25%">A+</td>
+                                <td with="25%">{{ task['response'].correctness_grade}}</td>
                             </tr>
                         {% endfor %}
                     </table>

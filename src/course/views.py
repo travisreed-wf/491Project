@@ -61,7 +61,7 @@ class RegisterForCourseView(MethodView):
     decorators = [login_required, auth.permissions_student]
 
     def get(self):
-        return render_template("RegisterForCourse.html")
+        return render_template("registerForCourse.html")
 
     def post(self):
         return "TEST"

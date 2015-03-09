@@ -10,6 +10,7 @@ from flask_login import current_user
 import models
 import re
 import json
+import datetime as DT
 
 
 class HomeScreenView(MethodView):
@@ -32,11 +33,12 @@ class TaskListView(MethodView):
     def get(self):
         tasks = {'current':[], 'complete':[]}
         userResponseIDs = [tr.task_id for tr in current_user.task_responses]
+        week_ago = DT.date.today() - DT.timedelta(days=7)
         for c in current_user.courses:
             for t in c.tasks:
-                if(t.id in userResponseIDs):
+                if(t.id in userResponseIDs and t.duedate.date() > week_ago):
                     tasks['complete'].append(t.serialize)
-                else:
+                elif(t.duedate.date() > week_ago):
                     tasks['current'].append(t.serialize)
         tasks['complete'] = sorted(tasks['complete'], key=lambda k: k['duedate'])
         tasks['current'] = sorted(tasks['current'], key=lambda k: k['duedate'])

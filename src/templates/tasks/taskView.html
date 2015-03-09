@@ -50,13 +50,14 @@
         manualQuestions.push(data);
       });
       var endTaskTime = new Date();
+      console.log(endTaskTime);
       var totalTaskTime = endTaskTime.getTime() - startTaskTime.getTime();
       var data = {};
       data['automatic_questions'] = automaticQuestions;
       data['supplementary'] = supplementaryInformationTimes;
       data['manual_questions'] = manualQuestions;
-      data['startTaskTime'] = startTaskTime;
-      data['endTaskTime'] = endTaskTime;
+      data['startTaskTime'] = getFormattedDatetime(startTaskTime);
+      data['endTaskTime'] = getFormattedDatetime(endTaskTime);
       data['totalTaskTime'] = totalTaskTime/1000;
       $.ajax({
         url: window.location.pathname,
@@ -73,6 +74,14 @@
     });
     var startTaskTime = new Date();
   });
+  function getFormattedDatetime(time) {
+    var month = ('0' + (time.getMonth() + 1)).slice(-2)
+        date = ('0' + time.getDate()).slice(-2),
+        year = time.getFullYear();
+    return month + '/' + date + '/' + year + ' ' + time.toLocaleTimeString();
+
+  };
+ 
 </script>
 
 {% endblock %}

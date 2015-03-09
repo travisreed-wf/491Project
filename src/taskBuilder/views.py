@@ -97,11 +97,19 @@ class TaskView(MethodView):
         return render_template("tasks/taskView.html", content=task.content.strip().replace('\n', ''))
 
     def post(self, taskID):
-        print flask.request.get_json()
-        task_response = models.TaskResponse(json.dumps(flask.request.get_json()))
+        data = flask.request.get_json()
+        task_response = models.TaskResponse(json.dumps(data))
         task_response.datetime = datetime.datetime.now()
         task_response.task_id = int(taskID)
         task_response.student_id = current_user.id
+        task_response.supplementary = json.dumps(data.get('supplementary'))
+        start_time = data.get('startTaskTime')
+        end_time = data.get('endTaskTime')
+        date_format = "%m/%d/%Y %I:%M:%S %p"
+        formatted_s_time = datetime.datetime.strptime(start_time, date_format)
+        formatted_e_time = datetime.datetime.strptime(end_time, date_format)
+        task_response.start_time = formatted_s_time
+        task_response.end_time = formatted_e_time
         models.db.session.add(task_response)
         models.db.session.commit()
         return "success"

@@ -43,6 +43,7 @@ class CourseMasterView(MethodView):
         else:
             return render_template("home.html")
 
+
 class CourseTaskListView(MethodView):
     def get(self, courseID):
         tasks = {'current':[], 'complete':[]}
@@ -57,6 +58,7 @@ class CourseTaskListView(MethodView):
         tasks['current'] = sorted(tasks['current'], key=lambda k: k['duedate'])
         return flask.json.dumps(tasks)
 
+
 class RegisterForCourseView(MethodView):
     decorators = [login_required, auth.permissions_student]
 
@@ -66,21 +68,23 @@ class RegisterForCourseView(MethodView):
     def post(self):
         return "TEST"
 
+
 class searchCourseName(MethodView):
     def get(self):
-        return 
+        return
 
     def post(self):
         data = flask.request.get_json()
         courseName = data.get('courseName')
-        if courseName:    
+        if courseName:
             courses = models.Course.query.filter(models.Course.name.contains(courseName)).all()
-        else: 
-            courses =[]
-        course_info = [course.serialize for course in courses] 
+        else:
+            courses = []
+        course_info = [course.serialize for course in courses]
         print courseName
         print course_info
         return json.dumps(course_info)
+
 
 class searchProfessorName(MethodView):
     def get(self):

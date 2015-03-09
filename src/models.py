@@ -129,6 +129,8 @@ class TaskResponse(db.Model):
     correctness_grade = db.Column(db.Float)
     supplementary = db.Column(db.Text)
     graded_supplementary = db.Column(db.Text)
+    start_time = db.Column(db.DateTime())
+    end_time = db.Column(db.DateTime())
 
     def __init__(self, response):
         self.response = response

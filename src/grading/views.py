@@ -23,6 +23,7 @@ class ResponseView(MethodView):
         formatted_time = task_response.datetime.strftime("%a %b %d %H:%M:%S")
         response = json.loads(task_response.graded_response)
         supplementary = json.loads(task_response.graded_supplementary)
+        print json.loads(task_response.response).get('endTaskTime')
         return render_template("grading/response.html", response=response,
                                student=task_response.user, task=task_response.task,
                                task_response=task_response, time=formatted_time,

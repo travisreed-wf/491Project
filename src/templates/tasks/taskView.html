@@ -49,10 +49,15 @@
         data['questionContent'] = question.find(".question-content").text();
         manualQuestions.push(data);
       });
+      var endTaskTime = new Date();
+      var totalTaskTime = endTaskTime.getTime() - startTaskTime.getTime();
       var data = {};
       data['automatic_questions'] = automaticQuestions;
       data['supplementary'] = supplementaryInformationTimes;
       data['manual_questions'] = manualQuestions;
+      data['startTaskTime'] = startTastkTime;
+      data['endTaskTime'] = endTaskTime;
+      data['totalTaskTime'] = totalTaskTime/1000;
       $.ajax({
         url: window.location.pathname,
         type: 'POST',
@@ -66,7 +71,7 @@
         }
       });
     });
-
+    var startTaskTime = new Date();
   });
 </script>
 

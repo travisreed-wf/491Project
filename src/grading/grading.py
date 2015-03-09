@@ -21,7 +21,7 @@ class Grader:
             for task_question in task_questions:
                 if task_question['questionID'] == question['questionID']:
                     correctOption = task_question['correctOption']
-                    correct = (question['selectedOption'] == correctOption)
+                    correct = (question.get('selectedOption') == correctOption)
                     question['correctOption'] = correctOption
                     question['correct'] = correct
                     question['correctOptionText'] = task_question['correctOptionText']

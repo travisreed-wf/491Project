@@ -9,27 +9,32 @@
 <div class= "row">
     <div class="col-md-8 col-md-offset-2">
         {% for d in tasks %}
-            <div id="courses" class="panel panel-default">
-                <div id="class-{{ d['course'].id }}" class="panel-heading" style="text-align:center">
-                    <strong>{{d['course'].name}}</strong>
-                </div>
-                <div class="panel-body">
+            <div id="class-{{ d['course'].id }}" class="list-group">
+                <li class="list-group-item active" align="center"><strong>{{d['course'].name}}</strong></li>
+                <a href="" class="list-group-item">
                     <table width="100%">
-                        <tr>
-                            <th width="50%">Title</th>
-                            <th width="25%">Due Date</th>
-                            <th width="25%">Grade</th>
-                        </tr>
-                        <tr></tr>
-                        {% for task in d['tasks'] %}
                             <tr>
-                                <td width="50%"><a href="{{url_for('response', responseID=task['response'].id)}}">{{ task['task'].title }}</a></td>
-                                <td width="25%">{{ task['task'].duedate }}</td>
-                                <td with="25%">{{ task['response'].correctness_grade}}</td>
+                                <th width="50%">Title</th>
+                                <th width="25%">Due Date</th>
+                                <th width="25%">Grade</th>
                             </tr>
-                        {% endfor %}
                     </table>
-                </div>
+                </a>
+                {% for task in d['tasks'] %}
+                    {% if task['response'].id %}
+                        <a href="{{url_for('response', responseID=task['response'].id)}}" class="list-group-item">
+                    {% else %}
+                        <a class="list-group-item">
+                    {% endif %}
+                        <table width="100%">
+                            <tr>
+                                <td width="50%">{{ task['task'].title }}</td>
+                                <td width="25%">{{ task['task'].duedate }}</td>
+                                <td width="25%">{{ task['response'].correctness_grade}}</td>
+                            </tr>
+                        </table>
+                    </a>
+                {% endfor %}
             </div>
         {% endfor %}
     </div>

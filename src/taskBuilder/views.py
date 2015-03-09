@@ -42,12 +42,16 @@ class UploadView(MethodView):
     def get(self):
         return render_template('upload.html')
 
-    def post(self):
+    def post(self, userid):
         f = flask.request.files.get('file_path')
         print f
         print f.filename
+        print userid
+        uploadDir = "src/static/uploads/" + userid
+        if not os.path.exists(uploadDir):
+            os.makedirs(uploadDir)
         if f and allowed_file(f.filename):
-            f.save(os.path.join("src/static/uploads", f.filename))
+            f.save(os.path.join(uploadDir, f.filename))
             return "Success"
         return "Failed"
 

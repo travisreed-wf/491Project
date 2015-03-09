@@ -41,15 +41,16 @@ class Grader:
         task = task_response.task
         task_supplementary = json.loads(task.supplementary) if task.supplementary else {}
         sufficient_materials = 0
-        for sup_id, expected_time in task_supplementary.items():
+        for sup_id, sup_data in task_supplementary.items():
             time = response_supplementary.get(sup_id)
             graded_response.append({
                 'time': time,
-                'expected_time': expected_time,
-                'sufficient': time >= expected_time,
-                'id': sup_id
+                'expected_time': sup_data.get('time'),
+                'sufficient': time >= sup_data.get('time'),
+                'id': sup_id,
+                'title': sup_data.get('title')
             })
-            sufficient_materials += 1 if time >= expected_time else 0
+            sufficient_materials += 1 if time >= sup_data.get('time') else 0
         task_response.cognitive_grade = int(float(100 * sufficient_materials) / len(graded_response))
         task_response.graded_supplementary = json.dumps(graded_response)
         models.db.session.commit()

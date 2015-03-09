@@ -45,9 +45,10 @@
       <h4>Supplementary Material</h4>
       {% for supp in supplementary %}
         <div class="panel {% if supp['sufficient'] %}panel-success{% else %}panel-danger{% endif %}">
-          <div class="panel-heading">{{supp['id']}}</div>
+          <div class="panel-heading">{{supp['title']}}</div>
           <div class="panel-body">
-            Supplementary Title: {{supp['id']}}<br>
+            ID: {{supp['id']}}<br>
+            Title: {{supp['title']}}<br>
             Time: {{supp['time']}}<br>
             Expected Time: {{supp['expected_time']}}
           </div>

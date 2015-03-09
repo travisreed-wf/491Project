@@ -238,7 +238,11 @@
       var numSupplementaryMinTimes = parseInt(nextSupplementaryMinTimeID.split("minTime")[1]);
       console.log(numSupplementaryMinTimes);
       for(i = 0 ; i < numSupplementaryMinTimes; i++){
-        supplementaryInformationMinTimes["supplementary" + i] = parseInt($("#minTime" +i).val());
+        var d = {};
+        d['id'] = "supplementary" + i;
+        d['time'] = parseInt($("#minTime" +i).val());
+        d['title'] = $('#minTime' + i).parent().find('#title').val()
+        supplementaryInformationMinTimes["supplementary" + i] = d;
       }
       console.log(supplementaryInformationMinTimes);
       $('.EDIT_ONLY').remove();

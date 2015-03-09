@@ -26,6 +26,7 @@ def login(email, password):
         flask.session['email'] = user.email
         flask.session['name'] = user.name
         flask.session['permissions'] = user.permissions
+        flask.session['userid'] = user.id
         login_user(user)
         return True
     return False

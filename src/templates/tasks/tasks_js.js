@@ -146,9 +146,10 @@
 
   function uploadImageFile(f) {
       var form_data = new FormData(f);
+      var uploadUrl = '/upload/{{ session.userid }}';
       $.ajax({
           type: 'POST',
-          url: '/upload',
+          url: uploadUrl,
           data: form_data,
           contentType: false,
           cache: false,
@@ -157,16 +158,17 @@
           success: function(data) {
             var src = $(f).find('input').val();
             var src = src.split("\\")[2]
-            src = "/static/uploads/" + src;
+            src = "/static/uploads/{{ session.userid }}/" + src;
             $(f).closest('div.wp-image').find('img').first().attr("src", src);
           },
       });
   };
   function uploadFile(f) {
       var form_data = new FormData(f);
+      var uploadUrl = '/upload/{{ session.userid }}';
       $.ajax({
           type: 'POST',
-          url: '/upload',
+          url: uploadUrl,
           data: form_data,
           contentType: false,
           cache: false,
@@ -175,7 +177,7 @@
           success: function(data) {
             var src = $(f).find('input.wp-file-src').val();
             var src = src.split("\\")[2];
-            src = "/static/uploads/" + src;
+            src = "/static/uploads/{{ session.userid }}/" + src;
             $(f).parent().parent().find('h3').first().attr("src", src);
           },
       });

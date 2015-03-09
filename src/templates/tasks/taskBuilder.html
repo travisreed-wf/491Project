@@ -9,16 +9,16 @@
 {% block body %}
 <div class="row">
   <!-- Sidebar -->
-  <div class="col-md-1 EDIT_ONLY" style="position:fixed">
+  <div class="col-md-1 EDIT_ONLY" style="position:fixed;overflow-y:auto;height:90%">
     {% for element in elements %}
-      <div class="element" style="border:1px;border-style:outset;border-radius:5px" data-name="{{ element.name }}" data-filepath="{{ element.filePath }}">
+      <div class="element" style="border:2px;border-style:outset;border-radius:5px;text-align:center" data-name="{{ element.name }}" data-filepath="{{ element.filePath }}">
         {% if element.image %}
-          <img src="{{ element.image }}" style="width:70px;height:70px">
+          <img src="{{ element.image }}" style="width:70px;height:70px;border-radius:10px">
         {% else %}
           <img src="../static/images/Manda-Pie-Back-To-School-Books.ico" alt="Mountain View" style="width:70px;height:70px">
         {% endif %}
         <br>
-        &nbsp;&nbsp;{{ element.name }}
+        {{ element.name }}
       </div>
       <br>
     {% endfor %}
@@ -105,10 +105,11 @@
     getCoursesTeaching();
 
     $("div.element").draggable({
-      scroll: true,
+      scroll: false,
       revert: true,
       distance: 25,
-      stack: "div.element"
+      appendTo: 'body',
+      helper: 'clone'
     });
 
     $('#preview').click(function(){

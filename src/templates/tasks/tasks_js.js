@@ -236,7 +236,6 @@
 
   function submitClicked(element) {
       var numSupplementaryMinTimes = parseInt(nextSupplementaryMinTimeID.split("minTime")[1]);
-      console.log(numSupplementaryMinTimes);
       for(i = 0 ; i < numSupplementaryMinTimes; i++){
         var d = {};
         d['id'] = "supplementary" + i;
@@ -244,7 +243,6 @@
         d['title'] = $('#minTime' + i).parent().find('#title').val()
         supplementaryInformationMinTimes["supplementary" + i] = d;
       }
-      console.log(supplementaryInformationMinTimes);
       $('.EDIT_ONLY').remove();
       $('.PREVIEW_ONLY').remove();
       var questions = [];
@@ -263,7 +261,6 @@
       var data = {};
       data['html'] = $('#questionList').html();
       data['questions'] = questions;
-      console.log($(element).attr('id'));
       data['supplementary'] = supplementaryInformationMinTimes;
       data['course_id'] = $(element).attr('id')
       data['taskTitle'] = $('#taskTitle').val()

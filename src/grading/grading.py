@@ -51,6 +51,6 @@ class Grader:
                 'title': sup_data.get('title')
             })
             sufficient_materials += 1 if time >= sup_data.get('time') else 0
-        task_response.cognitive_grade = int(float(100 * sufficient_materials) / len(graded_response))
+        task_response.cognitive_grade = int(float(100 * sufficient_materials) / len(graded_response)) if graded_response else 0
         task_response.graded_supplementary = json.dumps(graded_response)
         models.db.session.commit()

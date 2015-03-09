@@ -9,7 +9,9 @@
 <div class= "row">
 	<div class="col-md-10 col-md-offset-2" style="width:800px;">
 		<div id="courses" class="panel panel-default">
-			
+            { % for d in tasks %}
+                <div id="class-{{d['course'].id}}"></div>
+            { % endfor %}
 		</div>
 	</div>
 </div>

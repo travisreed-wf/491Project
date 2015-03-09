@@ -7,11 +7,37 @@
 {% endblock %}
 {% block body %}
 <div class= "row">
-	<div class="col-md-10 col-md-offset-2" style="width:800px;">
-		<div id="courses" class="panel panel-default">
-			
-		</div>
-	</div>
+    <div class="col-md-8 col-md-offset-2">
+        {% for d in tasks %}
+            <div id="class-{{ d['course'].id }}" class="list-group">
+                <li class="list-group-item active" align="center"><strong>{{d['course'].name}}</strong></li>
+                <a href="" class="list-group-item">
+                    <table width="100%">
+                            <tr>
+                                <th width="50%">Title</th>
+                                <th width="25%">Due Date</th>
+                                <th width="25%">Grade</th>
+                            </tr>
+                    </table>
+                </a>
+                {% for task in d['tasks'] %}
+                    {% if task['response'].id %}
+                        <a href="{{url_for('response', responseID=task['response'].id)}}" class="list-group-item">
+                    {% else %}
+                        <a class="list-group-item">
+                    {% endif %}
+                        <table width="100%">
+                            <tr>
+                                <td width="50%">{{ task['task'].title }}</td>
+                                <td width="25%">{{ task['task'].duedate }}</td>
+                                <td width="25%">{{ task['response'].correctness_grade}}</td>
+                            </tr>
+                        </table>
+                    </a>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
 </div>
 
 {% endblock %}
@@ -20,50 +46,6 @@
 {{ super() }}
 
 <script type="text/javascript">
-	
-	function getClassList(){
-		$.ajax({
-            url         :'{{ url_for("class_list")}}',
-			type	: "GET",
-			success	: function(result){
-				var classList = $.parseJSON(result);
-				var strClassList = "";
-				
-				for(var i = 0;i < classList.length;i++){
-					strClassList += '<div id="class' + i + '"';
-					strClassList += ' class="panel-heading" style="text-align:center"><strong>';
-					strClassList += classList[i].name;
-					strClassList += '</strong></div><table id="' + classList[i].name.replace(" ", "_") + '"';
-					strClassList += ' class="table"></table>';
-				}
-				$('#courses').html(strClassList);
-			}
-		});
-	}
-
-	function getTaskList(){
-		$.ajax({
-            url         :'{{ url_for("task_list")}}',
-            type        :"GET",
-            success     :function(result) {
-                var taskList = $.parseJSON(result);
-                var strTaskList="";
-
-                for(var i=0; i < taskList.length;i++){
-                		var courseName = taskList[i].course_name;
-                		strTaskList = $('#' + courseName.replace(" ", "_")).html();
-                		strTaskList += '<tr><td>' + taskList[i].title + '</td>';
-                    	strTaskList += '<td>Due: ' + taskList[i].due_date + '</td>';
-                    	strTaskList += '<td>Grade: A+</td></tr>';
-                    	$('#' + courseName.replace(" ", "_")).html(strTaskList);                }                
-            }
-        });
-	}
-
-	$(document).ready(function() {
-        getClassList();
-        getTaskList();
-    })	
 	
 </script>
 

@@ -1,0 +1,10 @@
+### March 8th
+- database:
+alter table task_response add column start_time datetime;
+alter table task_response add column end_time datetime;
+alter table task_response add column cognitive_grade float;
+
+
+### March 7th 
+- settingslocal.py:
+SANDBOX_HOST = 'localhost'

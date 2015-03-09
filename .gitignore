@@ -1,6 +1,6 @@
 *.py[cod]
 settingslocal.py
-src/static/uploads/*
+src/static/uploads
 build-*.zip
 
 # Virtual environment

@@ -1,5 +1,6 @@
 <script type="text/javascript">  
   var supplementaryInformationTimes = {}; 
+  var supplementaryInformationMinTimes = {};
   function answerKeyCompleted(){
     var ret = true;
     $('.automatic-grading').each(function(){
@@ -125,6 +126,9 @@
     var html = $(appendID).html();
     html = html.replace("nextID", nextSupplementaryID);
     nextSupplementaryID = "supplementary" + (parseInt(nextSupplementaryID.split("supplementary")[1]) + 1);
+    html = html.replace("nextMinTimeID", nextSupplementaryMinTimeID);
+    nextSupplementaryMinTimeID = "minTime" + (parseInt(nextSupplementaryMinTimeID.split("minTime")[1]) + 1);
+
     toAppend.append(html);
   }
   function addVideo(ctx){
@@ -231,6 +235,10 @@
   }
 
   function submitClicked(element) {
+      var numSupplementaryMinTimes = parseInt(nextSupplementaryMinTimeID.split("minTime")[1]);
+      for(i = 0 ; i < numSupplementaryMinTimes; i++){
+        supplementaryInformationMinTimes[i] = $("#minTime" +i).val();
+      }
       $('.EDIT_ONLY').remove();
       $('.PREVIEW_ONLY').remove();
       var questions = [];
@@ -250,7 +258,7 @@
       data['html'] = $('#questionList').html();
       data['questions'] = questions;
       console.log($(element).attr('id'));
-      data['supplementary'] = supplementaryInformationTimes;
+      data['supplementary'] = supplementaryInformationMinTimes;
       data['course_id'] = $(element).attr('id')
       data['taskTitle'] = $('#taskTitle').val()
 

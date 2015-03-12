@@ -56,7 +56,7 @@ class Course(db.Model):
     title = db.Column(db.String(255))
     securityCode = db.Column(db.String(6))
     teacher_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    tasks = db.relationship('Task', backref='course', lazy='dynamic')
+    tasks = db.relationship('Task', backref='course', lazy='joined')
 
     def __init__(self, name, title,securityCode = 123456):
         self.securityCode = securityCode
@@ -100,11 +100,13 @@ class Task(db.Model):
     content = db.Column(db.Text)
     questions = db.Column(db.Text)
     duedate = db.Column(db.DateTime())
-    task_responses = db.relationship('TaskResponse',backref='task',lazy='dynamic')
+    task_responses = db.relationship('TaskResponse', backref='task', lazy='dynamic')
     supplementary = db.Column(db.Text)
+    status = db.Column(db.String(20))
 
     def __init__(self, title):
         self.title = title
+        self.status = "created"
         return
 
     @property

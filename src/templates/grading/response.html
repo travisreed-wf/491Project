@@ -16,9 +16,12 @@
       Date of Response: <p class="text-muted">{{ time }}</p>
       Correctness Grade: <p class="text-muted">{{task_response.correctness_grade}}%</p>
       Cognitive Grade: <p class="text-muted">{{task_response.cognitive_grade}}%</p>
-
   </div>
+  {% if permissions > 1 %}
   <div class="col-md-5 vertical-line">
+  {% else %}
+  <div class="col-md-8 vertical-line">
+  {% endif %}
       <h4>Manual Grading Required</h4>
       {% for manual_question in response['manual_questions'] %}
         <div class="panel panel-warning">
@@ -41,6 +44,7 @@
         </div>
       {% endfor %}
   </div>
+  {% if permissions > 1 %}
   <div class="col-md-5 vertical-line">
       <h4>Supplementary Material</h4>
       {% for supp in supplementary %}
@@ -55,6 +59,7 @@
         </div>
       {% endfor %}<br>
   </div>
+  {% endif %}
 </div>
 {% endblock %}
 {% block js_bottom %}

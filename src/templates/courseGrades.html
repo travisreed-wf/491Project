@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block header_css %}
+<head>
+    <title>Personal Gradebook</title>
+    {{ super() }}
+</head>
+{% endblock %}
+{% block body %}
+<div class= "row">
+	<table id= "grades" class = "table table-bordered">
+	<tr>
+		<td>Student Name</td>
+		{% for d in data %}
+			<td>{{d.task.title}}</td>
+		{% endfor %}
+	</tr>
+	{% for d in data %}
+	<tr>
+		<td>{{d.user.name}}</td>
+		<td>{{d.response.correctness_grade}}</td>
+		<script type="text/javascript">
+			alert("{{d.response}}");
+		</script>
+	</tr>
+	{% endfor %}
+	</table>
+</div>
+
+{% endblock %}
+
+{% block js_bottom %}
+{{ super() }}
+
+<script type="text/javascript">
+
+	$(document).ready(function() {
+       
+    });
+	
+</script>
+
+{% endblock %}
+
+<!--
+
+-->

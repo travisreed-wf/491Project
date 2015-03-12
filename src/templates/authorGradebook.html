@@ -19,49 +19,26 @@
 
 <script type="text/javascript">
 	
-	function getClassList(){
-		$.ajax({
+	function getClassList() {
+        $.ajax({
             url         :'{{ url_for("class_list")}}',
-			type	: "GET",
-			success	: function(result){
-				var classList = $.parseJSON(result);
-				var strClassList = "";
-				
-				for(var i = 0;i < classList.length;i++){
-					strClassList +='<div id="courses" class="panel panel-default">';
-					strClassList += '<div id="class' + i + '"';
-					strClassList += ' class="panel-heading" style="text-align:center"><strong>';
-					strClassList += classList[i].name;
-					strClassList += '</strong></div><table id="' + classList[i].name.replace(" ", "_") + '"';
-					strClassList += ' class="table"></table></div>';
-				}
-				$('#coursePanels').html(strClassList);
-			}
-		});
-	}
-
-	function getTaskList(){
-		$.ajax({
-            url         :'{{ url_for("task_list")}}',
             type        :"GET",
             success     :function(result) {
-                var taskList = $.parseJSON(result);
-                var strTaskList="";
+                var classList = $.parseJSON(result);
+                var strClassList="";
 
-                for(var i=0; i < taskList.length;i++){
-                		var courseName = taskList[i].course_name;
-                		strTaskList = $('#' + courseName.replace(" ", "_")).html();
-                		strTaskList += '<tr><td>' + taskList[i].title + '</td>';
-                    	strTaskList += '<td>Due: ' + taskList[i].due_date + '</td>';
-                    	strTaskList += '<td>Grade: A+</td></tr>';
-                    	$('#' + courseName.replace(" ", "_")).html(strTaskList);                }                
+                for(var i=0; i < classList.length;i++){
+                    strClassList+="<a href='{{url_for('author_grades', courseID='')}}" + (parseInt(classList[i].id) + 1000) + "' class='list-group-item'>";
+                    strClassList+=classList[i].name;
+                    strClassList+="</a>";
+                }
+                $('#coursePanels').html(strClassList);
             }
         });
-	}
+    }
 
 	$(document).ready(function() {
         getClassList();
-        getTaskList();
     })	
 	
 </script>

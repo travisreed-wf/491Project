@@ -8,11 +8,24 @@
 {% block body %}
 <div class="row">
     <div class="col-md-10 col-md-offset-2" style="width:800px;">
-        <!-- <button id="testbtn" class="btn btn-sm btn-primary">TEST DB</button> -->
-        <h3>Courses </h3>
-        <div id="class-list" class="list-group">
-            
+        {% if courses_teaching %}
+        <h3>Courses Teaching</h3>
+        <div id="classes-teaching-list" class="list-group">
+            {% for course in courses_teaching %}
+                <a href="/course/view/{{1000 + course.id}}" class="list-group-item">{{course.name}}</a>
+            {% endfor %}
         </div>
+        {% endif %}
+
+        {% if courses_enrolled %}
+        <h3>Courses Enrolled</h3>
+        <div id="classes-teaching-list" class="list-group">
+            {% for course in courses_enrolled %}
+                <a href="/course/view/{{1000 + course.id}}" class="list-group-item">{{course.name}}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+
         <h3>Tasks </h3>
         <div id="task-list-current" class="list-group">
         </div>
@@ -24,24 +37,6 @@
 {% block js_bottom %}
 {{ super() }}
 <script>    
-    
-    function getClassList() {
-        $.ajax({
-            url         :'{{ url_for("class_list")}}',
-            type        :"GET",
-            success     :function(result) {
-                var classList = $.parseJSON(result);
-                var strClassList="";
-
-                for(var i=0; i < classList.length;i++){
-                    strClassList+="<a href='{{url_for('view_course', courseID='')}}" + (parseInt(classList[i].id) + 1000) + "' class='list-group-item'>";
-                    strClassList+=classList[i].name;
-                    strClassList+="</a>";
-                }
-                $('#class-list').html(strClassList);
-            }
-        });
-    }
 
     function getTaskList() {
         $.ajax({
@@ -99,7 +94,6 @@
     }
 
     $(document).ready(function() {
-        getClassList();
         getTaskList();
     })
 </script>

@@ -22,8 +22,7 @@ class CreateView(MethodView):
         name = flask.request.form.get('name')
         f = flask.request.files.get('students')
         title = flask.request.form.get('title')
-        course = models.Course(name,title)
-        current_user.courses.append(course)
+        course = models.Course(name, title)
         course.teacher_id = current_user.id
         models.db.session.commit()
         author = models.User.query.filter_by(id=course.teacher_id).first()

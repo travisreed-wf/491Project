@@ -6,7 +6,11 @@ if [ $# -ne 2 ]; then
   exit 1
 fi
 
-zip -r $1.zip ./src -x '*/settingslocal.py'
+zip -r $1.zip ./src -x \
+      '*/settingslocal.py' \
+      '*.pyc' \
+      'src/static/uploads/*' \
+      '*.DS_Store'
 
 echo "Note: If you're not on the ISU network, don't forget to VPN!"
 echo "Transferrring $1.zip to nirwebportal. . ."

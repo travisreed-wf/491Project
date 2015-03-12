@@ -22,9 +22,9 @@ class CreateView(MethodView):
         name = flask.request.form.get('name')
         f = flask.request.files.get('students')
         title = flask.request.form.get('title')
-        course = models.Course(name,title)
-        current_user.courses.append(course)
+        course = models.Course(name, title)
         course.teacher_id = current_user.id
+        models.db.session.add(course)
         models.db.session.commit()
         author = models.User.query.filter_by(id=course.teacher_id).first()
         if f:
@@ -60,7 +60,7 @@ class CourseTaskListView(MethodView):
 
 
 class RegisterForCourseView(MethodView):
-    decorators = [login_required, auth.permissions_student]
+    decorators = [login_required]
 
     def get(self):
         return render_template("registerForCourse.html")

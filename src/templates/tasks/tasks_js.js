@@ -162,7 +162,7 @@
             var src = $(f).find('input').val();
             var src = src.split("\\")[2]
             src = "/static/uploads/" + src;
-            $(f).closest('div.wp-image').find('img').first().attr("src", src);
+            $(f).closest('div.wp-image').find('img').attr("src", src);
           },
       });
   };

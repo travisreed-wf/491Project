@@ -14,7 +14,8 @@
       Student Email: <p class="text-muted">{{ student.email }}</p>
       Task Title: <p class="text-muted">{{ task.title }}</p>
       Date of Response: <p class="text-muted">{{ time }}</p>
-      <div id="chart_div" style="width: 400px; height: 120px;"></div>
+      Correctness Grade: <p class="text-muted">{{task_response.correctness_grade}}</p>
+      Cognitive Grade: <p class="text-muted">{{task_response.cognitive_grade}}</p>
 
   </div>
   <div class="col-md-5 vertical-line">
@@ -41,27 +42,18 @@
       {% endfor %}
   </div>
   <div class="col-md-5 vertical-line">
-      <h4>Manual Grading Required</h4>
-      {% for manual_question in response['manual_questions'] %}
-        <div class="panel panel-warning">
-          <div class="panel-heading">{{manual_question['questionID']}}</div>
+      <h4>Supplementary Material</h4>
+      {% for supp in supplementary %}
+        <div class="panel {% if supp['sufficient'] %}panel-success{% else %}panel-danger{% endif %}">
+          <div class="panel-heading">{{supp['title']}}</div>
           <div class="panel-body">
-            Question Content: {{manual_question['questionContent']}}<br>
-            Response: {{manual_question['response']}}
+            ID: {{supp['id']}}<br>
+            Title: {{supp['title']}}<br>
+            Time: {{supp['time']}}<br>
+            Expected Time: {{supp['expected_time']}}
           </div>
         </div>
       {% endfor %}<br>
-      <h4>Automatically Graded</h4>
-      {% for automatic_question in response['automatic_questions'] %}
-        <div class="panel {% if automatic_question['correct'] %}panel-success{% else %}panel-danger{% endif %}">
-          <div class="panel-heading">{{automatic_question['questionID']}}</div>
-          <div class="panel-body">
-            Question Content: {{automatic_question['questionContent']}}<br>
-            Correct Answer: {{automatic_question['correctOptionText']}}<br>
-            Response: {{automatic_question['selectedOptionText']}}<br>
-          </div>
-        </div>
-      {% endfor %}
   </div>
 </div>
 {% endblock %}
@@ -69,27 +61,6 @@
 {{ super() }}
 <script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1.1','packages':['gauge']}]}"></script>
 <script type="text/javascript">
-  google.setOnLoadCallback(drawChart);
-    function drawChart() {
-
-      var data = google.visualization.arrayToDataTable([
-        ['Label', 'Value'],
-        ['Correct', {{task_response.correctness_grade}}],
-        ['Supp', 70]
-      ]);
-
-      var options = {
-        width: 400, height: 120,
-        redFrom: 0, redTo: 70,
-        yellowFrom:70, yellowTo: 83,
-        greenFrom:83, greenTo:100,
-        minorTicks: 5
-      };
-
-      var chart = new google.visualization.Gauge(document.getElementById('chart_div'));
-
-      chart.draw(data, options);
-    }
 
   $(document).ready(function() {});
 </script>

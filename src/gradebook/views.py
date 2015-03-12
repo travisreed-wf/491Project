@@ -10,16 +10,31 @@ from flask_login import current_user
 import models
 
 
-class gradebookScreenView(MethodView):
+class GradebookScreenView(MethodView):
     decorators = [login_required]
 
     def get(self):
-        if(current_user.permissions == 1):
-            return render_template('studentGradebook.html')
-
-        else:
-            return render_template('authorGradebook.html')
-
+        data = []
+        for c in current_user.courses:
+            tasks = []
+            d = {
+                'course': c,
+            }
+            for task in c.tasks:
+                response = models.TaskResponse.query.filter(
+                    models.TaskResponse.student_id==current_user.id,
+                    models.TaskResponse.task_id==task.id).order_by(
+                    models.TaskResponse.datetime.desc()).first()
+                t = {
+                    'task': task,
+                    'response': response
+                }
+                tasks.append(t)
+            d['tasks'] = tasks
+            data.append(d)
+        return render_template('studentGradebook.html',
+                               courses=current_user.courses,
+                               tasks=data)
 
 class courseGradeView(MethodView):
 
@@ -42,7 +57,3 @@ class courseGradeView(MethodView):
             return render_template("courseGrades.html", data = data)
         else:
             return render_template("home.html")
-
-
-        
-

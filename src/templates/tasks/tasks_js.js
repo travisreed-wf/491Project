@@ -1,5 +1,6 @@
-<script type="text/javascript">
-
+<script type="text/javascript">  
+  var supplementaryInformationTimes = {}; 
+  var supplementaryInformationMinTimes = {};
   function answerKeyCompleted(){
     var ret = true;
     $('.automatic-grading').each(function(){
@@ -16,7 +17,6 @@
       $("#key_alert").hide();
     }
   }
-
   function createElement(elementWell, elementToCreate){
       $('#elementWell').css("height","100px");
       $('#elementWell').html("<br><br>Add more elements here.");
@@ -55,7 +55,19 @@
     var src = getVideoURL($(changeEvent).val());
     $(changeEvent).parent().find('.wp-video-panel').attr("src", src)
   }
-
+  function modalTiming(event){
+    var endDate = new Date();
+    var endTime = endDate.getTime();
+    var duration = endTime - event.data.startTime;
+    $('.modal').data("supplementaryDuration",duration/1000);
+    if(supplementaryInformationTimes[event.data.modalID]){
+          supplementaryInformationTimes[event.data.modalID] = supplementaryInformationTimes[event.data.modalID] + duration/1000;
+    }else{
+          supplementaryInformationTimes[event.data.modalID] = duration/1000;
+    }
+    $('.modal').off('hide.bs.modal');       
+    
+  }
   function showModal(idToShow){
     if (answerKeyCompleted() == true){
       $("#"+idToShow).find('.modal').modal('toggle');
@@ -67,33 +79,57 @@
   function clickVideo(clkevent){
     var src = $(clkevent).parent().find('.wp-video-panel').attr('src');
     $(clkevent).parent().find('iframe').attr('src', src);
-    $(clkevent).parent().find('.modal').modal('toggle');
+    var modal = $(clkevent).parent().find('.modal');
+    modal.modal('toggle');
+    var startDate = new Date();
+    $('.modal').data("supplementaryDuration",startTime);
     $('.modal').on('hidden.bs.modal', function () {
       $('iframe').attr('src', $('iframe').attr('src'));
-    });
+    }); 
+    var modalID = $(modal).attr('id');
+    var startTime = startDate.getTime();
+    $('.modal').on('hide.bs.modal', {startTime: startTime, modalID: modalID}, modalTiming);
   }
   function clickImage(clkevent){
     console.log($(clkevent).parent().find('img').attr('src'));
     var src = $(clkevent).parent().find('img').attr('src');
     $(clkevent).parent().find('iframe').attr('src', src);
-    $(clkevent).parent().find('.modal').modal('toggle');
+    var modal = $(clkevent).parent().find('.modal');
+    modal.modal('toggle');    
+    var startDate = new Date();
     $('.modal').on('hidden.bs.modal', function () {
       $('iframe').attr('src', $('iframe').attr('src'));
     });
+    var modalID = $(modal).attr('id');
+    var startTime = startDate.getTime();
+    $('.modal').on('hide.bs.modal', {startTime: startTime, modalID: modalID}, modalTiming);
+
   }
   function clickFile(clkevent){
     var src = $(clkevent).parent().find('.wp-file-title-label').attr('src');
     console.log(src);
     $(clkevent).parent().find('iframe').attr('src', src);
-    $(clkevent).parent().find('.modal').modal('toggle');
+    var modal = $(clkevent).parent().find('.modal');
+    modal.modal('toggle');    
+    var startDate = new Date();    
     $('.modal').on('hidden.bs.modal', function () {
       $('iframe').attr('src', $('iframe').attr('src'));
     });
+    var modalID = $(modal).attr('id');
+    var startTime = startDate.getTime();
+    $('.modal').on('hide.bs.modal', {startTime: startTime, modalID: modalID}, modalTiming);
+
   }
 
   function addSuppElement(ctx, appendID){
     var toAppend = $(ctx).closest('.panel-body').find('.supplementary-target');
-    toAppend.append($(appendID).html());
+    var html = $(appendID).html();
+    html = html.replace("nextID", nextSupplementaryID);
+    nextSupplementaryID = "supplementary" + (parseInt(nextSupplementaryID.split("supplementary")[1]) + 1);
+    html = html.replace("nextMinTimeID", nextSupplementaryMinTimeID);
+    nextSupplementaryMinTimeID = "minTime" + (parseInt(nextSupplementaryMinTimeID.split("minTime")[1]) + 1);
+
+    toAppend.append(html);
   }
   function addVideo(ctx){
     addSuppElement(ctx, '#wp-video-template')
@@ -114,9 +150,10 @@
 
   function uploadImageFile(f) {
       var form_data = new FormData(f);
+      var uploadUrl = '/upload/{{ session.userid }}';
       $.ajax({
           type: 'POST',
-          url: '/upload',
+          url: uploadUrl,
           data: form_data,
           contentType: false,
           cache: false,
@@ -125,16 +162,17 @@
           success: function(data) {
             var src = $(f).find('input').val();
             var src = src.split("\\")[2]
-            src = "/static/uploads/" + src;
-            $(f).closest('div.wp-image').find('img').first().attr("src", src);
+            src = "/static/uploads/{{ session.userid }}/" + src;
+            $(f).closest('div.wp-image').find('img').attr("src", src);
           },
       });
   };
   function uploadFile(f) {
       var form_data = new FormData(f);
+      var uploadUrl = '/upload/{{ session.userid }}';
       $.ajax({
           type: 'POST',
-          url: '/upload',
+          url: uploadUrl,
           data: form_data,
           contentType: false,
           cache: false,
@@ -143,7 +181,7 @@
           success: function(data) {
             var src = $(f).find('input.wp-file-src').val();
             var src = src.split("\\")[2];
-            src = "/static/uploads/" + src;
+            src = "/static/uploads/{{ session.userid }}/" + src;
             $(f).parent().parent().find('h3').first().attr("src", src);
           },
       });
@@ -199,6 +237,14 @@
   }
 
   function submitClicked(element) {
+      var numSupplementaryMinTimes = parseInt(nextSupplementaryMinTimeID.split("minTime")[1]);
+      for(i = 0 ; i < numSupplementaryMinTimes; i++){
+        var d = {};
+        d['id'] = "supplementary" + i;
+        d['time'] = parseInt($("#minTime" +i).val());
+        d['title'] = $('#minTime' + i).parent().find('#title').val()
+        supplementaryInformationMinTimes["supplementary" + i] = d;
+      }
       $('.EDIT_ONLY').remove();
       $('.PREVIEW_ONLY').remove();
       var questions = [];
@@ -217,6 +263,7 @@
       var data = {};
       data['html'] = $('#questionList').html();
       data['questions'] = questions;
+      data['supplementary'] = supplementaryInformationMinTimes;
       data['course_id'] = $(element).attr('id')
       data['taskTitle'] = $('#taskTitle').val()
 
@@ -229,7 +276,6 @@
       var mins = parseInt(hoursMins[1].substring(0,2));
       var dueOn = new Date(date[2], parseInt(date[0])-1, date[1], hours, mins, 0, 0).getTime();
       data['taskDue'] = dueOn;
-
       $.ajax({
           url: '{{ url_for("taskBuilder") }}',
           type: 'POST',

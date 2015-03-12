@@ -42,12 +42,16 @@ class UploadView(MethodView):
     def get(self):
         return render_template('upload.html')
 
-    def post(self):
+    def post(self, userid):
         f = flask.request.files.get('file_path')
         print f
         print f.filename
+        print userid
+        uploadDir = "src/static/uploads/" + userid
+        if not os.path.exists(uploadDir):
+            os.makedirs(uploadDir)
         if f and allowed_file(f.filename):
-            f.save(os.path.join("src/static/uploads", f.filename))
+            f.save(os.path.join(uploadDir, f.filename))
             return "Success"
         return "Failed"
 
@@ -70,15 +74,15 @@ class TaskBuilderView(MethodView):
         pattern = r"<script.*?</script>"
         data = flask.request.get_json()
         content = data.get('html')
-        questions = data.get('questions')
         courseID = data.get('course_id')
         taskTitle = data.get('taskTitle')
-        taskDueDate = data.get('taskDue');
+        taskDueDate = data.get('taskDue')
         task.title = taskTitle
         task.content = re.sub(pattern, "", content, flags=re.DOTALL)
-        task.questions = json.dumps(questions)
+        task.questions = json.dumps(data.get('questions'))
         task.course = models.Course.query.filter_by(id=courseID).first()
         task.duedate = datetime.datetime.fromtimestamp(taskDueDate/1000.0)
+        task.supplementary = json.dumps(data.get('supplementary'))
         models.db.session.add(task)
         models.db.session.commit()
         return ""
@@ -93,11 +97,19 @@ class TaskView(MethodView):
         return render_template("tasks/taskView.html", content=task.content.strip().replace('\n', ''))
 
     def post(self, taskID):
-        print flask.request.get_json()
-        task_response = models.TaskResponse(json.dumps(flask.request.get_json()))
+        data = flask.request.get_json()
+        task_response = models.TaskResponse(json.dumps(data))
         task_response.datetime = datetime.datetime.now()
         task_response.task_id = int(taskID)
         task_response.student_id = current_user.id
+        task_response.supplementary = json.dumps(data.get('supplementary'))
+        start_time = data.get('startTaskTime')
+        end_time = data.get('endTaskTime')
+        date_format = "%m/%d/%Y %I:%M:%S %p"
+        formatted_s_time = datetime.datetime.strptime(start_time, date_format)
+        formatted_e_time = datetime.datetime.strptime(end_time, date_format)
+        task_response.start_time = formatted_s_time
+        task_response.end_time = formatted_e_time
         models.db.session.add(task_response)
         models.db.session.commit()
         return "success"
@@ -129,6 +141,12 @@ class SupplementaryView(MethodView):
 
     def get(self):
         return render_template("elements/supplementary.html")
+
+class TextContentView(MethodView):
+    decorators = [login_required, auth.permissions_author]
+
+    def get(self):
+        return render_template("elements/textContent.html")
 
 class CoursesTeachingView(MethodView):
 

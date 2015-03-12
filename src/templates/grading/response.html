@@ -14,8 +14,8 @@
       Student Email: <p class="text-muted">{{ student.email }}</p>
       Task Title: <p class="text-muted">{{ task.title }}</p>
       Date of Response: <p class="text-muted">{{ time }}</p>
-      Correctness Grade: <p class="text-muted">{{task_response.correctness_grade}}</p>
-      Cognitive Grade: <p class="text-muted">{{task_response.cognitive_grade}}</p>
+      Correctness Grade: <p class="text-muted">{{task_response.correctness_grade}}%</p>
+      Cognitive Grade: <p class="text-muted">{{task_response.cognitive_grade}}%</p>
 
   </div>
   <div class="col-md-5 vertical-line">
@@ -49,8 +49,8 @@
           <div class="panel-body">
             ID: {{supp['id']}}<br>
             Title: {{supp['title']}}<br>
-            Time: {{supp['time']}}<br>
-            Expected Time: {{supp['expected_time']}}
+            Time: {{ '%s seconds' % supp['time'] if supp['time'] else 'Did not view' }}<br>
+            Expected Time: {{supp['expected_time']}} seconds
           </div>
         </div>
       {% endfor %}<br>

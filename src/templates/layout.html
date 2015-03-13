@@ -76,6 +76,8 @@
                 success     :function(result) {
                     var classList = $.parseJSON(result);
                     var strClassList="<li style='display: none;' class='author'><a href='/course/create'>Create Course</a></li>";
+                    var registerforClass = "<li style='display: none;' class='student author'><a href='/course/registerForCourse'>Register For Course</a></li>"
+                    strClassList += registerforClass;
                     for(var i=0; i < classList.length;i++){
 
                         url = "{{url_for('view_course', courseID='')}}";
@@ -88,8 +90,6 @@
                       strClassList+="<li style='display: none;' class='student'><a>No Courses</a></li>";
                     }
                     $('#courses-dropdown-list').html(strClassList);
-                    var registerforClass = "<li style='display: none;' class='student author'><a href='/course/registerForCourse'>Register For Course</a></li>"
-                    $('#courses-dropdown-list').append(registerforClass);
                 }
             });
         }

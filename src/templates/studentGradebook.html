@@ -21,8 +21,10 @@
                     </table>
                 </a>
                 {% for task in d['tasks'] %}
-                    {% if task['response'].id %}
+                    {% if task['response'].id and task['task'].status == "grades published"%}
                         <a href="{{url_for('response', responseID=task['response'].id)}}" class="list-group-item">
+                    {% elif not task['response'].id %}
+                        <a href="{{url_for('task_view', taskID=task['task'].id)}}" class="list-group-item">
                     {% else %}
                         <a class="list-group-item">
                     {% endif %}
@@ -30,7 +32,7 @@
                             <tr>
                                 <td width="50%">{{ task['task'].title }}</td>
                                 <td width="25%">{{ task['task'].duedate }}</td>
-                                {% if task['response'].status == "graded" %}
+                                {% if task['response'].status == "grades published" %}
                                 <td width="25%">{{ task['response'].correctness_grade}}</td>
                                 {% elif task['response'].id %}
                                 <td width="25%"><span class="glyphicon glyphicon-time" aria-hidden="true" style="color:#f0ad4e;"></span></td>

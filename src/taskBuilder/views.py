@@ -88,13 +88,31 @@ class TaskBuilderView(MethodView):
         return ""
 
 
+class TaskTransitionView(MethodView):
+    decorators = [login_required]
+
+    def post(self):
+        data = flask.request.get_json()
+        task = models.Task.query.filter_by(id=data['task_id']).first()
+        task.status = data['status']
+        models.db.session.commit()
+        return "success"
+
+
 class TaskView(MethodView):
     decorators = [login_required]
 
     def get(self, taskID):
         task = models.Task.query.filter_by(id=int(taskID)).first()
-        content = "<div></div>"
-        return render_template("tasks/taskView.html", content=task.content.strip().replace('\n', ''))
+        course = models.Course.query.filter_by(id=task.course_id).first()
+        if current_user.id == course.teacher_id:
+            return render_template("tasks/taskAuthorView.html", task=task, course=course)
+        elif course.id not in [c.id for c in current_user.courses]:
+            return "You are not allowed to see this task", 401
+        elif task.status == "available":
+            return render_template("tasks/taskStudentView.html", content=task.content.strip().replace('\n', ''))
+        else:
+            return "This task is no longer available"
 
     def post(self, taskID):
         data = flask.request.get_json()

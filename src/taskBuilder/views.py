@@ -108,7 +108,7 @@ class TaskView(MethodView):
         if current_user.id == course.teacher_id:
             return render_template("tasks/taskAuthorView.html", task=task, course=course)
         elif course.id not in [c.id for c in current_user.courses]:
-            return "You are not allowed to see that task", 401
+            return "You are not allowed to see this task", 401
         elif task.status == "available":
             return render_template("tasks/taskStudentView.html", content=task.content.strip().replace('\n', ''))
         else:

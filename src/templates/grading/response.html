@@ -24,14 +24,20 @@
   {% endif %}
       <h4>Manual Grading Required</h4>
       {% for manual_question in response['manual_questions'] %}
+        {% if manual_question['correct'] == True %}
+        <div class="panel panel-success">
+        {% elif manual_question['correct'] == False %}
+        <div class="panel panel-danger">
+        {% else %}
         <div class="panel panel-warning">
+        {% endif %}
           <div class="panel-heading">{{manual_question['questionID']}}</div>
           <div class="panel-body">
             Question Content: {{manual_question['questionContent']}}<br>
             Response: {{manual_question['response']}}<br>
             Correct?: 
-            <button type="button" class="btn btn-success btn-xs"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
-            <button type="button" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+            <button type="button" class="btn btn-success btn-xs" onclick="markCorrect(true, this)"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+            <button type="button" class="btn btn-danger btn-xs" onclick="markCorrect(false, this)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
           </div>
         </div>
       {% endfor %}<br>
@@ -67,9 +73,33 @@
 {% endblock %}
 {% block js_bottom %}
 {{ super() }}
-<script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1.1','packages':['gauge']}]}"></script>
 <script type="text/javascript">
 
-  $(document).ready(function() {});
+  function markCorrect(correct, button){
+      var heading = $(button).parent().parent().find('.panel-heading');
+      var questionID = heading.text();
+      var data = {};
+      var responseID = document.URL.split("/").pop();
+      data['question_id'] = questionID;
+      data['correct'] = correct;
+      data['response_id'] = responseID;
+      $.ajax({
+            type: 'POST',
+            url: '{{ url_for("grade_manually")}}',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            success: function(data) {
+              heading.parent().toggleClass("panel-warning", false);
+              if (correct == true){
+                heading.parent().toggleClass("panel-success", true);
+                heading.parent().toggleClass("panel-danger", false);
+              }
+              else {
+                heading.parent().toggleClass("panel-danger", true);
+                heading.parent().toggleClass("panel-success", false);
+              }
+            }
+        });
+  }
 </script>
 {% endblock %}

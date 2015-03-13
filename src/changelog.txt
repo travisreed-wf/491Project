@@ -1,5 +1,6 @@
 ### March 12th
 alter table task add column status varchar(20);
+alter table task_response add column graded tinyint(1);
 
 
 ### March 8th

@@ -29,4 +29,19 @@ class ResponseView(MethodView):
                                task_response=task_response, time=formatted_time,
                                supplementary=supplementary,
                                permissions=current_user.permissions)
-        
+
+
+class ManualGradingView(MethodView):
+    decorators = [login_required]
+    # TODO come back and verify that the user has permission to do this
+
+    def post(self):
+        data = flask.request.get_json()
+        response = models.TaskResponse.query.filter_by(id=data['response_id']).first()
+        graded_response = json.loads(response.graded_response)
+        for question in graded_response['manual_questions']:
+            if question['questionID'] == data['question_id']:
+                question['correct'] = data['correct']
+        response.graded_response = json.dumps(graded_response)
+        models.db.session.commit()
+        return "success"

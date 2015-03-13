@@ -136,6 +136,7 @@ class TaskResponse(db.Model):
     cognitive_grade = db.Column(db.Float)
     supplementary = db.Column(db.Text)
     graded_supplementary = db.Column(db.Text)
+    graded = db.Column(db.Boolean)
     start_time = db.Column(db.DateTime())
     end_time = db.Column(db.DateTime())
 

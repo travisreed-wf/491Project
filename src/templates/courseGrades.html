@@ -10,17 +10,16 @@
 	<table id= "grades" class = "table table-bordered">
 	<tr>
 		<td>Student Name</td>
-		{% for d in data %}
-			<td>{{d.task.title}}</td>
+		{% for t in course_tasks['course_tasks'] %}
+			<td>{{t.title}}</td>
 		{% endfor %}
 	</tr>
-	{% for d in data %}
+	{% for u in data %}
 	<tr>
-		<td>{{d.user.name}}</td>
-		<td>{{d.response.correctness_grade}}</td>
-		<script type="text/javascript">
-			alert("{{d.response}}");
-		</script>
+		<td>{{u['user'].name}}</td>
+		{% for t in u['tasks'] %}
+		<td>{{t['response'].correctness_grade}}</td>
+		{% endfor %}
 	</tr>
 	{% endfor %}
 	</table>

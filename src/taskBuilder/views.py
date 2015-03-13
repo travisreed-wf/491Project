@@ -109,8 +109,10 @@ class TaskView(MethodView):
             return "You are not allowed to see that task", 401
         if current_user.id == course.teacher_id:
             return render_template("tasks/taskAuthorView.html", task=task, course=course)
-        else:
+        elif task.status == "available":
             return render_template("tasks/taskStudentView.html", content=task.content.strip().replace('\n', ''))
+        else:
+            return "This task is no longer available"
 
     def post(self, taskID):
         data = flask.request.get_json()

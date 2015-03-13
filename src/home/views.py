@@ -38,6 +38,7 @@ class TaskListView(MethodView):
         week_ago = DT.date.today() - DT.timedelta(days=7)
         for c in current_user.courses:
             for t in c.tasks:
+                print t.status
                 if(t.id in userResponseIDs and t.duedate.date() > week_ago and t.status != "created"):
                     tasks['complete'].append(t.serialize)
                 elif(t.duedate.date() > week_ago and t.status != "created"):

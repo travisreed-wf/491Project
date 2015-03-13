@@ -64,6 +64,7 @@ class CourseGradeView(MethodView):
             'course_tasks': course.tasks
         }
         if course in current_user.courses:
-            return render_template("courseGrades.html", data = data, course_tasks = course_tasks)
+            return render_template("courseGrades.html", data=data,
+                                   course_tasks=course_tasks)
         else:
             return render_template("home.html")

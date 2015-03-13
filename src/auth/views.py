@@ -11,14 +11,14 @@ from flask import render_template
 from flask import url_for
 from flask.views import MethodView
 import flask_login
-from flask_login import current_user
 from flask_login import login_required
 
 
 class LoginView(MethodView):
 
     def get(self):
-        if current_user is not None and current_user.is_authenticated():
+        if flask_login.current_user is not None and \
+                flask_login.current_user.is_authenticated():
             return redirect(url_for('home'))
         return render_template("login.html", failure=False)
 
@@ -27,7 +27,7 @@ class LoginView(MethodView):
         email = data.get('email')
         pw = data.get('password')
         auth.login(email, pw)
-        if current_user.is_authenticated():
+        if flask_login.current_user.is_authenticated():
             next_url = flask.request.args.get('next', url_for("home"))
             logger.info("User: %s has logged in" % email)
             return json.dumps({"next_url": next_url})

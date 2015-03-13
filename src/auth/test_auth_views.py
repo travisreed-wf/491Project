@@ -35,3 +35,11 @@ class TestLoginView(unittest.TestCase):
         views.LoginView().get()
         self.url_for.assert_called_with("home")
         self.redirect.assert_called_with("home")
+
+    def test_get_not_authenticated(self):
+        current_user = Mock()
+        current_user.is_authenticated.return_value = False
+        self.flask_login.current_user = current_user
+
+        views.LoginView().get()
+        self.render_template.assert_called_with("login.html", failure=False)

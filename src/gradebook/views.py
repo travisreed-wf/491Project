@@ -50,8 +50,9 @@ class CourseGradeView(MethodView):
             tasks = []
             d = {'user': u}
             for task in course.tasks:
-                response = models.TaskResponse.query.filter(models.TaskResponse.task_id == task.id, models.TaskResponse.student_id == u.id).order_by(
-                    models.TaskResponse.datetime.desc()).first()
+                response = models.TaskResponse.query.filter(models.TaskResponse.task_id == task.id,
+                                                            models.TaskResponse.student_id == u.id).order_by(
+                                                            models.TaskResponse.datetime.desc()).first()
                 r = {
                     'task': task,
                     'response': response

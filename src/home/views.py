@@ -17,6 +17,7 @@ class HomeScreenView(MethodView):
     decorators = [login_required]
 
     def get(self):
+        print current_user.courses
         teaching = models.Course.query.filter_by(teacher_id=current_user.id).all()
         return render_template('home.html',
                                courses_enrolled=current_user.courses,

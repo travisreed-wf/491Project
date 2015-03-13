@@ -39,7 +39,8 @@ class GradebookScreenView(MethodView):
         elif current_user.permissions == 2:
             return render_template('authorGradebook.html')
 
-class courseGradeView(MethodView):
+
+class CourseGradeView(MethodView):
 
     def get(self, courseID):
         course = models.Course.query.filter_by(id=int(courseID) - 1000).first()
@@ -58,7 +59,6 @@ class courseGradeView(MethodView):
                     tasks.append(r)
                 d['tasks'] = tasks
                 data.append(d)
-        print data
         course_tasks = {
             'course_tasks' : course.tasks
         }

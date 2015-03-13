@@ -37,7 +37,8 @@ class GradebookScreenView(MethodView):
                                    courses=current_user.courses,
                                    tasks=data)
         elif current_user.permissions == 2:
-            return render_template('authorGradebook.html')
+            teaching = models.Course.query.filter_by(teacher_id=current_user.id).all()
+            return render_template('authorGradebook.html', courses=teaching)
 
 
 class CourseGradeView(MethodView):

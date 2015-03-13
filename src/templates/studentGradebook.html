@@ -23,6 +23,8 @@
                 {% for task in d['tasks'] %}
                     {% if task['response'].id and task['task'].status == "grades published"%}
                         <a href="{{url_for('response', responseID=task['response'].id)}}" class="list-group-item">
+                    {% elif not task['response'].id %}
+                        <a href="{{url_for('task_view', taskID=task['task'].id)}}" class="list-group-item">
                     {% else %}
                         <a class="list-group-item">
                     {% endif %}

@@ -45,11 +45,14 @@ class CourseGradeView(MethodView):
 
     def get(self, courseID):
         course = models.Course.query.filter_by(id=int(courseID) - 1000).first()
+        if course.teacher_id != current_user.id:
+            return "You are not the instructor for this course", 401
         data = []
         for u in course.users:
             tasks = []
             d = {'user': u}
             for task in course.tasks:
+                print task
                 response = models.TaskResponse.query.filter(models.TaskResponse.task_id == task.id,
                                                             models.TaskResponse.student_id == u.id).order_by(
                                                             models.TaskResponse.datetime.desc()).first()
@@ -63,8 +66,6 @@ class CourseGradeView(MethodView):
         course_tasks = {
             'course_tasks': course.tasks
         }
-        if course in current_user.courses:
-            return render_template("courseGrades.html", data=data,
-                                   course_tasks=course_tasks)
-        else:
-            return render_template("home.html")
+        return render_template("courseGrades.html", data=data,
+                               course_tasks=course_tasks)
+

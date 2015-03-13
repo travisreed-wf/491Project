@@ -105,10 +105,10 @@ class TaskView(MethodView):
     def get(self, taskID):
         task = models.Task.query.filter_by(id=int(taskID)).first()
         course = models.Course.query.filter_by(id=task.course_id).first()
-        if course.id not in [c.id for c in current_user.courses]:
-            return "You are not allowed to see that task", 401
         if current_user.id == course.teacher_id:
             return render_template("tasks/taskAuthorView.html", task=task, course=course)
+        elif course.id not in [c.id for c in current_user.courses]:
+            return "You are not allowed to see that task", 401
         elif task.status == "available":
             return render_template("tasks/taskStudentView.html", content=task.content.strip().replace('\n', ''))
         else:

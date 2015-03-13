@@ -21,7 +21,7 @@
                     </table>
                 </a>
                 {% for task in d['tasks'] %}
-                    {% if task['response'].id %}
+                    {% if task['response'].id and task['task'].status == "grades published"%}
                         <a href="{{url_for('response', responseID=task['response'].id)}}" class="list-group-item">
                     {% else %}
                         <a class="list-group-item">

@@ -26,7 +26,10 @@ class HomeScreenView(MethodView):
 class ClassListView(MethodView):
     def get(self):
         if current_user.is_authenticated():
-            return flask.json.dumps([c.serialize for c in current_user.courses])
+            teaching = models.Course.query.filter_by(teacher_id=current_user.id).all()
+            courses = [c.serialize for c in current_user.courses]
+            courses += [c.serialize for c in teaching]
+            return flask.json.dumps(courses)
         else:
             return flask.json.dumps([])
 
@@ -44,6 +47,4 @@ class TaskListView(MethodView):
                     tasks['current'].append(t.serialize)
         tasks['complete'] = sorted(tasks['complete'], key=lambda k: k['duedate'])
         tasks['current'] = sorted(tasks['current'], key=lambda k: k['duedate'])
-        return flask.json.dumps(tasks)
-
-        
+        return flask.json.dumps(tasks)    

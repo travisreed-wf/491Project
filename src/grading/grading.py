@@ -12,15 +12,17 @@ class Grader:
         task_response = models.TaskResponse.query.filter_by(id=response_id).first()
         response = json.loads(task_response.graded_response)
         correct = 0
-        total = 0
+        total_graded = 0
+        total = len(response['manual_questions']) + len(['automatic_questions'])
         for question in response['automatic_questions']:
             correct += 1 if question['correct'] else 0
-            total += 1
+            total_graded += 1
         for question in response['manual_questions']:
             correct += 1 if question.get('correct') else 0
-            total += 1 if question.get('correct') is not None else 0
+            total_graded += 1 if question.get('correct') is not None else 0
 
-        return int(float(100 * correct) / total) if total else 0
+        task_response.graded = (total == total_graded)
+        return int(float(100 * correct) / total_graded) if total else 0
 
     def grade_manual_questions(self, response_id, question_id, correct):
         response = models.TaskResponse.query.filter_by(id=response_id).first()

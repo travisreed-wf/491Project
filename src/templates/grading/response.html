@@ -28,7 +28,10 @@
           <div class="panel-heading">{{manual_question['questionID']}}</div>
           <div class="panel-body">
             Question Content: {{manual_question['questionContent']}}<br>
-            Response: {{manual_question['response']}}
+            Response: {{manual_question['response']}}<br>
+            Correct?: 
+            <button type="button" class="btn btn-success btn-xs"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+            <button type="button" class="btn btn-danger btn-xs"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
           </div>
         </div>
       {% endfor %}<br>

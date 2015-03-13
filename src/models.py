@@ -47,7 +47,11 @@ class User(db.Model):
 
     def is_admin(self):
         return True
-
+    @property
+    def serialize(self):
+        return {
+            'name': self.name
+        }
 
 class Course(db.Model):
     __tablename__ = 'course'

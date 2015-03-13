@@ -14,7 +14,7 @@
       Student Email: <p class="text-muted">{{ student.email }}</p>
       Task Title: <p class="text-muted">{{ task.title }}</p>
       Date of Response: <p class="text-muted">{{ time }}</p>
-      Correctness Grade: <p class="text-muted">{{task_response.correctness_grade}}%</p>
+      Correctness Grade: <p id="correctnessGrade" class="text-muted">{{task_response.correctness_grade}}%</p>
       Cognitive Grade: <p class="text-muted">{{task_response.cognitive_grade}}%</p>
   </div>
   {% if permissions > 1 %}
@@ -89,6 +89,7 @@
             contentType: 'application/json',
             data: JSON.stringify(data),
             success: function(data) {
+              $("#correctnessGrade").text(data + "%");
               heading.parent().toggleClass("panel-warning", false);
               if (correct == true){
                 heading.parent().toggleClass("panel-success", true);

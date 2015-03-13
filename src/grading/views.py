@@ -37,11 +37,8 @@ class ManualGradingView(MethodView):
 
     def post(self):
         data = flask.request.get_json()
-        response = models.TaskResponse.query.filter_by(id=data['response_id']).first()
-        graded_response = json.loads(response.graded_response)
-        for question in graded_response['manual_questions']:
-            if question['questionID'] == data['question_id']:
-                question['correct'] = data['correct']
-        response.graded_response = json.dumps(graded_response)
-        models.db.session.commit()
-        return "success"
+        grader = grading.Grader()
+        correctness = grader.grade_manual_questions(data['response_id'],
+                                                    data['question_id'],
+                                                    data['correct'])
+        return json.dumps(correctness)

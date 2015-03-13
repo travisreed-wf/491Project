@@ -38,7 +38,7 @@
           contentType: 'application/json',
           data: JSON.stringify(data),
           success: function(data) {
-            $('#status').text(status.charAt(0).toUpperCase() + status.slice(1));
+            $('#status').text("Status: " + status.charAt(0).toUpperCase() + status.slice(1));
             $('#status_button').hide()
           }
       });

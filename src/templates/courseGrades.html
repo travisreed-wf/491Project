@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block header_css %}
+<head>
+    <title>Instructor Gradebook</title>
+    {{ super() }}
+</head>
+{% endblock %}
+{% block body %}
+<div class= "row">
+	<table id= "grades" class = "table table-bordered">
+	<tr>
+		<td>Student Name</td>
+		{% for t in course_tasks['course_tasks'] %}
+			<td>{{t.title}}</td>
+		{% endfor %}
+	</tr>
+	{% for u in data %}
+	<tr>
+		<td>{{u['user'].name}}</td>
+		{% for t in u['tasks'] %}
+		<td>{{t['response'].correctness_grade}}</td>
+		{% endfor %}
+	</tr>
+	{% endfor %}
+	</table>
+</div>
+{% endblock %}

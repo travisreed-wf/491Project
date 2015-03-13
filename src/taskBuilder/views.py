@@ -17,6 +17,7 @@ import re
 import auth
 from auth import auth
 import config
+from grading import grading
 import helper_functions
 import models
 
@@ -130,6 +131,9 @@ class TaskView(MethodView):
         task_response.end_time = formatted_e_time
         models.db.session.add(task_response)
         models.db.session.commit()
+        id = models.TaskResponse.query.order_by(models.TaskResponse.id.desc()).first().id
+        grader = grading.Grader()
+        grader.grade_automatic_questions(id)
         return "success"
 
 

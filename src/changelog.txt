@@ -1,3 +1,7 @@
+### March 12th
+alter table task add column status varchar(20);
+
+
 ### March 8th
 - database:
 alter table task_response add column start_time datetime;

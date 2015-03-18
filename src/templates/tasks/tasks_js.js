@@ -68,6 +68,11 @@
     $('.modal').off('hide.bs.modal');       
     
   }
+
+  function showSubmitModal(){
+    showModal('submission-modal');
+  }
+
   function showModal(idToShow){
     if (answerKeyCompleted() == true){
       $("#"+idToShow).find('.modal').modal('toggle');
@@ -204,6 +209,26 @@
     $(element).next('p').text($(element).val());
   }
 
+  function copyTextToInput(textfield, inputfield){
+    $(textfield).each(function(){
+      var textfield_content = $(this).text();
+      console.log(textfield_content)
+      $(this).parent().find(inputfield).val(textfield_content);
+    })
+  }
+
+  function initEditTask(){
+    $('.EDIT_ONLY').show();
+    $('.PREVIEW_ONLY').show();
+    $('.TAKE_ONLY').hide();
+    $('#preview').text("Preview");
+    
+    copyTextToInput('p.question-content', '#body');
+    copyTextToInput('p.multichoice-content', 'input.form-control');
+    copyTextToInput('#p_title', 'input.form-control');
+    copyTextToInput('.wp-pair-text', '.wp-pair-input');
+  }
+
   function getCoursesTeaching(){
     $.ajax({
       url         :'{{ url_for("courses_teaching")}}',
@@ -245,8 +270,6 @@
         d['title'] = $('#minTime' + i).parent().find('#title').val()
         supplementaryInformationMinTimes["supplementary" + i] = d;
       }
-      $('.EDIT_ONLY').remove();
-      $('.PREVIEW_ONLY').remove();
       var questions = [];
       $('.automatic-grading').each(function(){
           var question = $(this);

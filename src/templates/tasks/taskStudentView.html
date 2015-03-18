@@ -24,7 +24,8 @@
 <script type="text/javascript">
 
   $(document).ready(function(){
-    $('#questionList').html('{{content|safe}}');
+    var html_content = '{{content|safe}}';
+    $('#questionList').html(html_content);
     $('#submit').click(function(){
       var automaticQuestions = [];
       var manualQuestions = [];

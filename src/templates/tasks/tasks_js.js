@@ -209,12 +209,25 @@
     $(element).next('p').text($(element).val());
   }
 
-  function copyTextToInput(textfield, inputfield){
-    $(textfield).each(function(){
-      var textfield_content = $(this).text();
-      console.log(textfield_content)
-      $(this).parent().find(inputfield).val(textfield_content);
-    })
+  function copyTextToInput(textfield, inputfield, parentDepth){
+    if(arguments.length == 2){
+      $(textfield).each(function(){
+        var textfield_content = $(this).text();
+        $(this).parent().find(inputfield).val(textfield_content);
+      })
+    }
+    else if(arguments.length == 3){
+      console.log("got length 3")
+      $(textfield).each(function(){
+        var textfield_content = $(this).text();
+        var cur = $(this);
+        for(i = 0; i < parentDepth; i++){
+          console.log("cur is: " + cur)
+          cur = cur.parent();
+        }
+        cur.find(inputfield).val(textfield_content);
+      })      
+    }
   }
 
   function initEditTask(){
@@ -223,10 +236,25 @@
     $('.TAKE_ONLY').hide();
     $('#preview').text("Preview");
     
+    // fill out all of the input fields using the information
+    // saved in <p> elements and such
     copyTextToInput('p.question-content', '#body');
     copyTextToInput('p.multichoice-content', 'input.form-control');
     copyTextToInput('#p_title', 'input.form-control');
     copyTextToInput('.wp-pair-text', '.wp-pair-input');
+    copyTextToInput('.wp-pair-text-2', '.wp-pair-input-2', 2);
+    
+    // wp-video-panel attr src --> .wp-video-src
+    $('.wp-video-panel').each(function(){
+      var src = $(this).attr('src');
+      $(this).parent().find('.wp-video-src').val(src);
+    })
+
+    // supp material duration --> input field
+    $('.modal.fade').each(function(){
+      var duration = $(this).data('supplementaryDuration');
+      $(this).parent().find('.wp-supp-input').val(duration);
+    })
   }
 
   function getCoursesTeaching(){

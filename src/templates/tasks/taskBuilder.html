@@ -99,11 +99,8 @@
 <script type="text/javascript" src="/static/jquery.timepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="/static/jquery.timepicker.css" />
 <script type="text/javascript">
-  var NUM_SUPP_TEMPLATES = 5;
   var nextChoiceID = "choice" + $('.multipleChoice').size();
   var nextQuestionID = "question" + $('.question').size();
-  var nextSupplementaryID = "supplementary" + ($('.wp-supplementary').size() - NUM_SUPP_TEMPLATES);
-  var nextSupplementaryMinTimeID = "minTime" + ($('.wp-supplementary').size() - NUM_SUPP_TEMPLATES);
   $(document).ready(function(){
     initEditTask();
     makeDroppable($('div.elementWell'));

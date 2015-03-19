@@ -129,11 +129,8 @@
   function addSuppElement(ctx, appendID){
     var toAppend = $(ctx).closest('.panel-body').find('.supplementary-target');
     var html = $(appendID).html();
-    html = html.replace("nextID", nextSupplementaryID);
-    nextSupplementaryID = "supplementary" + (parseInt(nextSupplementaryID.split("supplementary")[1]) + 1);
-    html = html.replace("nextMinTimeID", nextSupplementaryMinTimeID);
-    nextSupplementaryMinTimeID = "minTime" + (parseInt(nextSupplementaryMinTimeID.split("minTime")[1]) + 1);
-
+    html = html.replace("nextID", "supplementary" + getNextSuppID());
+    html = html.replace("nextMinTimeID", "minTime" + getNextSuppID());
     toAppend.append(html);
   }
   function addVideo(ctx){
@@ -252,7 +249,6 @@
       var supplementary = {{ supplementary }}
       for(var id in supplementary){
         $('#' + supplementary[id].inputID).val(supplementary[id].time)
-        console.log(supplementary[id].inputID)
       }
     {% endif %}
 
@@ -263,6 +259,30 @@
         $('#' + answers[i].correctOption).prop('checked', true);
       }
     {% endif %}
+
+    applyQuestionJS();
+  }
+
+  function applyQuestionJS(){
+    $('.delete-question').click(function(){
+      var row = $(this).closest('.row');
+      row.fadeOut(200, function(){row.remove()});
+      if($(".question-parent").length <= 1){
+        $('#elementWell').css("height","300px");
+        $('#elementWell').html("<br><br>To begin, drag elements onto the screen.");
+      }
+    });
+    $('.delete-header').click(function(){
+      $(this).closest('.panel-heading').fadeOut();
+    });
+    $('.TAKE_ONLY').hide();
+  }
+
+  function getNextSuppID(){
+    var nextSuppID = 0;
+    while($('#supplementary' + nextSuppID).length == 1)
+      nextSuppID++;
+    return nextSuppID;
   }
 
   function getCoursesTeaching(){
@@ -298,15 +318,16 @@
   }
 
   function submitClicked(element) {
-      var numSupplementaryMinTimes = parseInt(nextSupplementaryMinTimeID.split("minTime")[1]);
-      for(i = 0 ; i < numSupplementaryMinTimes; i++){
+      $('[id^=minTime]').each(function(){
+        var thisID = $(this).prop('id');
+        var index = parseInt(thisID.split("minTime")[1]);
         var d = {};
-        d['id'] = "supplementary" + i;
-        d['inputID'] = "minTime" + i;
-        d['time'] = parseInt($("#minTime" +i).val());
-        d['title'] = $('#minTime' + i).parent().find('#title').val()
-        supplementaryInformationMinTimes["supplementary" + i] = d;
-      }
+        d['id'] = "supplementary" + index;
+        d['inputID'] = thisID;
+        d['time'] = parseInt($('#' + thisID).val());
+        d['title'] = $('#' + thisID).parent().find('#title').val()
+        supplementaryInformationMinTimes["supplementary" + index] = d;
+      })
       var questions = [];
       $('.automatic-grading').each(function(){
           var question = $(this);

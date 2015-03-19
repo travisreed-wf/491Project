@@ -98,7 +98,8 @@ class TaskBuilderEditView(MethodView):
             elements=elements, 
             old_content=task.content.strip().replace('\n', ''),
             supplementary=task.supplementary,
-            task_id=taskID)
+            task_id=taskID,
+            correct_options=task.questions)
 
     def post(self, taskID):
         task = models.Task.query.filter_by(id=int(taskID)).first()

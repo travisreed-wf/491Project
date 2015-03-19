@@ -248,11 +248,21 @@
     })
 
     // supp material duration --> input field
-    var supplementary = {{ supplementary }}
-    for(var id in supplementary){
-      $(supplementary[id].inputID).val(supplementary[id].time)
-      var cur = supplementary[id];
-    }
+    {% if supplementary %}
+      var supplementary = {{ supplementary }}
+      for(var id in supplementary){
+        $('#' + supplementary[id].inputID).val(supplementary[id].time)
+        console.log(supplementary[id].inputID)
+      }
+    {% endif %}
+
+    // select all the auto-graded options selected previously
+    {% if correct_options %}
+      var answers = {{ correct_options }}
+      for(var i in answers){
+        $('#' + answers[i].correctOption).prop('checked', true);
+      }
+    {% endif %}
   }
 
   function getCoursesTeaching(){
@@ -327,11 +337,11 @@
       var dueOn = new Date(date[2], parseInt(date[0])-1, date[1], hours, mins, 0, 0).getTime();
       data['taskDue'] = dueOn;
 
-      var postURL;
-      if({{ task_id }})
-        postURL = '/taskBuilder/' + {{ task_id }}
-      else
-        postURL = '/{{ url_for("taskBuilder") }}',
+      {% if task_id %}
+        var postURL = '/taskBuilder/' + {{ task_id }}
+      {% else %}
+        var postURL = '{{ url_for("taskBuilder") }}'
+      {% endif %}
 
       $.ajax({
           url: postURL,

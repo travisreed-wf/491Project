@@ -94,11 +94,14 @@ class TaskBuilderEditView(MethodView):
     def get(self, taskID):
         elements = helper_functions.get_elements()
         task = models.Task.query.filter_by(id=int(taskID)).first()
-        return render_template("tasks/taskBuilder.html", elements=elements, old_content=task.content.strip().replace('\n', ''))
+        return render_template("tasks/taskBuilder.html", 
+            elements=elements, 
+            old_content=task.content.strip().replace('\n', ''),
+            supplementary=task.supplementary,
+            task_id=taskID)
 
-    def post(self):
-        ## TEMP STUFF
-        task = models.Task("")
+    def post(self, taskID):
+        task = models.Task.query.filter_by(id=int(taskID)).first()
         pattern = r"<script.*?</script>"
         data = flask.request.get_json()
         content = data.get('html')

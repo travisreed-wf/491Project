@@ -22,7 +22,7 @@
       $('#elementWell').html("<br><br>Add more elements here.");
       elementWell.before("<div class='elementTarget'></div>");
       var target = elementWell.parent().find(".elementTarget").first();
-      target.load(elementToCreate.data('filepath'));
+      target.load("/" + elementToCreate.data('filepath'));
       target.hide().fadeIn(700);
       target.removeClass('elementTarget');
       return target;
@@ -217,12 +217,10 @@
       })
     }
     else if(arguments.length == 3){
-      console.log("got length 3")
       $(textfield).each(function(){
         var textfield_content = $(this).text();
         var cur = $(this);
         for(i = 0; i < parentDepth; i++){
-          console.log("cur is: " + cur)
           cur = cur.parent();
         }
         cur.find(inputfield).val(textfield_content);
@@ -236,8 +234,7 @@
     $('.TAKE_ONLY').hide();
     $('#preview').text("Preview");
     
-    // fill out all of the input fields using the information
-    // saved in <p> elements and such
+    // <p> elements --> <input> fields
     copyTextToInput('p.question-content', '#body');
     copyTextToInput('p.multichoice-content', 'input.form-control');
     copyTextToInput('#p_title', 'input.form-control');
@@ -251,10 +248,11 @@
     })
 
     // supp material duration --> input field
-    $('.modal.fade').each(function(){
-      var duration = $(this).data('supplementaryDuration');
-      $(this).parent().find('.wp-supp-input').val(duration);
-    })
+    var supplementary = {{ supplementary }}
+    for(var id in supplementary){
+      $(supplementary[id].inputID).val(supplementary[id].time)
+      var cur = supplementary[id];
+    }
   }
 
   function getCoursesTeaching(){
@@ -294,6 +292,7 @@
       for(i = 0 ; i < numSupplementaryMinTimes; i++){
         var d = {};
         d['id'] = "supplementary" + i;
+        d['inputID'] = "minTime" + i;
         d['time'] = parseInt($("#minTime" +i).val());
         d['title'] = $('#minTime' + i).parent().find('#title').val()
         supplementaryInformationMinTimes["supplementary" + i] = d;
@@ -327,8 +326,15 @@
       var mins = parseInt(hoursMins[1].substring(0,2));
       var dueOn = new Date(date[2], parseInt(date[0])-1, date[1], hours, mins, 0, 0).getTime();
       data['taskDue'] = dueOn;
+
+      var postURL;
+      if({{ task_id }})
+        postURL = '/taskBuilder/' + {{ task_id }}
+      else
+        postURL = '/{{ url_for("taskBuilder") }}',
+
       $.ajax({
-          url: '{{ url_for("taskBuilder") }}',
+          url: postURL,
           type: 'POST',
           contentType: 'application/json',
           data: JSON.stringify(data),

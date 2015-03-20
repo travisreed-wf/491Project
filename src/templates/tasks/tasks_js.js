@@ -322,12 +322,12 @@
           for(var i=0; i < coursesList.length;i++){
               url = "{{url_for('view_course', courseID='')}}";
               url += coursesList[i].id + 1000;
-              strCoursesList+="<li class='submit-task' id='" + coursesList[i].id + "' onclick='submitClicked(this)''><a target='" + url + "'>";
+              strCoursesList+="<option id='" + coursesList[i].id + "' value='"+coursesList[i].name+"'>";
               strCoursesList+=coursesList[i].name;
-              strCoursesList+="</a></li>";
+              strCoursesList+="</option>";
           }
           if(coursesList.length == 0){
-              strCoursesList+="<a href='#' class='list-group-item'>No Courses</a>";
+              strCoursesList+="<option disabled>No Courses</option>";
           }
           $('#taskbuilder_viewable_courses').html(strCoursesList);
       }
@@ -343,7 +343,7 @@
     });
   }
 
-  function submitClicked(element) {
+  function submitClicked() {
       $('[id^=minTime]').each(function(){
         var thisID = $(this).prop('id');
         var index = parseInt(thisID.split("minTime")[1]);
@@ -371,7 +371,7 @@
       data['html'] = $('#questionList').html();
       data['questions'] = questions;
       data['supplementary'] = supplementaryInformationMinTimes;
-      data['course_id'] = $(element).attr('id')
+      data['course_id'] = $('#taskbuilder_viewable_courses option:selected').prop('id')
       data['taskTitle'] = $('#taskTitle').val()
 
       // Construct a JS date object
@@ -385,7 +385,7 @@
       data['taskDue'] = dueOn;
 
       {% if task_id %}
-        var postURL = '/taskBuilder/' + {{ task_id }}
+        var postURL = "{{ url_for('taskBuilder_edit', taskID=task_id)}}"
       {% else %}
         var postURL = '{{ url_for("taskBuilder") }}'
       {% endif %}

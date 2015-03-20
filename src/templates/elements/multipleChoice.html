@@ -15,34 +15,24 @@
       </span>
     </div>
   </div>
-  <p id="addNewResponse" class="EDIT_ONLY text-center"><a>Add another response</a></p>
+  <p id="addNewResponse" class="EDIT_ONLY text-center new-response"><a>Add another response</a></p>
 {% endblock %}
 {% block js_bottom %}
 <script type="text/javascript">
-  function addRadioResponse(ctx){
-    var textcon = $(this)
-    if (typeof ctx.first === 'function'){
-      textcon = ctx;
-    }
-    var toAdd = "<div><div class='input-group'>" 
-      + textcon.parent().find(".radioResponse").html() 
-      + "</div><br></div>";
-    textcon.parent().find('.multipleChoice').append(toAdd);
-    textcon.parent().find('.multipleChoice').find(":radio").last().attr('id', nextChoiceID);
+  $(document).ready(function(){
+    var mcID = getNextID("question");
+    $("#notSet").attr("id", mcID);
+    $(".unassignedName").attr("name", mcID);
+    $(".unassignedName").removeClass("unassignedName");
+    addRadioResponse('#' + mcID);
+    addRadioResponse('#' + mcID);
     $(".glyphicon-trash").click(function(){
       $(this).closest("div").parent().remove();
     });
-    nextChoiceID = "choice" + (parseInt(nextChoiceID.split("choice")[1]) + 1);
-  };
-  $(document).ready(function(){
-    $(".unassignedName").attr("name", "" + $(".multipleChoice").length);
-    $(".unassignedName").removeClass("unassignedName");
-    addRadioResponse($('#addNewResponse'));
-    addRadioResponse($('#addNewResponse'));
-    $("#addNewResponse").click(addRadioResponse);
+    $("#addNewResponse").click(function(){
+      addRadioResponse('#' + mcID);
+    })
     $('#addNewResponse').attr('id', '');
-    $('#notSet').attr('id', nextQuestionID);
-    nextQuestionID = "question" + (parseInt(nextQuestionID.split("question")[1]) + 1);
   });
   </script>
   {% endblock %}

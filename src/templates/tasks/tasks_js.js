@@ -129,8 +129,8 @@
   function addSuppElement(ctx, appendID){
     var toAppend = $(ctx).closest('.panel-body').find('.supplementary-target');
     var html = $(appendID).html();
-    html = html.replace("nextID", "supplementary" + getNextSuppID());
-    html = html.replace("nextMinTimeID", "minTime" + getNextSuppID());
+    html = html.replace("nextID", getNextID('supplementary'));
+    html = html.replace("nextMinTimeID", getNextID('minTime'));
     toAppend.append(html);
   }
   function addVideo(ctx){
@@ -261,6 +261,19 @@
     {% endif %}
 
     applyQuestionJS();
+    applyMultiChoiceJS();
+  }
+
+  function applyMultiChoiceJS(){
+    $('.multipleChoice').each(function(){
+      $(".glyphicon-trash").click(function(){
+        $(this).closest("div").parent().remove();
+      });
+      var mcID = '#' + $(this).prop("id")
+      $(mcID).parent().find('.new-response').click(function(){
+        addRadioResponse(mcID);
+      })
+    })
   }
 
   function applyQuestionJS(){
@@ -276,14 +289,39 @@
       $(this).closest('.panel-heading').fadeOut();
     });
     $('.TAKE_ONLY').hide();
+
+    $('#notSet').attr('id', getNextID('question'));
   }
 
-  function getNextSuppID(){
-    var nextSuppID = 0;
-    while($('#supplementary' + nextSuppID).length == 1)
-      nextSuppID++;
-    return nextSuppID;
+  function getNextID(baseID){
+    var nextID = 0;
+    while($('#' + baseID + nextID).length == 1)
+      nextID++;
+    return baseID + nextID;
   }
+
+  function addRadioResponse(ctx){
+    var toAdd = "<div><div class='input-group'>" 
+      + $(ctx).find(".radioResponse").html() 
+      + "</div><br></div>";
+    $(ctx).append(toAdd);
+    $(ctx).find(":radio").last().attr('id', getNextID('choice'));
+    $(".glyphicon-trash").click(function(){
+      $(this).closest("div").parent().remove();
+    });
+    // var textcon = $(this)
+    // if (typeof ctx.first === 'function'){
+    //   textcon = ctx;
+    // }
+    // var toAdd = "<div><div class='input-group'>" 
+    //   + textcon.parent().find(".radioResponse").html() 
+    //   + "</div><br></div>";
+    // textcon.parent().find('.multipleChoice').append(toAdd);
+    // textcon.parent().find('.multipleChoice').find(":radio").last().attr('id', getNextID('choice'));
+    // $(".glyphicon-trash").click(function(){
+    //   $(this).closest("div").parent().remove();
+    // });
+  };
 
   function getCoursesTeaching(){
     $.ajax({

@@ -23,17 +23,6 @@
 {% endblock %}
 <script type="text/javascript">
 $(document).ready(function(){
-  $('.delete-question').click(function(){
-    var row = $(this).closest('.row');
-    row.fadeOut(200, function(){row.remove()});
-    if($(".question-parent").length <= 1){
-      $('#elementWell').css("height","300px");
-      $('#elementWell').html("<br><br>To begin, drag elements onto the screen.");
-    }
-  });
-  $('.delete-header').click(function(){
-    $(this).closest('.panel-heading').fadeOut();
-  });
-  $('.TAKE_ONLY').hide();
+  applyQuestionJS();
 });
 </script>

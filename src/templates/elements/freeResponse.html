@@ -9,11 +9,3 @@
     <textarea id="student-response" class="form-control" placeholder="Student Answer Here" onchange="textChange(this)"></textarea><br>
   </div>
 {% endblock %}
-{% block js_bottom %}
-<script type="text/javascript">
-$(document).ready(function(){
-    $('#notSet').attr('id', nextQuestionID);
-    nextQuestionID = "question" + (parseInt(nextQuestionID.split("question")[1]) + 1);
-});
-</script>
-{% endblock %}

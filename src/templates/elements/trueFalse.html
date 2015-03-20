@@ -20,12 +20,8 @@
 {% block js_bottom %}
 <script type="text/javascript">
   $(document).ready(function(){
-    $('#true').attr('id', nextChoiceID);
-    nextChoiceID = "choice" + (parseInt(nextChoiceID.split("choice")[1]) + 1);
-    $('#false').attr('id', nextChoiceID);
-    nextChoiceID = "choice" + (parseInt(nextChoiceID.split("choice")[1]) + 1);
-    $('#notSet').attr('id', nextQuestionID);
-    nextQuestionID = "question" + (parseInt(nextQuestionID.split("question")[1]) + 1);
+    $('#true').attr('id', getNextID('choice'));
+    $('#false').attr('id', getNextID('choice'));
   });
 </script>
 {% endblock %}

@@ -309,18 +309,6 @@
     $(".glyphicon-trash").click(function(){
       $(this).closest("div").parent().remove();
     });
-    // var textcon = $(this)
-    // if (typeof ctx.first === 'function'){
-    //   textcon = ctx;
-    // }
-    // var toAdd = "<div><div class='input-group'>" 
-    //   + textcon.parent().find(".radioResponse").html() 
-    //   + "</div><br></div>";
-    // textcon.parent().find('.multipleChoice').append(toAdd);
-    // textcon.parent().find('.multipleChoice').find(":radio").last().attr('id', getNextID('choice'));
-    // $(".glyphicon-trash").click(function(){
-    //   $(this).closest("div").parent().remove();
-    // });
   };
 
   function getCoursesTeaching(){

@@ -8,26 +8,26 @@
 {% block body %}
 <div class= "row">
 	<table id= "grades" class = "table table-bordered">
-	<tr>
-		<td>Student Name</td>
-		{% for t in course_tasks['course_tasks'] %}
-			<td>{{t.title}}</td>
+		<tr>
+			<th>Student Name</th>
+			{% for t in course_tasks['course_tasks'] %}
+				<th>{{t.title}}</th>
+			{% endfor %}
+		</tr>
+		{% for u in data %}
+		<tr>
+			<th>{{u['user'].name}}</th>
+			{% for t in u['tasks'] %}
+				{% if t['response'].id and t['response'].graded %}
+					<td><a href="{{url_for('response', responseID=t['response'].id)}}">{{t['response'].correctness_grade}}</a></td>
+				{% elif t['response'].id %}
+					<td><a href="{{url_for('response', responseID=t['response'].id)}}"><span class="glyphicon glyphicon-time" aria-hidden="true" style="color:#f0ad4e;"></span></a></td>
+				{% else %}
+					<td><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></td>
+				{% endif %}
+			{% endfor %}
+		</tr>
 		{% endfor %}
-	</tr>
-	{% for u in data %}
-	<tr>
-		<td>{{u['user'].name}}</td>
-		{% for t in u['tasks'] %}
-			{% if t['response'].id and t['response'].graded %}
-				<td><a href="{{url_for('response', responseID=t['response'].id)}}">{{t['response'].correctness_grade}}</a></td>
-			{% elif t['response'].id %}
-				<td><a href="{{url_for('response', responseID=t['response'].id)}}"><span class="glyphicon glyphicon-time" aria-hidden="true" style="color:#f0ad4e;"></span></a></td>
-			{% else %}
-				<td><span class="glyphicon glyphicon-minus" aria-hidden="true"></span></td>
-			{% endif %}
-		{% endfor %}
-	</tr>
-	{% endfor %}
 	</table>
 </div>
 {% endblock %}

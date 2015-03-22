@@ -1,5 +1,6 @@
 <script type="text/javascript">  
   var supplementaryInformationTimes = {}; 
+  var supplementaryInformationMinTimes = {};
   function answerKeyCompleted(){
     var ret = true;
     $('.automatic-grading').each(function(){
@@ -125,6 +126,9 @@
     var html = $(appendID).html();
     html = html.replace("nextID", nextSupplementaryID);
     nextSupplementaryID = "supplementary" + (parseInt(nextSupplementaryID.split("supplementary")[1]) + 1);
+    html = html.replace("nextMinTimeID", nextSupplementaryMinTimeID);
+    nextSupplementaryMinTimeID = "minTime" + (parseInt(nextSupplementaryMinTimeID.split("minTime")[1]) + 1);
+
     toAppend.append(html);
   }
   function addVideo(ctx){
@@ -146,9 +150,10 @@
 
   function uploadImageFile(f) {
       var form_data = new FormData(f);
+      var uploadUrl = '/upload/{{ session.userid }}';
       $.ajax({
           type: 'POST',
-          url: '/upload',
+          url: uploadUrl,
           data: form_data,
           contentType: false,
           cache: false,
@@ -157,16 +162,17 @@
           success: function(data) {
             var src = $(f).find('input').val();
             var src = src.split("\\")[2]
-            src = "/static/uploads/" + src;
-            $(f).closest('div.wp-image').find('img').first().attr("src", src);
+            src = "/static/uploads/{{ session.userid }}/" + src;
+            $(f).closest('div.wp-image').find('img').attr("src", src);
           },
       });
   };
   function uploadFile(f) {
       var form_data = new FormData(f);
+      var uploadUrl = '/upload/{{ session.userid }}';
       $.ajax({
           type: 'POST',
-          url: '/upload',
+          url: uploadUrl,
           data: form_data,
           contentType: false,
           cache: false,
@@ -175,7 +181,7 @@
           success: function(data) {
             var src = $(f).find('input.wp-file-src').val();
             var src = src.split("\\")[2];
-            src = "/static/uploads/" + src;
+            src = "/static/uploads/{{ session.userid }}/" + src;
             $(f).parent().parent().find('h3').first().attr("src", src);
           },
       });
@@ -231,6 +237,14 @@
   }
 
   function submitClicked(element) {
+      var numSupplementaryMinTimes = parseInt(nextSupplementaryMinTimeID.split("minTime")[1]);
+      for(i = 0 ; i < numSupplementaryMinTimes; i++){
+        var d = {};
+        d['id'] = "supplementary" + i;
+        d['time'] = parseInt($("#minTime" +i).val());
+        d['title'] = $('#minTime' + i).parent().find('#title').val()
+        supplementaryInformationMinTimes["supplementary" + i] = d;
+      }
       $('.EDIT_ONLY').remove();
       $('.PREVIEW_ONLY').remove();
       var questions = [];
@@ -249,8 +263,7 @@
       var data = {};
       data['html'] = $('#questionList').html();
       data['questions'] = questions;
-      console.log($(element).attr('id'));
-      data['supplementary'] = supplementaryInformationTimes;
+      data['supplementary'] = supplementaryInformationMinTimes;
       data['course_id'] = $(element).attr('id')
       data['taskTitle'] = $('#taskTitle').val()
 

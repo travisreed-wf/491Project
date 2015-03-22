@@ -17,6 +17,7 @@ import re
 import auth
 from auth import auth
 import config
+from grading import grading
 import helper_functions
 import models
 
@@ -42,12 +43,16 @@ class UploadView(MethodView):
     def get(self):
         return render_template('upload.html')
 
-    def post(self):
+    def post(self, userid):
         f = flask.request.files.get('file_path')
         print f
         print f.filename
+        print userid
+        uploadDir = "src/static/uploads/" + userid
+        if not os.path.exists(uploadDir):
+            os.makedirs(uploadDir)
         if f and allowed_file(f.filename):
-            f.save(os.path.join("src/static/uploads", f.filename))
+            f.save(os.path.join(uploadDir, f.filename))
             return "Success"
         return "Failed"
 
@@ -84,13 +89,31 @@ class TaskBuilderView(MethodView):
         return ""
 
 
+class TaskTransitionView(MethodView):
+    decorators = [login_required]
+
+    def post(self):
+        data = flask.request.get_json()
+        task = models.Task.query.filter_by(id=data['task_id']).first()
+        task.status = data['status']
+        models.db.session.commit()
+        return "success"
+
+
 class TaskView(MethodView):
     decorators = [login_required]
 
     def get(self, taskID):
         task = models.Task.query.filter_by(id=int(taskID)).first()
-        content = "<div></div>"
-        return render_template("tasks/taskView.html", content=task.content.strip().replace('\n', ''))
+        course = models.Course.query.filter_by(id=task.course_id).first()
+        if current_user.id == course.teacher_id:
+            return render_template("tasks/taskAuthorView.html", task=task, course=course)
+        elif course.id not in [c.id for c in current_user.courses]:
+            return "You are not allowed to see this task", 401
+        elif task.status == "available":
+            return render_template("tasks/taskStudentView.html", content=task.content.strip().replace('\n', ''))
+        else:
+            return "This task is no longer available"
 
     def post(self, taskID):
         data = flask.request.get_json()
@@ -99,8 +122,18 @@ class TaskView(MethodView):
         task_response.task_id = int(taskID)
         task_response.student_id = current_user.id
         task_response.supplementary = json.dumps(data.get('supplementary'))
+        start_time = data.get('startTaskTime')
+        end_time = data.get('endTaskTime')
+        date_format = "%m/%d/%Y %I:%M:%S %p"
+        formatted_s_time = datetime.datetime.strptime(start_time, date_format)
+        formatted_e_time = datetime.datetime.strptime(end_time, date_format)
+        task_response.start_time = formatted_s_time
+        task_response.end_time = formatted_e_time
         models.db.session.add(task_response)
         models.db.session.commit()
+        id = models.TaskResponse.query.order_by(models.TaskResponse.id.desc()).first().id
+        grader = grading.Grader()
+        grader.grade_automatic_questions(id)
         return "success"
 
 

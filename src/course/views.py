@@ -22,9 +22,9 @@ class CreateView(MethodView):
         name = flask.request.form.get('name')
         f = flask.request.files.get('students')
         title = flask.request.form.get('title')
-        course = models.Course(name,title)
-        current_user.courses.append(course)
+        course = models.Course(name, title)
         course.teacher_id = current_user.id
+        models.db.session.add(course)
         models.db.session.commit()
         author = models.User.query.filter_by(id=course.teacher_id).first()
         if f:
@@ -38,10 +38,11 @@ class CourseMasterView(MethodView):
     def get(self, courseID):
         course = models.Course.query.filter_by(id=int(courseID) - 1000).first()
         author = models.User.query.filter_by(id=course.teacher_id).first()
-        if course in current_user.courses:
+        if course in current_user.courses or course.teacher_id == current_user.id:
             return render_template("course.html", course=course, author=author)
         else:
-            return render_template("home.html")
+            return "You do not have access to view this course", 401
+
 
 class CourseTaskListView(MethodView):
     def get(self, courseID):
@@ -49,6 +50,8 @@ class CourseTaskListView(MethodView):
         course = models.Course.query.filter_by(id=int(courseID) - 1000).first()
         userResponseIDs = [tr.task_id for tr in current_user.task_responses]
         for t in course.tasks:
+            if t.status == "created":
+                continue
             if(t.id in userResponseIDs):
                 tasks['complete'].append(t.serialize)
             else:
@@ -57,8 +60,9 @@ class CourseTaskListView(MethodView):
         tasks['current'] = sorted(tasks['current'], key=lambda k: k['duedate'])
         return flask.json.dumps(tasks)
 
+
 class RegisterForCourseView(MethodView):
-    decorators = [login_required, auth.permissions_student]
+    decorators = [login_required]
 
     def get(self):
         return render_template("registerForCourse.html")
@@ -66,21 +70,23 @@ class RegisterForCourseView(MethodView):
     def post(self):
         return "TEST"
 
+
 class searchCourseName(MethodView):
     def get(self):
-        return 
+        return
 
     def post(self):
         data = flask.request.get_json()
         courseName = data.get('courseName')
-        if courseName:    
+        if courseName:
             courses = models.Course.query.filter(models.Course.name.contains(courseName)).all()
-        else: 
-            courses =[]
-        course_info = [course.serialize for course in courses] 
+        else:
+            courses = []
+        course_info = [course.serialize for course in courses]
         print courseName
         print course_info
         return json.dumps(course_info)
+
 
 class searchProfessorName(MethodView):
     def get(self):

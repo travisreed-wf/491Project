@@ -7,41 +7,68 @@
 {% endblock %}
 {% block body %}
 <div class="row">
-    <div class="col-md-10 col-md-offset-2" style="width:800px;">
-        <!-- <button id="testbtn" class="btn btn-sm btn-primary">TEST DB</button> -->
-        <h3>Courses </h3>
-        <div id="class-list" class="list-group">
-            
+    <div class="col-md-5 col-sm-10 col-sm-offset-1 col-md-offset-1">
+        {% if courses_enrolled %}
+        <div id="classes-teaching-list" class="list-group">
+            <li class="list-group-item active" align="center"><strong>Courses Enrolled</strong></li>
+            {% for course in courses_enrolled %}
+                <a href="/course/view/{{1000 + course.id}}" class="list-group-item">{{course.name}}</a>
+            {% endfor %}
         </div>
-        <h3>Tasks </h3>
+        {% endif %}
+
+        {% if courses_teaching %}
+        <div id="classes-teaching-list" class="list-group">
+            <li class="list-group-item active" align="center"><strong>Courses Teaching</strong></li>
+            {% for course in courses_teaching %}
+                <a href="/course/view/{{1000 + course.id}}" class="list-group-item">{{course.name}}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-md-5 col-sm-10 col-sm-offset-1">
+        {% if courses_enrolled %}
         <div id="task-list-current" class="list-group">
         </div>
         <div id="task-list-complete" class="list-group">
         </div>
+        {% endif %}
+        {% if courses_teaching %}
+        <div id="tasks-teaching-list" class="list-group">
+            <li class="list-group-item active" align="center"><strong>Tasks (teaching)</strong></li>
+            <a href="" class="list-group-item">
+                <table width="100%">
+                    <tr>
+                        <td width="60%"><b>Title</b></td>
+                        <td width="30%"><b>Duedate</b></td>
+                        <td width="10%"><b>Status</b></td>
+                    </tr>
+                </table>
+            </a>
+
+            {% for course in courses_teaching %}
+                {% for task in course.tasks %}
+                    {% if task.status != "closed" %}
+                        <a href="{{url_for('task_view', taskID=task.id)}}" class="list-group-item">
+                            <table width="100%">
+                                <tr>
+                                    <td width="60%">{{ course.name}} - {{task.title }}</td>
+                                    <td width="30%">{{ task.duedate }}</td>
+                                    <td width="10%">{{ task.status.capitalize()}}</td>
+                                </tr>
+                            </table>
+                        </a>
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
 {% block js_bottom %}
 {{ super() }}
 <script>    
-    
-    function getClassList() {
-        $.ajax({
-            url         :'{{ url_for("class_list")}}',
-            type        :"GET",
-            success     :function(result) {
-                var classList = $.parseJSON(result);
-                var strClassList="";
-
-                for(var i=0; i < classList.length;i++){
-                    strClassList+="<a href='{{url_for('view_course', courseID='')}}" + (parseInt(classList[i].id) + 1000) + "' class='list-group-item'>";
-                    strClassList+=classList[i].name;
-                    strClassList+="</a>";
-                }
-                $('#class-list').html(strClassList);
-            }
-        });
-    }
 
     function getTaskList() {
         $.ajax({
@@ -50,7 +77,7 @@
             success     :function(result) {
                 var taskList = $.parseJSON(result);
                 var strCurrentTaskList="";
-                strCurrentTaskList+="<li class='list-group-item active'>Current</li>";
+                strCurrentTaskList+="<li class='list-group-item active' align='center'><strong>Current Tasks (student)</strong></li>";
                 for(var i=0; i < taskList.current.length;i++){
                     strCurrentTaskList+="<a href='{{url_for('task_view', taskID='')}}" + taskList.current[i].id + "' class='list-group-item";
                     var curTime = new Date(new Date().getTime() + new Date().getTimezoneOffset()*1000); // remove timezone
@@ -61,10 +88,10 @@
                         strCurrentTaskList+=" list-group-item-warning'>"; // due in <1 day
                     else
                         strCurrentTaskList+="'>"; // due in >= 1 day
+                    strCurrentTaskList+=taskList.current[i].courseName + " - ";
                     strCurrentTaskList+=taskList.current[i].title;
                     if(taskList.current[i].title == "")
                         strCurrentTaskList+="no title";
-                    strCurrentTaskList+=" - " + taskList.current[i].courseName;
                     strCurrentTaskList+='<div class="pull-right">due on ';
                     strCurrentTaskList+=taskList.current[i].duedate.substring(0,11);
                     strCurrentTaskList+=' at ' + taskList.current[i].duedate.substring(17,22);
@@ -76,12 +103,12 @@
                 }
 
                 var strCompleteTaskList="";
-                strCompleteTaskList+="<li class='list-group-item active'>Complete</li>";
+                strCompleteTaskList+="<li class='list-group-item active' align='center'><strong>Complete Tasks (student)</strong></li>";
                 for(var i=0; i < taskList.complete.length;i++){
                     strCompleteTaskList+="<a href='{{url_for('task_view', taskID='')}}" 
                     + taskList.complete[i].id + "' class='list-group-item'>";
+                    strCompleteTaskList+=taskList.complete[i].courseName + " - ";
                     strCompleteTaskList+=taskList.complete[i].title;
-                    strCompleteTaskList+=" - " + taskList.complete[i].courseName;
                     strCompleteTaskList+='<div class="pull-right">due on ';
                     strCompleteTaskList+=taskList.complete[i].duedate.substring(0,11);
                     strCompleteTaskList+=' at ' + taskList.complete[i].duedate.substring(17,22);
@@ -99,7 +126,6 @@
     }
 
     $(document).ready(function() {
-        getClassList();
         getTaskList();
     })
 </script>

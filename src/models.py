@@ -47,7 +47,11 @@ class User(db.Model):
 
     def is_admin(self):
         return True
-
+    @property
+    def serialize(self):
+        return {
+            'name': self.name
+        }
 
 class Course(db.Model):
     __tablename__ = 'course'
@@ -56,7 +60,7 @@ class Course(db.Model):
     title = db.Column(db.String(255))
     securityCode = db.Column(db.String(6))
     teacher_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    tasks = db.relationship('Task', backref='course', lazy='dynamic')
+    tasks = db.relationship('Task', backref='course', lazy='joined')
 
     def __init__(self, name, title,securityCode = 123456):
         self.securityCode = securityCode
@@ -100,11 +104,13 @@ class Task(db.Model):
     content = db.Column(db.Text)
     questions = db.Column(db.Text)
     duedate = db.Column(db.DateTime())
-    task_responses = db.relationship('TaskResponse',backref='task',lazy='dynamic')
+    task_responses = db.relationship('TaskResponse', backref='task', lazy='dynamic')
     supplementary = db.Column(db.Text)
+    status = db.Column(db.String(20))
 
     def __init__(self, title):
         self.title = title
+        self.status = "created"
         return
 
     @property
@@ -127,8 +133,12 @@ class TaskResponse(db.Model):
     graded_response = db.Column(db.Text)
     datetime = db.Column(db.DateTime())
     correctness_grade = db.Column(db.Float)
+    cognitive_grade = db.Column(db.Float)
     supplementary = db.Column(db.Text)
     graded_supplementary = db.Column(db.Text)
+    graded = db.Column(db.Boolean)
+    start_time = db.Column(db.DateTime())
+    end_time = db.Column(db.DateTime())
 
     def __init__(self, response):
         self.response = response

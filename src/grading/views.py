@@ -23,8 +23,22 @@ class ResponseView(MethodView):
         formatted_time = task_response.datetime.strftime("%a %b %d %H:%M:%S")
         response = json.loads(task_response.graded_response)
         supplementary = json.loads(task_response.graded_supplementary)
+
         return render_template("grading/response.html", response=response,
                                student=task_response.user, task=task_response.task,
                                task_response=task_response, time=formatted_time,
-                               supplementary=supplementary)
-        
+                               supplementary=supplementary,
+                               permissions=current_user.permissions)
+
+
+class ManualGradingView(MethodView):
+    decorators = [login_required]
+    # TODO come back and verify that the user has permission to do this
+
+    def post(self):
+        data = flask.request.get_json()
+        grader = grading.Grader()
+        correctness = grader.grade_manual_questions(data['response_id'],
+                                                    data['question_id'],
+                                                    data['correct'])
+        return json.dumps(correctness)

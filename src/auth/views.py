@@ -73,7 +73,7 @@ class RegisterView(MethodView):
         models.db.session.commit()
 
         auth.login(email, password)
-        if current_user.is_authenticated():
+        if flask_login.current_user.is_authenticated():
             next_url = flask.request.args.get('next', url_for("home"))
             return json.dumps({"next_url": next_url})
         return render_template("register.html", failure=True)

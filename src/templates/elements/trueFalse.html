@@ -1,6 +1,6 @@
 {% extends "layout-question.html" %}
 {% block answer_details %}
-  <div class="panel-body automatic-grading" id="notSet">
+  <div class="panel-body automatic-grading question" id="notSet">
     <div>
       <textarea id="body" class="form-control EDIT_ONLY" placeholder="Question Content" onchange="textChange(this)"></textarea>
       <p id="p_body" class="TAKE_ONLY question-content"></p>
@@ -20,12 +20,8 @@
 {% block js_bottom %}
 <script type="text/javascript">
   $(document).ready(function(){
-    $('#true').attr('id', nextChoiceID);
-    nextChoiceID = "choice" + (parseInt(nextChoiceID.split("choice")[1]) + 1);
-    $('#false').attr('id', nextChoiceID);
-    nextChoiceID = "choice" + (parseInt(nextChoiceID.split("choice")[1]) + 1);
-    $('#notSet').attr('id', nextQuestionID);
-    nextQuestionID = "question" + (parseInt(nextQuestionID.split("question")[1]) + 1);
+    $('#true').attr('id', getNextID('choice'));
+    $('#false').attr('id', getNextID('choice'));
   });
 </script>
 {% endblock %}

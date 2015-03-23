@@ -31,6 +31,9 @@
       <span class="sr-only">Error:</span>
       Finish the answer key by filling out all radio buttons
     </div>
+    {% if old_content %}    
+      {{ old_content|safe }}
+    {% else %}
     <div class="row">
       <div id="elementWell" class="elementWell EDIT_ONLY" style="border:1px;border-style:dashed;border-radius:5px;height:300px" align="center">
         <br><br>To begin, drag elements onto the screen.
@@ -38,12 +41,13 @@
     </div>
     <br>
     <div class="row">
-        <button type="button" class="btn btn-default btn-lg pull-right TAKE_ONLY PREVIEW_ONLY" style="display:None" onclick="showModal('submission-modal')">Create Task</button>
+        <button type="button" class="btn btn-success btn-lg pull-right TAKE_ONLY PREVIEW_ONLY" style="display:None" onclick="showSubmitModal()">Create Task</button>
         <p class="pull-right PREVIEW_ONLY">&nbsp;&nbsp;</p>
         <button type="button" class="btn btn-danger btn-lg pull-right EDIT_ONLY" aria-expanded="false" id="delete-all">Delete All</button>
         <p class="pull-right PREVIEW_ONLY">&nbsp;&nbsp;</p>
         <button type="button" class="btn btn-lg btn-success pull-right PREVIEW_ONLY" aria-expanded="false" id="preview">Preview</button>
     </div>
+    {% endif %}
   </div>
 </div>
 
@@ -56,10 +60,10 @@
           <h4 class="modal-title">Create Task</h4>
         </div>
         <div class="modal-body">
-          <form>
+          <form onsubmit="submitClicked()">
             <div class="form-group">
               <label for="taskTitle">Task Title</label>
-              <input type="text" class="form-control" id="taskTitle" placeholder="Task Title">
+              <input type="text" class="form-control" id="taskTitle" placeholder="Task Title" required>
             </div>
             <style>
               #taskDueDate{z-index:1151 !important;}
@@ -67,21 +71,19 @@
             <div class="form-group">
               <label for="taskDueDate">Due Date</label><br>
               <div class="col-xs-6">
-              <input id='taskDueDate' type='text' class="form-control" placeholder="mm/dd/yyyy"/>
+              <input id='taskDueDate' type='text' class="form-control" placeholder="mm/dd/yyyy" required/>
               </div>
               <div class="col-xs-6">
-              <input id='taskDueTime' type='text' class="form-control time ui-timepicker-input" placeholder="HH:MM(pm|am)"/>
+              <input id='taskDueTime' type='text' class="form-control time ui-timepicker-input" placeholder="HH:MM(pm|am)" required/>
               </div><br><br>
             </div>
             <div class="form-group">
-              <label for="taskForCourse">Associate with Course</label><br>
-              <button id="taskForCourse" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select a course<span class="caret"></span></button>
-              <ul class="dropdown-menu" aria-labelledby="dLabel" role="menu" id="taskbuilder_viewable_courses"></ul>
+              <label for="taskbuilder_viewable_courses">Associate with Course</label><br>
+              <select id="taskbuilder_viewable_courses" required></select>
             </div>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-success">Submit</button>
           </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
@@ -95,14 +97,11 @@
 <script type="text/javascript" src="/static/jquery.timepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="/static/jquery.timepicker.css" />
 <script type="text/javascript">
-  var nextChoiceID = "choice" + 0;
-  var nextQuestionID = "question" + 0;
-  var nextSupplementaryID = "supplementary" + 0;
-  var nextSupplementaryMinTimeID = "minTime" + 0;
   $(document).ready(function(){
-    
+    initEditTask();
     makeDroppable($('div.elementWell'));
 
+    // fills in courses in the submission dropdown
     getCoursesTeaching();
 
     $("div.element").draggable({

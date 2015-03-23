@@ -39,9 +39,10 @@
             <a href="" class="list-group-item">
                 <table width="100%">
                     <tr>
-                        <td width="60%"><b>Title</b></td>
+                        <td width="40%"><b>Title</b></td>
                         <td width="30%"><b>Duedate</b></td>
-                        <td width="10%"><b>Status</b></td>
+                        <td width="20%"><b>Status</b></td>
+                        <td width="10%"><b>Edit</b></td>
                     </tr>
                 </table>
             </a>
@@ -52,9 +53,16 @@
                         <a href="{{url_for('task_view', taskID=task.id)}}" class="list-group-item">
                             <table width="100%">
                                 <tr>
-                                    <td width="60%">{{ course.name}} - {{task.title }}</td>
+                                    <td width="40%">{{ course.name}} <br> <i>{{task.title }}</i></td>
                                     <td width="30%">{{ task.duedate }}</td>
-                                    <td width="10%">{{ task.status.capitalize()}}</td>
+                                    <td width="20%">{{ task.status.capitalize()}}</td>
+                                    <td width="10%">
+                                        <form action="{{url_for('taskBuilder_edit', taskID=task.id)}}" style="display:inline">
+                                            <button class="btn btn-success pull-right">
+                                                <span class="glyphicon glyphicon-pencil"></span>
+                                            </button>
+                                        </form>                     
+                                    </td>               
                                 </tr>
                             </table>
                         </a>

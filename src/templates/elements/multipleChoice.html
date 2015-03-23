@@ -1,6 +1,6 @@
 {% extends "layout-question.html" %}
 {% block answer_details %}
-  <div class="panel-body multipleChoice automatic-grading" id="notSet">
+  <div class="panel-body multipleChoice question automatic-grading" id="notSet">
     <div>
       <textarea id="body" class="form-control EDIT_ONLY" placeholder="Question Content" onchange="textChange(this)"></textarea>
       <p id="p_body" class="TAKE_ONLY question-content"></p>
@@ -9,40 +9,30 @@
     <div class="input-group hidden radioResponse">
       <span class="input-group-addon"> <input class="unassignedName radio-template" type="radio" name="0" onchange="hideAnswerKeyAlertIfAppropriate()"> </span>
       <input type="text" class="form-control EDIT_ONLY" onchange="textChangeBySibling(this)">
-      <p class='form-control TAKE_ONLY'></p>
+      <p class="form-control TAKE_ONLY multichoice-content"></p>
       <span class="EDIT_ONLY input-group-addon">
         <span class="glyphicon glyphicon-trash"></span>
       </span>
     </div>
   </div>
-  <p id="addNewResponse" class="EDIT_ONLY text-center"><a>Add another response</a></p>
+  <p id="addNewResponse" class="EDIT_ONLY text-center new-response"><a>Add another response</a></p>
 {% endblock %}
 {% block js_bottom %}
 <script type="text/javascript">
-  function addRadioResponse(ctx){
-    var textcon = $(this)
-    if (typeof ctx.first === 'function'){
-      textcon = ctx;
-    }
-    var toAdd = "<div><div class='input-group'>" 
-      + textcon.parent().find(".radioResponse").html() 
-      + "</div><br></div>";
-    textcon.parent().find('.multipleChoice').append(toAdd);
-    textcon.parent().find('.multipleChoice').find(":radio").last().attr('id', nextChoiceID);
+  $(document).ready(function(){
+    var mcID = getNextID("question");
+    $("#notSet").attr("id", mcID);
+    $(".unassignedName").attr("name", mcID);
+    $(".unassignedName").removeClass("unassignedName");
+    addRadioResponse('#' + mcID);
+    addRadioResponse('#' + mcID);
     $(".glyphicon-trash").click(function(){
       $(this).closest("div").parent().remove();
     });
-    nextChoiceID = "choice" + (parseInt(nextChoiceID.split("choice")[1]) + 1);
-  };
-  $(document).ready(function(){
-    $(".unassignedName").attr("name", "" + $(".multipleChoice").length);
-    $(".unassignedName").removeClass("unassignedName");
-    addRadioResponse($('#addNewResponse'));
-    addRadioResponse($('#addNewResponse'));
-    $("#addNewResponse").click(addRadioResponse);
+    $("#addNewResponse").click(function(){
+      addRadioResponse('#' + mcID);
+    })
     $('#addNewResponse').attr('id', '');
-    $('#notSet').attr('id', nextQuestionID);
-    nextQuestionID = "question" + (parseInt(nextQuestionID.split("question")[1]) + 1);
   });
   </script>
   {% endblock %}

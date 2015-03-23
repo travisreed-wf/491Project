@@ -25,6 +25,8 @@
 
   $(document).ready(function(){
     $('#questionList').html('{{content|safe}}');
+    $('.EDIT_ONLY').remove();
+    $('.PREVIEW_ONLY').remove();
     $('#submit').click(function(){
       var automaticQuestions = [];
       var manualQuestions = [];

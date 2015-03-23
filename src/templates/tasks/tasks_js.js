@@ -22,7 +22,7 @@
       $('#elementWell').html("<br><br>Add more elements here.");
       elementWell.before("<div class='elementTarget'></div>");
       var target = elementWell.parent().find(".elementTarget").first();
-      target.load(elementToCreate.data('filepath'));
+      target.load("/" + elementToCreate.data('filepath'));
       target.hide().fadeIn(700);
       target.removeClass('elementTarget');
       return target;
@@ -68,6 +68,11 @@
     $('.modal').off('hide.bs.modal');       
     
   }
+
+  function showSubmitModal(){
+    showModal('submission-modal');
+  }
+
   function showModal(idToShow){
     if (answerKeyCompleted() == true){
       $("#"+idToShow).find('.modal').modal('toggle');
@@ -124,11 +129,8 @@
   function addSuppElement(ctx, appendID){
     var toAppend = $(ctx).closest('.panel-body').find('.supplementary-target');
     var html = $(appendID).html();
-    html = html.replace("nextID", nextSupplementaryID);
-    nextSupplementaryID = "supplementary" + (parseInt(nextSupplementaryID.split("supplementary")[1]) + 1);
-    html = html.replace("nextMinTimeID", nextSupplementaryMinTimeID);
-    nextSupplementaryMinTimeID = "minTime" + (parseInt(nextSupplementaryMinTimeID.split("minTime")[1]) + 1);
-
+    html = html.replace("nextID", getNextID('supplementary'));
+    html = html.replace("nextMinTimeID", getNextID('minTime'));
     toAppend.append(html);
   }
   function addVideo(ctx){
@@ -204,6 +206,111 @@
     $(element).next('p').text($(element).val());
   }
 
+  function copyTextToInput(textfield, inputfield, parentDepth){
+    if(arguments.length == 2){
+      $(textfield).each(function(){
+        var textfield_content = $(this).text();
+        $(this).parent().find(inputfield).val(textfield_content);
+      })
+    }
+    else if(arguments.length == 3){
+      $(textfield).each(function(){
+        var textfield_content = $(this).text();
+        var cur = $(this);
+        for(i = 0; i < parentDepth; i++){
+          cur = cur.parent();
+        }
+        cur.find(inputfield).val(textfield_content);
+      })      
+    }
+  }
+
+  function initEditTask(){
+    $('.EDIT_ONLY').show();
+    $('.PREVIEW_ONLY').show();
+    $('.TAKE_ONLY').hide();
+    $('#preview').text("Preview");
+    
+    // <p> elements --> <input> fields
+    copyTextToInput('p.question-content', '#body');
+    copyTextToInput('p.multichoice-content', 'input.form-control');
+    copyTextToInput('#p_title', 'input.form-control');
+    copyTextToInput('.wp-pair-text', '.wp-pair-input');
+    copyTextToInput('.wp-pair-text-2', '.wp-pair-input-2', 2);
+    
+    // wp-video-panel attr src --> .wp-video-src
+    $('.wp-video-panel').each(function(){
+      var src = $(this).attr('src');
+      $(this).parent().find('.wp-video-src').val(src);
+    })
+
+    // supp material duration --> input field
+    {% if supplementary %}
+      var supplementary = {{ supplementary }}
+      for(var id in supplementary){
+        $('#' + supplementary[id].inputID).val(supplementary[id].time)
+      }
+    {% endif %}
+
+    // select all the auto-graded options selected previously
+    {% if correct_options %}
+      var answers = {{ correct_options }}
+      for(var i in answers){
+        $('#' + answers[i].correctOption).prop('checked', true);
+      }
+    {% endif %}
+
+    applyQuestionJS();
+    applyMultiChoiceJS();
+  }
+
+  function applyMultiChoiceJS(){
+    $('.multipleChoice').each(function(){
+      $(".glyphicon-trash").click(function(){
+        $(this).closest("div").parent().remove();
+      });
+      var mcID = '#' + $(this).prop("id")
+      $(mcID).parent().find('.new-response').click(function(){
+        addRadioResponse(mcID);
+      })
+    })
+  }
+
+  function applyQuestionJS(){
+    $('.delete-question').click(function(){
+      var row = $(this).closest('.row');
+      row.fadeOut(200, function(){row.remove()});
+      if($(".question-parent").length <= 1){
+        $('#elementWell').css("height","300px");
+        $('#elementWell').html("<br><br>To begin, drag elements onto the screen.");
+      }
+    });
+    $('.delete-header').click(function(){
+      $(this).closest('.panel-heading').fadeOut();
+    });
+    $('.TAKE_ONLY').hide();
+
+    $('#notSet').attr('id', getNextID('question'));
+  }
+
+  function getNextID(baseID){
+    var nextID = 0;
+    while($('#' + baseID + nextID).length == 1)
+      nextID++;
+    return baseID + nextID;
+  }
+
+  function addRadioResponse(ctx){
+    var toAdd = "<div><div class='input-group'>" 
+      + $(ctx).find(".radioResponse").html() 
+      + "</div><br></div>";
+    $(ctx).append(toAdd);
+    $(ctx).find(":radio").last().attr('id', getNextID('choice'));
+    $(".glyphicon-trash").click(function(){
+      $(this).closest("div").parent().remove();
+    });
+  };
+
   function getCoursesTeaching(){
     $.ajax({
       url         :'{{ url_for("courses_teaching")}}',
@@ -215,12 +322,12 @@
           for(var i=0; i < coursesList.length;i++){
               url = "{{url_for('view_course', courseID='')}}";
               url += coursesList[i].id + 1000;
-              strCoursesList+="<li class='submit-task' id='" + coursesList[i].id + "' onclick='submitClicked(this)''><a target='" + url + "'>";
+              strCoursesList+="<option id='" + coursesList[i].id + "' value='"+coursesList[i].name+"'>";
               strCoursesList+=coursesList[i].name;
-              strCoursesList+="</a></li>";
+              strCoursesList+="</option>";
           }
           if(coursesList.length == 0){
-              strCoursesList+="<a href='#' class='list-group-item'>No Courses</a>";
+              strCoursesList+="<option disabled>No Courses</option>";
           }
           $('#taskbuilder_viewable_courses').html(strCoursesList);
       }
@@ -236,17 +343,17 @@
     });
   }
 
-  function submitClicked(element) {
-      var numSupplementaryMinTimes = parseInt(nextSupplementaryMinTimeID.split("minTime")[1]);
-      for(i = 0 ; i < numSupplementaryMinTimes; i++){
+  function submitClicked() {
+      $('[id^=minTime]').each(function(){
+        var thisID = $(this).prop('id');
+        var index = parseInt(thisID.split("minTime")[1]);
         var d = {};
-        d['id'] = "supplementary" + i;
-        d['time'] = parseInt($("#minTime" +i).val());
-        d['title'] = $('#minTime' + i).parent().find('#title').val()
-        supplementaryInformationMinTimes["supplementary" + i] = d;
-      }
-      $('.EDIT_ONLY').remove();
-      $('.PREVIEW_ONLY').remove();
+        d['id'] = "supplementary" + index;
+        d['inputID'] = thisID;
+        d['time'] = parseInt($('#' + thisID).val());
+        d['title'] = $('#' + thisID).parent().find('#title').val()
+        supplementaryInformationMinTimes["supplementary" + index] = d;
+      })
       var questions = [];
       $('.automatic-grading').each(function(){
           var question = $(this);
@@ -264,7 +371,7 @@
       data['html'] = $('#questionList').html();
       data['questions'] = questions;
       data['supplementary'] = supplementaryInformationMinTimes;
-      data['course_id'] = $(element).attr('id')
+      data['course_id'] = $('#taskbuilder_viewable_courses option:selected').prop('id')
       data['taskTitle'] = $('#taskTitle').val()
 
       // Construct a JS date object
@@ -276,8 +383,15 @@
       var mins = parseInt(hoursMins[1].substring(0,2));
       var dueOn = new Date(date[2], parseInt(date[0])-1, date[1], hours, mins, 0, 0).getTime();
       data['taskDue'] = dueOn;
+
+      {% if task_id %}
+        var postURL = "{{ url_for('taskBuilder_edit', taskID=task_id)}}"
+      {% else %}
+        var postURL = '{{ url_for("taskBuilder") }}'
+      {% endif %}
+
       $.ajax({
-          url: '{{ url_for("taskBuilder") }}',
+          url: postURL,
           type: 'POST',
           contentType: 'application/json',
           data: JSON.stringify(data),

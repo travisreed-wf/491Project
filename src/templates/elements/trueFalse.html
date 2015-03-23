@@ -20,6 +20,12 @@
 {% block js_bottom %}
 <script type="text/javascript">
   $(document).ready(function(){
+    // force the ID to be set in this document.ready
+    var tfID = getNextID("question");
+    $("#notSet").attr("id", tfID);
+    $("#true").prop("name", "tf-" + tfID)
+    $("#false").prop("name", "tf-" + tfID)
+
     $('#true').attr('id', getNextID('choice'));
     $('#false').attr('id', getNextID('choice'));
   });

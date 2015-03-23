@@ -12,7 +12,6 @@ from flask import url_for
 from flask.views import MethodView
 import flask_login
 from flask_login import login_required
-from flask_login import current_user
 
 
 class LoginView(MethodView):
@@ -74,7 +73,7 @@ class RegisterView(MethodView):
         models.db.session.commit()
 
         auth.login(email, password)
-        if current_user.is_authenticated():
+        if flask_login.current_user.is_authenticated():
             next_url = flask.request.args.get('next', url_for("home"))
             return json.dumps({"next_url": next_url})
         return render_template("register.html", failure=True)

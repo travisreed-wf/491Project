@@ -58,9 +58,13 @@ class AddAuthorView(MethodView):
         data = flask.request.get_json()
         email = data.get('email')
         if email:
-            user = models.user.query.filter(models.Course.name.contains(email)).first()
-        print email
-        print user
-        print "TEST123"
-        return email
+            user = models.User.query.filter(models.User.email.contains(email)).first()
+            if user:
+                user.permissions = 2
+                models.db.session.commit()
+                return email
+            else: 
+                return "failure"
+        else:
+            return "failure"
 

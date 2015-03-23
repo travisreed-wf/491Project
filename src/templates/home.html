@@ -73,16 +73,16 @@
         {% endif %}
     </div>
 </div>
-<div class="col-md-5 col-sm-10 col-sm-offset-4 admin" style="display:">
+<div class="col-md-5 col-sm-10 col-sm-offset-4 admin" style="display: none">
     <div id="tasks-teaching-list" class="list-group">
         <li class="list-group-item active" align="center"><strong>Options</strong></li>
         <a class="list-group-item">
             <table width="100%">
                 <tr>
-                    <td width="40%"><b>Add Author</b></td>
+                    <td width="30%"><b>Add Author</b></td>
                     <td width="40%"><input id="addAuthorEmail" type="text" placeholder="New Author's Email" /></td>
                     <td width="10%"><button id="submitAddAuthor" type="button" class="">Send</button> </td>
-                    <td id="addAuthorNotification" width="10%"></td>
+                    <td id="addAuthorNotification" width="20%" style="color:red; visibility: hidden">  *Not Found</td>
                 </tr>
             </table>
         </a>
@@ -150,13 +150,10 @@
     $(document).ready(function() {
         getTaskList();
         $("#submitAddAuthor").click(function(){
-            alert("got here");
             addAuthor();
         })
 
         function addAuthor() {
-            alert("adding author");
-            alert($("#addAuthorEmail").val());
             $.ajax({
                   url: '{{ url_for("add_Author") }}',
                   type: 'POST',
@@ -165,7 +162,14 @@
                         'email': $("#addAuthorEmail").val(),
                     }),
                     success:  function(data) {
-                        alert("success : " + data);
+                        alert(data);
+                        if(data == "failure"){
+                            $("#addAuthorNotification").css("visibility","visible");
+                        }else{
+                            $("#addAuthorNotification").css("visibility", "hidden");
+                            $("#addAuthorEmail").val("");
+
+                        }
                     },
                     error: function(data){
                         

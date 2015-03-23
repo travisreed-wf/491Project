@@ -12,6 +12,7 @@ from flask import url_for
 from flask.views import MethodView
 import flask_login
 from flask_login import login_required
+from flask_login import current_user
 
 
 class LoginView(MethodView):

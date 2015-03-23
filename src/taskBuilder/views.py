@@ -96,7 +96,7 @@ class TaskBuilderEditView(MethodView):
         task = models.Task.query.filter_by(id=int(taskID)).first()
         return render_template("tasks/taskBuilder.html", 
                                 elements=elements, 
-                                old_content=task.content.strip().replace('\n', ''),
+                                old_content=task.content.strip(),
                                 supplementary=task.supplementary,
                                 task_id=taskID,
                                 correct_options=task.questions)

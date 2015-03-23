@@ -95,11 +95,11 @@ class TaskBuilderEditView(MethodView):
         elements = helper_functions.get_elements()
         task = models.Task.query.filter_by(id=int(taskID)).first()
         return render_template("tasks/taskBuilder.html", 
-            elements=elements, 
-            old_content=task.content.strip().replace('\n', ''),
-            supplementary=task.supplementary,
-            task_id=taskID,
-            correct_options=task.questions)
+                                elements=elements, 
+                                old_content=task.content.strip().replace('\n', ''),
+                                supplementary=task.supplementary,
+                                task_id=taskID,
+                                correct_options=task.questions)
 
     def post(self, taskID):
         task = models.Task.query.filter_by(id=int(taskID)).first()

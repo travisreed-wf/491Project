@@ -2,9 +2,9 @@
   <div class="col-md-10 col-md-offset-1">
     <div class="panel panel-primary">
       <div class="panel-heading delete-if-empty">
-        <h3 id="p_title" class="TAKE_ONLY"></h3>
+        <h3 id="p_title" class="TAKE_ONLY wp-pair-text"></h3>
         <div class="EDIT_ONLY input-group">
-          <input type="text" id="title" class="form-control" placeholder="Element Title" onchange="textChange(this)">
+          <input type="text" id="title" class="form-control wp-pair-input" placeholder="Element Title" onchange="textChange(this)">
           <span class="input-group-addon">
             <span class="glyphicon glyphicon-trash delete-header" />
           </span>
@@ -23,17 +23,6 @@
 {% endblock %}
 <script type="text/javascript">
 $(document).ready(function(){
-  $('.delete-question').click(function(){
-    var row = $(this).closest('.row');
-    row.fadeOut(200, function(){row.remove()});
-    if($(".question-parent").length <= 1){
-      $('#elementWell').css("height","300px");
-      $('#elementWell').html("<br><br>To begin, drag elements onto the screen.");
-    }
-  });
-  $('.delete-header').click(function(){
-    $(this).closest('.panel-heading').fadeOut();
-  });
-  $('.TAKE_ONLY').hide();
+  applyQuestionJS();
 });
 </script>

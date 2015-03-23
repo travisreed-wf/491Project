@@ -88,6 +88,37 @@ class TaskBuilderView(MethodView):
         models.db.session.commit()
         return ""
 
+class TaskBuilderEditView(MethodView):
+    decorators = [login_required, auth.permissions_author]
+
+    def get(self, taskID):
+        elements = helper_functions.get_elements()
+        task = models.Task.query.filter_by(id=int(taskID)).first()
+        return render_template("tasks/taskBuilder.html", 
+                                elements=elements, 
+                                old_content=task.content.strip().replace('\n', ''),
+                                supplementary=task.supplementary,
+                                task_id=taskID,
+                                correct_options=task.questions)
+
+    def post(self, taskID):
+        task = models.Task.query.filter_by(id=int(taskID)).first()
+        pattern = r"<script.*?</script>"
+        data = flask.request.get_json()
+        content = data.get('html')
+        courseID = data.get('course_id')
+        taskTitle = data.get('taskTitle')
+        taskDueDate = data.get('taskDue')
+        task.title = taskTitle
+        task.content = re.sub(pattern, "", content, flags=re.DOTALL)
+        task.questions = json.dumps(data.get('questions'))
+        task.course = models.Course.query.filter_by(id=courseID).first()
+        task.duedate = datetime.datetime.fromtimestamp(taskDueDate/1000.0)
+        task.supplementary = json.dumps(data.get('supplementary'))
+        models.db.session.add(task)
+        models.db.session.commit()
+        return ""
+
 
 class TaskTransitionView(MethodView):
     decorators = [login_required]
@@ -106,12 +137,13 @@ class TaskView(MethodView):
     def get(self, taskID):
         task = models.Task.query.filter_by(id=int(taskID)).first()
         course = models.Course.query.filter_by(id=task.course_id).first()
+        html_content = task.content.strip().replace('\n', '')
         if current_user.id == course.teacher_id:
             return render_template("tasks/taskAuthorView.html", task=task, course=course)
         elif course.id not in [c.id for c in current_user.courses]:
             return "You are not allowed to see this task", 401
         elif task.status == "available":
-            return render_template("tasks/taskStudentView.html", content=task.content.strip().replace('\n', ''))
+            return render_template("tasks/taskStudentView.html", content=html_content)
         else:
             return "This task is no longer available"
 

@@ -48,3 +48,19 @@ class TaskListView(MethodView):
         tasks['complete'] = sorted(tasks['complete'], key=lambda k: k['duedate'])
         tasks['current'] = sorted(tasks['current'], key=lambda k: k['duedate'])
         return flask.json.dumps(tasks)    
+
+class AddAuthorView(MethodView):
+
+    def get(self):
+        return
+
+    def post(self):
+        data = flask.request.get_json()
+        email = data.get('email')
+        if email:
+            user = models.user.query.filter(models.Course.name.contains(email)).first()
+        print email
+        print user
+        print "TEST123"
+        return email
+

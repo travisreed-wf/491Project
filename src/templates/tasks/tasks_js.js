@@ -364,7 +364,7 @@
             data['options'].push($(this).attr('id'));
           });
           data['correctOption'] = question.find(':radio:checked').attr('id');
-          data['correctOptionText'] = question.find(':radio:checked').parent().next('p').text();
+          data['correctOptionText'] = question.find(':radio:checked').parent().parent().find('p').text();
           questions.push(data);
       })
       var data = {};

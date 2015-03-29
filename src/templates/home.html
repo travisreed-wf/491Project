@@ -7,7 +7,7 @@
 {% endblock %}
 {% block body %}
 <div class="row">
-    <div class="col-md-5 col-sm-10 col-sm-offset-1 col-md-offset-1">
+    <div class="col-md-10 col-sm-10 col-sm-offset-1 col-md-offset-1">
         {% if courses_enrolled %}
         <div id="classes-teaching-list" class="list-group">
             <li class="list-group-item active" align="center"><strong>Courses Enrolled</strong></li>
@@ -26,7 +26,7 @@
         </div>
         {% endif %}
     </div>
-    <div class="col-md-5 col-sm-10 col-sm-offset-1">
+    <div class="col-md-10 col-sm-10 col-sm-offset-1">
         {% if courses_enrolled %}
         <div id="task-list-current" class="list-group">
         </div>
@@ -57,11 +57,24 @@
                                     <td width="30%">{{ task.duedate }}</td>
                                     <td width="20%">{{ task.status.capitalize()}}</td>
                                     <td width="10%">
+                                        <!-- Copy task --><!-- 
                                         <form action="{{url_for('taskBuilder_edit', taskID=task.id)}}" style="display:inline">
-                                            <button class="btn btn-success pull-right">
+                                            <button title="Create a copy of this task." class="btn btn-success pull-right">
+                                                <span class="glyphicon glyphicon-copy">COPY</span>
+                                            </button>
+                                        </form>       -->
+                                        <!-- Edit task -->
+                                        <form action="{{url_for('taskBuilder_edit', taskID=task.id)}}" style="display:inline">
+                                            <button title="Edit this task." class="btn btn-success pull-right">
                                                 <span class="glyphicon glyphicon-pencil"></span>
                                             </button>
-                                        </form>                     
+                                        </form>           
+                                        <!-- Delete task --><!-- 
+                                        <form action="{{url_for('taskBuilder_edit', taskID=task.id)}}" style="display:inline">
+                                            <button title="Delete this task." class="btn btn-success pull-right">
+                                                <span class="glyphicon glyphicon-trash"></span>
+                                            </button>
+                                        </form>      -->                 
                                     </td>               
                                 </tr>
                             </table>

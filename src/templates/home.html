@@ -15,6 +15,14 @@
                 <a href="/course/view/{{1000 + course.id}}" class="list-group-item">{{course.name}}</a>
             {% endfor %}
         </div>
+        {% else %}
+        <div class="jumbotron">
+            <h1>Welcome!</h1>
+            <p>It looks as though you are not enrolled in any classes yet. 
+                If you have a class code, go to the courses drop down and register now. 
+                Otherwise contact an istructor to get approval.
+            </p>
+        </div>
         {% endif %}
 
         {% if courses_teaching %}

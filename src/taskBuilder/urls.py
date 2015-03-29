@@ -3,7 +3,8 @@ import views
 
 def setup_urls(app):
     app.add_url_rule('/taskBuilder', view_func=views.TaskBuilderView.as_view('taskBuilder'))
-    app.add_url_rule('/taskBuilder/<taskID>', view_func=views.TaskBuilderEditView.as_view('taskBuilder_edit'))
+    app.add_url_rule('/taskCopy/<taskID>', view_func=views.TaskBuilderCopyView.as_view('taskBuilder_copy'))
+    app.add_url_rule('/taskEdit/<taskID>', view_func=views.TaskBuilderEditView.as_view('taskBuilder_edit'))
     app.add_url_rule('/taskBuilder/transition', view_func=views.TaskTransitionView.as_view('transition_task'))
     app.add_url_rule('/task/<taskID>', view_func=views.TaskView.as_view('task_view'))
     app.add_url_rule('/elements/multipleChoice', view_func=views.MultipleChoiceView.as_view('elements/multipleChoice'))

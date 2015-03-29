@@ -11,7 +11,8 @@ import models
 import re
 import json
 import datetime as DT
-
+import auth
+from auth import auth
 
 class HomeScreenView(MethodView):
     decorators = [login_required]
@@ -32,6 +33,18 @@ class ClassListView(MethodView):
             return flask.json.dumps(courses)
         else:
             return flask.json.dumps([])
+
+
+class DeleteTaskView(MethodView):
+    decorators = [login_required, auth.permissions_author]
+
+    def post(self):
+        data = flask.request.get_json()
+        task = models.Task.query.filter_by(id=int(data['task_id'])).first()
+        models.db.session.delete(task)
+        models.db.session.commit()
+        print "Deleted task " + str(data['task_id'])
+        return ""
 
 
 class TaskListView(MethodView):

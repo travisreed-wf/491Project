@@ -53,7 +53,7 @@
                         <a href="{{url_for('task_view', taskID=task.id)}}" class="list-group-item">
                             <table width="100%">
                                 <tr>
-                                    <td width="40%">{{ course.name}} <br> <i>{{task.title }}</i></td>
+                                    <td width="40%">{{task.title }} <br> <font size="1">{{ course.name}}</font></td>
                                     <td width="30%">{{ task.duedate }}</td>
                                     <td width="20%">{{ task.status.capitalize()}}</td>
                                     <td width="10%">

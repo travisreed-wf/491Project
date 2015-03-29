@@ -84,6 +84,12 @@
                     <td width="10%"><button id="submitAddAuthor" type="button" class="">Send</button> </td>
                     <td id="addAuthorNotification" width="20%" style="color:red; visibility: hidden">  *Not Found</td>
                 </tr>
+                <tr>
+                    <td width="30%"><b>Add Admin</b></td>
+                    <td width="40%"><input id="addAdminEmail" type="text" placeholder="New Admin's Email" /></td>
+                    <td width="10%"><button id="submitAddAdmin" type="button" class="">Send</button> </td>
+                    <td id="addAdminNotification" width="20%" style="color:red; visibility: hidden">  *Not Found</td>
+                </tr>
             </table>
         </a>
     </div>
@@ -152,6 +158,9 @@
         $("#submitAddAuthor").click(function(){
             addAuthor();
         })
+        $("#submitAddAdmin").click(function(){
+            addAdmin();
+        })
 
         function addAuthor() {
             $.ajax({
@@ -162,12 +171,35 @@
                         'email': $("#addAuthorEmail").val(),
                     }),
                     success:  function(data) {
-                        alert(data);
                         if(data == "failure"){
                             $("#addAuthorNotification").css("visibility","visible");
                         }else{
+                            alert(data + " is now an Author");
                             $("#addAuthorNotification").css("visibility", "hidden");
                             $("#addAuthorEmail").val("");
+
+                        }
+                    },
+                    error: function(data){    
+                    }
+            });
+        }
+
+        function addAdmin() {
+            $.ajax({
+                  url: '{{ url_for("add_Admin") }}',
+                  type: 'POST',
+                  contentType: 'application/json',
+                  data: JSON.stringify({
+                        'email': $("#addAdminEmail").val(),
+                    }),
+                    success:  function(data) {
+                        if(data == "failure"){
+                            $("#addAdminNotification").css("visibility","visible");
+                        }else{
+                            alert(data + " is now an Admin");
+                            $("#addAdminNotification").css("visibility", "hidden");
+                            $("#addAdminEmail").val("");
 
                         }
                     },
@@ -175,8 +207,7 @@
                         
                     }
             });
-
-    }
+        }
 
     })
 </script>

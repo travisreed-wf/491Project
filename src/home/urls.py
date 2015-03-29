@@ -8,5 +8,6 @@ def setup_urls(app):
     app.add_url_rule('/home/classlist', view_func=views.ClassListView.as_view('class_list'))
     app.add_url_rule('/home/tasklist', view_func=views.TaskListView.as_view('task_list'))
     app.add_url_rule('/home/addAuthor', view_func=views.AddAuthorView.as_view('add_Author'))
+    app.add_url_rule('/home/addAdmin', view_func=views.AddAdminView.as_view('add_Admin'))
 
     

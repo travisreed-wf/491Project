@@ -279,7 +279,10 @@
   function applyQuestionJS(){
     $('.delete-question').click(function(){
       var row = $(this).closest('.row');
-      row.fadeOut(200, function(){row.remove()});
+      row.fadeOut(200, function(){
+        row.remove();
+        hideAnswerKeyAlertIfAppropriate();
+      });
       if($(".question-parent").length <= 1){
         $('#elementWell').css("height","300px");
         $('#elementWell').html("<br><br>To begin, drag elements onto the screen.");

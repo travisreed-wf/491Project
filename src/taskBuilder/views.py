@@ -37,6 +37,27 @@ def get_thumbnail(extension):
     else:
         return models.Thumbnail.query.filter_by(id=3).first()
 
+def store_task(taskID):
+    if taskID == -1:
+        task = models.Task("")
+    else :
+        task = models.Task.query.filter_by(id=int(taskID)).first()
+    pattern = r"<script.*?</script>"
+    data = flask.request.get_json()
+    content = data.get('html')
+    courseID = data.get('course_id')
+    taskTitle = data.get('taskTitle')
+    taskDueDate = data.get('taskDue')
+    task.title = taskTitle
+    task.content = re.sub(pattern, "", content, flags=re.DOTALL)
+    task.questions = json.dumps(data.get('questions'))
+    task.course = models.Course.query.filter_by(id=courseID).first()
+    task.duedate = datetime.datetime.fromtimestamp(taskDueDate/1000.0)
+    task.supplementary = json.dumps(data.get('supplementary'))
+    models.db.session.add(task)
+    models.db.session.commit()
+    print "Stored task " + str(task.id) + " into db."
+
 
 class UploadView(MethodView):
 
@@ -71,21 +92,8 @@ class TaskBuilderView(MethodView):
         return render_template("tasks/taskBuilder.html", elements=elements)
 
     def post(self):
-        task = models.Task("")
-        pattern = r"<script.*?</script>"
-        data = flask.request.get_json()
-        content = data.get('html')
-        courseID = data.get('course_id')
-        taskTitle = data.get('taskTitle')
-        taskDueDate = data.get('taskDue')
-        task.title = taskTitle
-        task.content = re.sub(pattern, "", content, flags=re.DOTALL)
-        task.questions = json.dumps(data.get('questions'))
-        task.course = models.Course.query.filter_by(id=courseID).first()
-        task.duedate = datetime.datetime.fromtimestamp(taskDueDate/1000.0)
-        task.supplementary = json.dumps(data.get('supplementary'))
-        models.db.session.add(task)
-        models.db.session.commit()
+        print "Creating a new task"
+        store_task(-1)
         return ""
 
 class TaskBuilderEditView(MethodView):
@@ -102,22 +110,21 @@ class TaskBuilderEditView(MethodView):
                                 correct_options=task.questions)
 
     def post(self, taskID):
-        task = models.Task.query.filter_by(id=int(taskID)).first()
-        pattern = r"<script.*?</script>"
-        data = flask.request.get_json()
-        content = data.get('html')
-        courseID = data.get('course_id')
-        taskTitle = data.get('taskTitle')
-        taskDueDate = data.get('taskDue')
-        task.title = taskTitle
-        task.content = re.sub(pattern, "", content, flags=re.DOTALL)
-        task.questions = json.dumps(data.get('questions'))
-        task.course = models.Course.query.filter_by(id=courseID).first()
-        task.duedate = datetime.datetime.fromtimestamp(taskDueDate/1000.0)
-        task.supplementary = json.dumps(data.get('supplementary'))
-        models.db.session.add(task)
-        models.db.session.commit()
+        print "Updating task " + str(taskID)
+        store_task(taskID)
         return ""
+
+class TaskBuilderCopyView(MethodView):
+    decorators = [login_required, auth.permissions_author]
+
+    def get(self, taskID):
+        elements = helper_functions.get_elements()
+        task = models.Task.query.filter_by(id=int(taskID)).first()
+        return render_template("tasks/taskBuilder.html", 
+                                elements=elements, 
+                                old_content=task.content.strip(),
+                                supplementary=task.supplementary,
+                                correct_options=task.questions)
 
 
 class TaskTransitionView(MethodView):

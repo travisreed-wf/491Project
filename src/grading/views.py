@@ -37,8 +37,9 @@ class ManualGradingView(MethodView):
 
     def post(self):
         data = flask.request.get_json()
+        response_id = data['response_id'].split('?')[0]
         grader = grading.Grader()
-        correctness = grader.grade_manual_question(data['response_id'],
+        correctness = grader.grade_manual_question(response_id,
                                                    data['question_id'],
                                                    data['correct'])
         return json.dumps(correctness)
@@ -50,8 +51,9 @@ class ManualCriticalGradingView(MethodView):
 
     def post(self):
         data = flask.request.get_json()
+        response_id = data['response_id'].split('?')[0]
         grader = grading.Grader()
-        grader.grade_manual_question(data['response_id'],
+        grader.grade_manual_question(response_id,
                                      data['question_id'],
                                      data['critical'],
                                      category="critical")

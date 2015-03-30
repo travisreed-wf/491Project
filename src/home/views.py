@@ -61,3 +61,42 @@ class TaskListView(MethodView):
         tasks['complete'] = sorted(tasks['complete'], key=lambda k: k['duedate'])
         tasks['current'] = sorted(tasks['current'], key=lambda k: k['duedate'])
         return flask.json.dumps(tasks)    
+
+class AddAuthorView(MethodView):
+
+    def get(self):
+        return
+
+    def post(self):
+        data = flask.request.get_json()
+        email = data.get('email')
+        if email:
+            user = models.User.query.filter(models.User.email.contains(email)).first()
+            if user:
+                user.permissions = 2
+                models.db.session.commit()
+                return email
+            else: 
+                return "failure"
+        else:
+            return "failure"
+
+class AddAdminView(MethodView):
+
+    def get(self):
+        return
+
+    def post(self):
+        data = flask.request.get_json()
+        email = data.get('email')
+        if email:
+            user = models.User.query.filter(models.User.email.contains(email)).first()
+            if user:
+                user.permissions = 3
+                models.db.session.commit()
+                return email
+            else: 
+                return "failure"
+        else:
+            return "failure" 
+

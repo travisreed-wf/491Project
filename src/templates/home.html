@@ -15,7 +15,7 @@
                 <a href="/course/view/{{1000 + course.id}}" class="list-group-item">{{course.name}}</a>
             {% endfor %}
         </div>
-        {% else %}
+        {% elif current_user.permissions == 1%}
         <div class="jumbotron">
             <h1>Welcome!</h1>
             <p>It looks as though you are not enrolled in any classes yet. 

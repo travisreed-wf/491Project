@@ -68,7 +68,7 @@ class RegisterView(MethodView):
             user = models.User(email, password, name)
             models.db.session.add(user)
             if data.get("author"):
-                user.permissions = 2
+                user.permissions = 50
 
         models.db.session.commit()
 

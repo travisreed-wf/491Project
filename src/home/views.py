@@ -73,7 +73,7 @@ class AddAuthorView(MethodView):
         if email:
             user = models.User.query.filter(models.User.email.contains(email)).first()
             if user:
-                user.permissions = 2
+                user.permissions = 50
                 models.db.session.commit()
                 return email
             else: 
@@ -92,7 +92,7 @@ class AddAdminView(MethodView):
         if email:
             user = models.User.query.filter(models.User.email.contains(email)).first()
             if user:
-                user.permissions = 3
+                user.permissions = 100
                 models.db.session.commit()
                 return email
             else: 

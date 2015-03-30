@@ -22,11 +22,11 @@ class User(db.Model):
     coursesTeaching = db.relationship('Course', backref='author',
                                       lazy='dynamic')
     name = db.Column(db.String(255))
-    permissions = db.Column(db.Integer, default=1)
+    permissions = db.Column(db.Integer, default=10)
     task_responses = db.relationship('TaskResponse', backref='user',
                                      lazy='dynamic')
 
-    def __init__(self, email, password, name, permissions=1):
+    def __init__(self, email, password, name, permissions=10):
         self.email = email
         self.password = password
         self.name = name

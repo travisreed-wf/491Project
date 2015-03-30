@@ -26,7 +26,7 @@
             <div class="collapse navbar-collapse">
                 <ul id="page-nav" class="nav navbar-nav">
                     <li><a href="/home">Home</a></li>
-                    <li style="display: none" class="author"><a href="/taskBuilder">Task Builder</a></li>
+                    <li style="display: none" class="author admin"><a href="/taskBuilder">Task Builder</a></li>
                     <li class="dropdown">
                         <a id="courses-dropdown" data-target="#" href="" data-toggle="dropdown">Courses 
                             <span class="caret"></span>
@@ -75,8 +75,8 @@
                 async       :false,
                 success     :function(result) {
                     var classList = $.parseJSON(result);
-                    var strClassList="<li style='display: none;' class='author'><a href='/course/create'>Create Course</a></li>";
-                    var registerforClass = "<li style='display: none;' class='student author'><a href='/course/registerForCourse'>Register For Course</a></li>"
+                    var strClassList="<li style='display: none;' class='author admin'><a href='/course/create'>Create Course</a></li>";
+                    var registerforClass = "<li style='display: none;' class='student author admin'><a href='/course/registerForCourse'>Register For Course</a></li>"
                     strClassList += registerforClass;
                     for(var i=0; i < classList.length;i++){
 

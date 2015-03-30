@@ -12,6 +12,28 @@ import grading
 import models
 
 
+class MigrateDataView(MethodView):
+
+    def get(self):
+        responses = models.TaskResponse.query.all()
+        for response in responses:
+            if response.graded_response:
+                graded_response = json.loads(response.graded_response)
+                for question in graded_response['manual_questions']:
+                    if question.get('correctness'):
+                        continue
+                    question['critical'] = None
+                    if question.get('correct'):
+                        question['correctness'] = 100
+                    elif question.get('correct') is False:
+                        question['correctness'] = 0
+                    else:
+                        question['correctness'] = -1
+                response.graded_response = json.dumps(graded_response)
+        models.db.session.commit()
+        return "Success"
+
+
 class ResponseView(MethodView):
     decorators = [login_required]
 

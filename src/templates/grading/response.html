@@ -26,7 +26,7 @@
       {% for manual_question in response['manual_questions'] %}
         {% if manual_question['correctness'] > 60 and manual_question['critical'] is not none %}
         <div class="panel panel-success">
-        {% elif manual_question['correctness'] > 0 and manual_question['critical'] is not none %}
+        {% elif manual_question['correctness'] >= 0 and manual_question['critical'] is not none %}
         <div class="panel panel-danger">
         {% else %}
         <div class="panel panel-warning">
@@ -35,10 +35,13 @@
           <div class="panel-body">
             Question Content: {{manual_question['questionContent']}}<br>
             Response: {{manual_question['response']}}<br>
-            Correctness: {{manual_question['correctness']}}
-            Critical Thinking?: 
-            <button type="button" class="btn btn-success btn-xs" onclick="markCritical(true, this, {{manual_question['correctness']}})"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
-            <button type="button" class="btn btn-danger btn-xs" onclick="markCritical(false, this, {{manual_question['correctness']}})"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+            Correctness: {% if manual_question['correctness'] >= 0 %}{{manual_question['correctness']}}{% else %}Not graded{% endif %}<br>
+            <div class="manual-radio">
+              <div class="radio">
+                <label class="radio-inline"><input type="radio" {% if manual_question['critical'] %}checked{% endif %} onclick="markCritical(true, this, {{manual_question['correctness']}})">Critical Thinking</label>
+                <label class="radio-inline"><input type="radio" {% if manual_question['critical'] == False %}checked{% endif %} onclick="markCritical(false, this, {{manual_question['correctness']}})">Simple Response</label>
+              </div>
+            </div>
           </div>
         </div>
       {% endfor %}<br>
@@ -76,8 +79,14 @@
 {{ super() }}
 <script type="text/javascript">
 
+  $( document ).ready(function() {    
+      $(".manual-radio" ).each(function( index ) {
+      $(this).find('input').attr('name', String(index));
+    });
+  })
+
   function markCritical(critical, button, correctness){
-      var heading = $(button).parent().parent().find('.panel-heading');
+      var heading = $(button).closest('.panel-body').prev('.panel-heading');
       var questionID = heading.text();
       var data = {};
       var responseID = document.URL.split("/").pop();

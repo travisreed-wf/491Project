@@ -51,7 +51,9 @@ class ManualCriticalGradingView(MethodView):
     def post(self):
         data = flask.request.get_json()
         grader = grading.Grader()
-        grader.grade_manual_questions(data['response_id'],
-                                      data['question_id'],
-                                      data['correct'],
-                                      category="critical")
+        grader.grade_manual_question(data['response_id'],
+                                     data['question_id'],
+                                     data['critical'],
+                                     category="critical")
+        models.db.session.commit()
+        return ""

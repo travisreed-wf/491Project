@@ -15,6 +15,14 @@
                 <a href="/course/view/{{1000 + course.id}}" class="list-group-item">{{course.name}}</a>
             {% endfor %}
         </div>
+        {% else %}
+        <div class="jumbotron">
+            <h1>Welcome!</h1>
+            <p>It looks as though you are not enrolled in any classes yet. 
+                If you have a class code, go to the courses drop down and register now. 
+                Otherwise contact an instructor to get approval.
+            </p>
+        </div>
         {% endif %}
 
         {% if courses_teaching %}
@@ -53,7 +61,7 @@
                         <a href="{{url_for('task_view', taskID=task.id)}}" class="list-group-item">
                             <table width="100%">
                                 <tr>
-                                    <td width="30%">{{ course.name}} <br> <i>{{task.title }}</i></td>
+                                    <td width="30%">{{task.title }} <br> <font size="1">{{ course.name}}</font></td>
                                     <td width="30%">{{ task.duedate }}</td>
                                     <td width="20%">{{ task.status.capitalize()}}</td>
                                     <td width="20%">
@@ -122,8 +130,8 @@
                         strCurrentTaskList+=" list-group-item-warning'>"; // due in <1 day
                     else
                         strCurrentTaskList+="'>"; // due in >= 1 day
-                    strCurrentTaskList+=taskList.current[i].courseName + " - ";
-                    strCurrentTaskList+=taskList.current[i].title;
+                    strCurrentTaskList+=taskList.current[i].title + "<br> ";
+                    strCurrentTaskList+= "<font size='1'>" + taskList.current[i].courseName + "</font>";
                     if(taskList.current[i].title == "")
                         strCurrentTaskList+="no title";
                     strCurrentTaskList+='<div class="pull-right">due on ';
@@ -141,8 +149,8 @@
                 for(var i=0; i < taskList.complete.length;i++){
                     strCompleteTaskList+="<a href='{{url_for('task_view', taskID='')}}" 
                     + taskList.complete[i].id + "' class='list-group-item'>";
-                    strCompleteTaskList+=taskList.complete[i].courseName + " - ";
-                    strCompleteTaskList+=taskList.complete[i].title;
+                    strCompleteTaskList+=taskList.complete[i].title + "<br> ";
+                    strCompleteTaskList+= "<font size='1'>" + taskList.complete[i].courseName + "</font>";
                     strCompleteTaskList+='<div class="pull-right">due on ';
                     strCompleteTaskList+=taskList.complete[i].duedate.substring(0,11);
                     strCompleteTaskList+=' at ' + taskList.complete[i].duedate.substring(17,22);

@@ -49,6 +49,8 @@
         data['questionID'] = question.attr('id');
         data['response'] = question.find('#student-response').val();
         data['questionContent'] = question.find(".question-content").text();
+        data['correct'] = -1;
+        data['critical'] = null;
         manualQuestions.push(data);
       });
       var endTaskTime = new Date();

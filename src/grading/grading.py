@@ -23,17 +23,19 @@ class Grader:
         task_response.graded = (total == total_graded)
         return int(float(100 * correct) / total_graded) if total_graded else 0
 
-    def grade_manual_questions(self, response_id, question_id, correct):
+    def grade_manual_question(self, response_id, question_id, correct,
+                              category='correct'):
         response = models.TaskResponse.query.filter_by(id=response_id).first()
         graded_response = json.loads(response.graded_response)
         for question in graded_response['manual_questions']:
             if question['questionID'] == question_id:
-                question['correct'] = correct
+                question[category] = correct
         response.graded_response = json.dumps(graded_response)
-        correctness_grade = self.calculate_correctness(response_id)
-        response.correctness_grade = correctness_grade
-        models.db.session.commit()
-        return correctness_grade
+        if category == 'corect':
+            correctness_grade = self.calculate_correctness(response_id)
+            response.correctness_grade = correctness_grade
+            models.db.session.commit()
+            return correctness_grade
 
     def grade_automatic_questions(self, response_id):
         task_response = models.TaskResponse.query.filter_by(id=response_id).first()

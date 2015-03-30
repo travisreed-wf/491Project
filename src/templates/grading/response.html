@@ -24,9 +24,9 @@
   {% endif %}
       <h4>Manual Grading Required</h4>
       {% for manual_question in response['manual_questions'] %}
-        {% if manual_question['correct'] == True %}
+        {% if manual_question['correctness'] > 60 and manual_question['critical'] is not none %}
         <div class="panel panel-success">
-        {% elif manual_question['correct'] == False %}
+        {% elif manual_question['correctness'] > 0 and manual_question['critical'] is not none %}
         <div class="panel panel-danger">
         {% else %}
         <div class="panel panel-warning">
@@ -35,9 +35,10 @@
           <div class="panel-body">
             Question Content: {{manual_question['questionContent']}}<br>
             Response: {{manual_question['response']}}<br>
-            Correct?: 
-            <button type="button" class="btn btn-success btn-xs" onclick="markCorrect(true, this)"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
-            <button type="button" class="btn btn-danger btn-xs" onclick="markCorrect(false, this)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+            Correctness: {{manual_question['correctness']}}
+            Critical Thinking?: 
+            <button type="button" class="btn btn-success btn-xs" onclick="markCritical(true, this, {{manual_question['correctness']}})"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+            <button type="button" class="btn btn-danger btn-xs" onclick="markCritical(false, this, {{manual_question['correctness']}})"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
           </div>
         </div>
       {% endfor %}<br>
@@ -75,7 +76,35 @@
 {{ super() }}
 <script type="text/javascript">
 
-  function markCorrect(correct, button){
+  function markCritical(critical, button, correctness){
+      var heading = $(button).parent().parent().find('.panel-heading');
+      var questionID = heading.text();
+      var data = {};
+      var responseID = document.URL.split("/").pop();
+      data['question_id'] = questionID;
+      data['critical'] = critical;
+      data['response_id'] = responseID;
+      $.ajax({
+            type: 'POST',
+            url: '{{ url_for("grade_manually_critical")}}',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            success: function(data) {
+              if (correctness > 60){
+                heading.parent().toggleClass("panel-success", true);
+                heading.parent().toggleClass("panel-danger", false);
+                heading.parent().toggleClass("panel-warning", false);
+              }
+              else if (correctness > 0){
+                heading.parent().toggleClass("panel-success", false);
+                heading.parent().toggleClass("panel-danger", true);
+                heading.parent().toggleClass("panel-warning", false);
+              }
+            }
+        });
+  }
+
+  function gradeCorrectness(correct, button){
       var heading = $(button).parent().parent().find('.panel-heading');
       var questionID = heading.text();
       var data = {};

@@ -57,37 +57,35 @@
 
             {% for course in courses_teaching %}
                 {% for task in course.tasks %}
-                    {% if task.status != "closed" %}
-                        <a href="{{url_for('task_view', taskID=task.id)}}" class="list-group-item">
-                            <table width="100%">
-                                <tr>
-                                    <td width="30%">{{task.title }} <br> <font size="1">{{ course.name}}</font></td>
-                                    <td width="30%">{{ task.duedate }}</td>
-                                    <td width="20%">{{ task.status.capitalize()}}</td>
-                                    <td width="20%">
-                                        <!-- Copy task -->
-                                        <form action="{{url_for('taskBuilder_copy', taskID=task.id)}}" style="display:inline">
-                                            <button title="Create a copy of this task." class="btn btn-primary">
-                                                <span class="glyphicon glyphicon-copy"></span>
-                                            </button>
-                                        </form>
-                                        <!-- Edit task -->
-                                        <form action="{{url_for('taskBuilder_edit', taskID=task.id)}}" style="display:inline">
-                                            <button title="Edit this task." class="btn btn-success">
-                                                <span class="glyphicon glyphicon-pencil"></span>
-                                            </button>
-                                        </form>           
-                                        <!-- Delete task -->
-                                        <form action="" style="display:inline" class="wp-delete-task">
-                                            <button title="Delete this task." class="btn btn-danger" onclick="deleteTask({{task.id }})">
-                                                <span class="glyphicon glyphicon-trash"></span>
-                                            </button> 
-                                        </form>
-                                    </td>               
-                                </tr>
-                            </table>
-                        </a>
-                    {% endif %}
+                    <a href="{{url_for('task_view', taskID=task.id)}}" class="list-group-item">
+                        <table width="100%">
+                            <tr>
+                                <td width="30%">{{task.title }} <br> <font size="1">{{ course.name}}</font></td>
+                                <td width="30%">{{ task.duedate }}</td>
+                                <td width="20%">{{ task.status.capitalize()}}</td>
+                                <td width="20%">
+                                    <!-- Copy task -->
+                                    <form action="{{url_for('taskBuilder_copy', taskID=task.id)}}" style="display:inline">
+                                        <button title="Create a copy of this task." class="btn btn-primary">
+                                            <span class="glyphicon glyphicon-copy"></span>
+                                        </button>
+                                    </form>
+                                    <!-- Edit task -->
+                                    <form action="{{url_for('taskBuilder_edit', taskID=task.id)}}" style="display:inline">
+                                        <button title="Edit this task." class="btn btn-success">
+                                            <span class="glyphicon glyphicon-pencil"></span>
+                                        </button>
+                                    </form>           
+                                    <!-- Delete task -->
+                                    <form action="" style="display:inline" class="wp-delete-task">
+                                        <button title="Delete this task." class="btn btn-danger" onclick="deleteTask({{task.id }})">
+                                            <span class="glyphicon glyphicon-trash"></span>
+                                        </button> 
+                                    </form>
+                                </td>               
+                            </tr>
+                        </table>
+                    </a>
                 {% endfor %}
             {% endfor %}
         </div>

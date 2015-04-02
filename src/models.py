@@ -78,8 +78,14 @@ class Course(db.Model):
 
     def set_students(self, student_file):
         try:
+            students = []
             lines = student_file.read()
-            students = lines.split(",")
+            if "," in lines:
+                students = lines.split(",")
+            elif " " in lines:
+                students = lines.split()
+            elif "\n" in lines:
+                students = lines.split("\n")
             for email in students:
                 print email
                 user = User.query.filter_by(email=email).first()

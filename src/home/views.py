@@ -29,9 +29,6 @@ class ClassListView(MethodView):
         if current_user.is_authenticated():
             teaching = models.Course.query.filter_by(teacher_id=current_user.id).all()
             tas = models.Course.query.filter(models.Course.secondaryTeachers.contains(str(current_user.id)+",")).all()
-            print "***************************************************************"
-            for c in tas:
-                print c.title
             courses = [c.serialize for c in current_user.courses]
             courses += [c.serialize for c in tas]
             courses += [c.serialize for c in teaching]
@@ -81,13 +78,10 @@ class AddAuthorView(MethodView):
     def post(self):
         data = flask.request.get_json()
         email = data.get('email')
-        print email
         if email:
             user = models.User.query.filter(models.User.email.contains(email)).first()
             if user:
-                print user
                 if user.permissions:
-                    print user.permissions
                     if user.permissions < 50:
                         user.permissions = 50
                         models.db.session.commit()

@@ -83,8 +83,6 @@ class searchCourseName(MethodView):
         else:
             courses = []
         course_info = [course.serialize for course in courses]
-        print courseName
-        print course_info
         return json.dumps(course_info)
 
 

@@ -128,17 +128,9 @@ class RemoveUserView(MethodView):
             user = models.User.query.filter(models.User.email.contains(email)).first()
             if user:
                 if user.permissions:
-                    if flask.session['permissions'] == 50:
-                        if user.permissions == 20:
-                            user.permissions = 10
-                            models.db.session.commit()
-                            return email
-                        else:
-                            return "failure"
-                    else:
-                        user.permissions = 10
-                        models.db.session.commit()
-                        return email
+                    user.permissions = 10
+                    models.db.session.commit()
+                    return email
             else: 
                 return "failure"
         else:

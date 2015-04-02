@@ -133,7 +133,50 @@ class AddTAView(MethodView):
                     if user.permissions <= 20:
                         user.permissions = 20
                         secondaryTeachers = course.secondaryTeachers
-                        secondaryTeachers = secondaryTeachers + str(user.id) + ","
+                        userIdAndComma = str(user.id) + ","
+                        if secondaryTeachers.find(userIdAndComma) == 0:
+                            return "failure"
+                        elif secondaryTeachers.find("," + userIdAndComma) != -1:
+                            return "failure"
+                        secondaryTeachers = secondaryTeachers + userIdAndComma
+                        course.secondaryTeachers = secondaryTeachers
+                        models.db.session.commit()
+                        return email
+                    else:
+                        return "failure"
+            else: 
+                return "failure"
+        else:
+            return "failure"
+
+class RemoveTAView(MethodView):
+
+    def get(self):
+        return
+
+    def post(self):
+        data = flask.request.get_json()
+        email = data.get('email')
+        courseId = data.get('courseID')
+        course = models.Course.query.filter_by(id=courseId).first()
+        if email:
+            user = models.User.query.filter(models.User.email.contains(email)).first()
+            if user:
+                if user.permissions:
+                    if user.permissions == 20:
+                        newUser = models.User.query.filter_by(email=email).first()
+                        tas = models.Course.query.filter(models.Course.secondaryTeachers.contains(str(newUser.id)+",")).all()
+                        print tas
+                        if len(tas) <= 1:
+                            newUser.permissions = 10
+                        secondaryTeachers = course.secondaryTeachers
+                        userIdAndComma = str(user.id) + ","
+                        if secondaryTeachers.find(userIdAndComma) == 0:
+                            secondaryTeachers = secondaryTeachers.replace(userIdAndComma,"",1)
+                        elif secondaryTeachers.find(","+userIdAndComma) != -1:
+                            secondaryTeachers = secondaryTeachers.replace(userIdAndComma,"",1)
+                        else:
+                            return "failure"
                         course.secondaryTeachers = secondaryTeachers
                         models.db.session.commit()
                         return email

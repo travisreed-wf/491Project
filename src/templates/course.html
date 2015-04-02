@@ -114,13 +114,15 @@
                 }
         });
     }
-    function removeUser(user) {
+    function removeTA(TA) {
         $.ajax({
-              url: '{{ url_for("remove_User") }}',
+              url: '{{ url_for("remove_TA") }}',
               type: 'POST',
               contentType: 'application/json',
               data: JSON.stringify({
-                    'email': user,
+                    'email': TA,
+                    'courseID': parseInt("{{course.id}}"),
+
                 }),
                 success:  function(data) {
                     if(data == "failure"){
@@ -143,7 +145,7 @@
             addTA();
         });
         $("#submitDeleteTA").click(function(){
-            removeUser($("#TAEmail").val());
+            removeTA($("#TAEmail").val());
         });
     })
 </script>

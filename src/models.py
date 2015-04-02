@@ -83,10 +83,10 @@ class Course(db.Model):
             lines = student_file.read()
             if "," in lines:
                 students = lines.split(",")
-            elif " " in lines:
-                students = lines.split()
             elif "\n" in lines:
                 students = lines.split("\n")
+            elif " " in lines:
+                students = lines.split()
             for email in students:
                 if "@" not in email:
                     email += "@iastate.edu"

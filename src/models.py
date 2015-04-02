@@ -87,7 +87,8 @@ class Course(db.Model):
             elif "\n" in lines:
                 students = lines.split("\n")
             for email in students:
-                print email
+                if "@" not in email:
+                    email += "@iastate.edu"
                 user = User.query.filter_by(email=email).first()
                 if user:
                     if self not in user.courses:

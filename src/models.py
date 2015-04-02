@@ -60,6 +60,7 @@ class Course(db.Model):
     title = db.Column(db.String(255))
     securityCode = db.Column(db.String(6))
     teacher_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    secondaryTeachers = db.Column(db.String(255),default="")
     tasks = db.relationship('Task', backref='course', lazy='joined')
 
     def __init__(self, name, title,securityCode = 123456):

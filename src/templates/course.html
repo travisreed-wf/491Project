@@ -17,6 +17,21 @@
         </div>
         <div id="course-task-list-complete" class="list-group">
         </div>
+        <div id="tasks-teaching-list author" class="list-group">
+            <li class="list-group-item active" align="center"><strong>Options</strong></li>
+            <a class="list-group-item">
+                <table width="100%">
+                    <tr class="admin author" style="display: none">
+                        <td width="35%"><b>Add/Remove TA from course</b></td>
+                        <td width="15%"><input id="TAEmail" type="text" placeholder="User's Email" /></td>
+                        <td width="5%">&nbsp</td>
+                        <td width="15%"><button id="submitAddTA" type="button" class="">Add TA</button> </td>
+                        <td width="15%"><button id="submitDeleteTA" type="button" class="">Delete TA</button> </td>
+                        <td id="addTANotification" width="15%" style="color:red; visibility: hidden">  *Incorrect</td>
+                    </tr>
+                </table>
+            </a>
+        </div>
     </div>
 </div>
 {% endblock %}
@@ -75,8 +90,61 @@
             }
         });
     }
+    function addTA() {
+        $.ajax({
+              url: '{{ url_for("add_TA") }}',
+              type: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify({
+                    'email': $("#TAEmail").val(),
+                    'courseID': parseInt("{{course.id}}"),
+                }),
+                success:  function(data) {
+                    if(data == "failure"){
+                        $("#addTANotification").css("visibility","visible");
+                    }else{
+                        alert(data + " is now an TA");
+                        $("#addTANotification").css("visibility", "hidden");
+                        $("#TAEmail").val("");
+
+                    }
+                },
+                error: function(data){
+                    
+                }
+        });
+    }
+    function removeUser(user) {
+        $.ajax({
+              url: '{{ url_for("remove_User") }}',
+              type: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify({
+                    'email': user,
+                }),
+                success:  function(data) {
+                    if(data == "failure"){
+                        $("#addTANotification").css("visibility","visible");
+                    }else{
+                        alert(data + " is now a Student");
+                        $("#addTaNotification").css("visibility", "hidden");
+                        $("#TAEmail").val("");
+
+                    }
+                },
+                error: function(data){
+                    
+                }
+        });
+    }
     $(document).ready(function() {
         getCourseTaskList();
+        $("#submitAddTA").click(function(){
+            addTA();
+        });
+        $("#submitDeleteTA").click(function(){
+            removeUser($("#TAEmail").val());
+        });
     })
 </script>
 {% endblock %}

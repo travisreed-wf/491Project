@@ -1,0 +1,127 @@
+{% extends "layout.html" %}
+{% block header_css %}
+<head>
+    <title>Course</title>
+    {{ super() }}
+</head>
+{% endblock %}
+{% block body %}
+<div class="col-md-8 col-sm-12 col-sm-offset-2 author admin" style="display: none">
+    <div id="tasks-teaching-list author" class="list-group">
+        <li class="list-group-item active" align="center"><strong>Options</strong></li>
+        <a class="list-group-item">
+            <table width="100%">
+                <tr class="admin" style="display: none">
+                    <td width="35%"><b>Change Status to Author</b></td>
+                    <td width="15%"><input id="authorEmail" type="text" placeholder="User's Email" /></td>
+                    <td width="15%">&nbsp</td>
+                    <td width="15%"><button id="submitAddAuthor" type="button" class="">Change</button> </td>
+                    <td id="addAuthorNotification" width="20%" style="color:red; visibility: hidden">  *Incorrect</td>
+                </tr>
+                <tr class="admin" style="display: none"><td>&nbsp</td></tr>
+                <tr class="admin" style="display: none">
+                    <td width="35%"><b>Change Status to Admin</b></td>
+                    <td width="15%"><input id="adminEmail" type="text" placeholder="User's Email" /></td>
+                    <td width="15%">&nbsp</td>
+                    <td width="15%"><button id="submitAddAdmin" type="button" class="">Change</button> </td>
+                    <td id="addAdminNotification" width="20%" style="color:red; visibility: hidden">  *Incorrect</td>
+                </tr>
+                <tr class="admin" style="display: none"><td>&nbsp</td></tr>
+                <tr class="admin" style="display: none">
+                    <td width="35%"><b>Remove User</b></td>
+                    <td width="15%"><input id="removalEmail" type="text" placeholder="User's Email" /></td>
+                    <td width="15%">&nbsp</td>
+                    <td width="15%"><button id="submitRemoveUser" type="button" class="">Remove</button> </td>
+                    <td id="addUserNotification" width="20%" style="color:red; visibility: hidden">  *Incorrect</td>
+                </tr>
+            </table>
+        </a>
+    </div>
+</div>
+
+{% endblock %}
+{% block js_bottom %}
+{{ super() }}
+<script>    
+    function addAuthor() {
+        $.ajax({
+              url: '{{ url_for("add_Author") }}',
+              type: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify({
+                    'email': $("#authorEmail").val(),
+                }),
+                success:  function(data) {
+                    if(data == "failure"){
+                        $("#addAuthorNotification").css("visibility","visible");
+                    }else{
+                        alert(data + " is now an Author");
+                        $("#addAuthorNotification").css("visibility", "hidden");
+                        $("#addAuthorEmail").val("");
+
+                    }
+                },
+                error: function(data){    
+                }
+        });
+    }
+
+    function addAdmin() {
+        $.ajax({
+              url: '{{ url_for("add_Admin") }}',
+              type: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify({
+                    'email': $("#adminEmail").val(),
+                }),
+                success:  function(data) {
+                    if(data == "failure"){
+                        $("#addAdminNotification").css("visibility","visible");
+                    }else{
+                        alert(data + " is now an Admin");
+                        $("#addAdminNotification").css("visibility", "hidden");
+                        $("#addAdminEmail").val("");
+
+                    }
+                },
+                error: function(data){
+                    
+                }
+        });
+    }
+    function removeUser(user) {
+        $.ajax({
+              url: '{{ url_for("remove_User") }}',
+              type: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify({
+                    'email': user,
+                }),
+                success:  function(data) {
+                    if(data == "failure"){
+                        $("#addUserNotification").css("visibility","visible");
+                    }else{
+                        alert(data + " is now a Student");
+                        $("#addAUserNotification").css("visibility", "hidden");
+                        $("#removalEmail").val("");
+
+                    }
+                },
+                error: function(data){
+                    
+                }
+        });
+    }
+    $(document).ready(function() {
+        $("#submitAddAuthor").click(function(){
+            addAuthor();
+        });
+        $("#submitAddAdmin").click(function(){
+            addAdmin();
+        });
+        $("#submitRemoveUser").click(function(){
+            removeUser($("#removalEmail").val());
+        });
+    })
+</script>
+{% endblock %}

@@ -212,5 +212,8 @@ class TextContentView(MethodView):
 class CoursesTeachingView(MethodView):
 
     def get(self):
-        return flask.json.dumps([c.serialize for c in current_user.coursesTeaching])
+        tas = models.Course.query.filter(models.Course.secondaryTeachers.contains(str(current_user.id)+",")).all()
+        courses = [c.serialize for c in current_user.coursesTeaching]
+        courses += [c.serialize for c in tas]
+        return flask.json.dumps(courses)
 

@@ -117,3 +117,31 @@ class securityCode(MethodView):
                 return "Redirect to:%s" % (url_for("view_course", courseID=course.id+1000))
         else:
             return "Security Code Incorrect"
+
+class AddTAView(MethodView):
+
+    def get(self):
+        return
+
+    def post(self):
+        data = flask.request.get_json()
+        email = data.get('email')
+        courseId = data.get('courseID')
+        course = models.Course.query.filter_by(id=courseId).first()
+        if email:
+            user = models.User.query.filter(models.User.email.contains(email)).first()
+            if user:
+                if user.permissions:
+                    if user.permissions <= 20:
+                        user.permissions = 20
+                        secondaryTeachers = course.secondaryTeachers
+                        secondaryTeachers = secondaryTeachers + str(user.id) + ","
+                        course.secondaryTeachers = secondaryTeachers
+                        models.db.session.commit()
+                        return email
+                    else:
+                        return "failure"
+            else: 
+                return "failure"
+        else:
+            return "failure"

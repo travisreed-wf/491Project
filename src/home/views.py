@@ -28,7 +28,12 @@ class ClassListView(MethodView):
     def get(self):
         if current_user.is_authenticated():
             teaching = models.Course.query.filter_by(teacher_id=current_user.id).all()
+            tas = models.Course.query.filter(models.Course.secondaryTeachers.contains(str(current_user.id)+",")).all()
+            print "***************************************************************"
+            for c in tas:
+                print c.title
             courses = [c.serialize for c in current_user.courses]
+            courses += [c.serialize for c in tas]
             courses += [c.serialize for c in teaching]
             return flask.json.dumps(courses)
         else:
@@ -62,6 +67,12 @@ class TaskListView(MethodView):
         tasks['current'] = sorted(tasks['current'], key=lambda k: k['duedate'])
         return flask.json.dumps(tasks)    
 
+class SettingsScreenView(MethodView):
+    decorators = [login_required]
+
+    def get(self):
+        return render_template("settings.html", failure=False)
+
 class AddAuthorView(MethodView):
 
     def get(self):
@@ -70,12 +81,19 @@ class AddAuthorView(MethodView):
     def post(self):
         data = flask.request.get_json()
         email = data.get('email')
+        print email
         if email:
             user = models.User.query.filter(models.User.email.contains(email)).first()
             if user:
-                user.permissions = 50
-                models.db.session.commit()
-                return email
+                print user
+                if user.permissions:
+                    print user.permissions
+                    if user.permissions < 50:
+                        user.permissions = 50
+                        models.db.session.commit()
+                        return email
+                    else:
+                        return "failure"
             else: 
                 return "failure"
         else:
@@ -92,11 +110,42 @@ class AddAdminView(MethodView):
         if email:
             user = models.User.query.filter(models.User.email.contains(email)).first()
             if user:
-                user.permissions = 100
-                models.db.session.commit()
-                return email
+                if user.permissions:
+                    if user.permissions < 100:
+                        user.permissions = 100
+                        models.db.session.commit()
+                        return email
+                    else:
+                        return "failure"
             else: 
                 return "failure"
         else:
-            return "failure" 
+            return "failure"
 
+class RemoveUserView(MethodView):
+
+    def get(self):
+        return
+
+    def post(self):
+        data = flask.request.get_json()
+        email = data.get('email')
+        if email:
+            user = models.User.query.filter(models.User.email.contains(email)).first()
+            if user:
+                if user.permissions:
+                    if flask.session['permissions'] == 50:
+                        if user.permissions == 20:
+                            user.permissions = 10
+                            models.db.session.commit()
+                            return email
+                        else:
+                            return "failure"
+                    else:
+                        user.permissions = 10
+                        models.db.session.commit()
+                        return email
+            else: 
+                return "failure"
+        else:
+            return "failure"

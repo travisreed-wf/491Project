@@ -53,6 +53,7 @@ class User(db.Model):
             'name': self.name
         }
 
+
 class Course(db.Model):
     __tablename__ = 'course'
     id = db.Column(db.Integer, primary_key=True)
@@ -62,7 +63,7 @@ class Course(db.Model):
     teacher_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     tasks = db.relationship('Task', backref='course', lazy='joined')
 
-    def __init__(self, name, title,securityCode = 123456):
+    def __init__(self, name, title, securityCode=123456):
         self.securityCode = securityCode
         self.name = name
         self.title = title

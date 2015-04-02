@@ -49,6 +49,7 @@ class CourseGradeView(MethodView):
             return "You are not the instructor for this course", 401
         data = []
         for u in course.users:
+            print u.name
             tasks = []
             d = {'user': u}
             for task in course.tasks:

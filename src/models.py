@@ -53,6 +53,7 @@ class User(db.Model):
             'name': self.name
         }
 
+
 class Course(db.Model):
     __tablename__ = 'course'
     id = db.Column(db.Integer, primary_key=True)
@@ -62,7 +63,7 @@ class Course(db.Model):
     teacher_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     tasks = db.relationship('Task', backref='course', lazy='joined')
 
-    def __init__(self, name, title,securityCode = 123456):
+    def __init__(self, name, title, securityCode=123456):
         self.securityCode = securityCode
         self.name = name
         self.title = title
@@ -78,10 +79,17 @@ class Course(db.Model):
 
     def set_students(self, student_file):
         try:
+            students = []
             lines = student_file.read()
-            students = lines.split(",")
+            if "," in lines:
+                students = lines.split(",")
+            elif "\n" in lines:
+                students = lines.split("\n")
+            elif " " in lines:
+                students = lines.split()
             for email in students:
-                print email
+                if "@" not in email:
+                    email += "@iastate.edu"
                 user = User.query.filter_by(email=email).first()
                 if user:
                     if self not in user.courses:

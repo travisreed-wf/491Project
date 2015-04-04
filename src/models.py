@@ -2,6 +2,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
+import random
 
 db = SQLAlchemy()
 
@@ -59,12 +60,12 @@ class Course(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255))
     title = db.Column(db.String(255))
-    securityCode = db.Column(db.String(6))
+    securityCode = db.Column(db.Integer)
     teacher_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     tasks = db.relationship('Task', backref='course', lazy='joined')
 
-    def __init__(self, name, title, securityCode=123456):
-        self.securityCode = securityCode
+    def __init__(self, name, title):
+        self.securityCode = random.randint(100000,999999)
         self.name = name
         self.title = title
         return
@@ -76,6 +77,9 @@ class Course(db.Model):
             'name': self.name,
             'teacher_name': self.author.name
         }
+
+    def get_securityCode(self):
+        return self.securityCode
 
     def set_students(self, student_file):
         try:

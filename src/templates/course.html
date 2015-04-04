@@ -21,13 +21,13 @@
         <div id="course-admin">
         <hr>
         <h3>Administrative Options</h3>
-        <button title="Show course security code" class="btn btn-primary" onclick="showSecurityCode()">
-            <br>Security Code &nbsp;&nbsp;<span class="glyphicon glyphicon-lock"></span><br><br>
-        </button>
-        &nbsp;&nbsp;
-        <button title="Archive this course" class="btn btn-danger">
-            <br>Archive Course &nbsp;&nbsp;<span class="glyphicon glyphicon-folder-open"></span><br><br>
-        </button>
+            <button title="Show course security code" class="btn btn-primary" onclick="showSecurityCode()">
+                <br>Security Code &nbsp;&nbsp;<span class="glyphicon glyphicon-lock"></span><br><br>
+            </button>
+            &nbsp;&nbsp;
+            <button title="Archive this course" class="btn btn-danger" onclick="archiveCourse()">
+                <br>Archive Course &nbsp;&nbsp;<span class="glyphicon glyphicon-folder-open"></span><br><br>
+            </button>
         </div>
         {% endif %}
     </div>
@@ -36,6 +36,10 @@
 {% block js_bottom %}
 {{ super() }}
 <script>    
+    function archiveCourse(){
+        alert("not yet implemented.")
+    }
+
     function showSecurityCode() {
         if({{ current_user.permissions }} != 2){
             alert("You do not have permission to view this.\nContact the course instructor.")

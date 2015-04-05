@@ -89,6 +89,25 @@ class searchCourseName(MethodView):
         print course_info
         return json.dumps(course_info)
 
+class ArchiveCourse(MethodView):
+    decorators = [login_required, auth.permissions_author]
+
+    def post(self, courseID):
+        course = models.Course.query.filter_by(id=int(courseID)).first()
+        course.isArchived = True
+        models.db.session.add(course)
+        models.db.session.commit()
+        return ""
+
+class UnarchiveCourse(MethodView):
+    decorators = [login_required, auth.permissions_author]
+
+    def post(self, courseID):
+        course = models.Course.query.filter_by(id=int(courseID)).first()
+        course.isArchived = False
+        models.db.session.add(course)
+        models.db.session.commit()
+        return ""
 
 class searchProfessorName(MethodView):
     def get(self):

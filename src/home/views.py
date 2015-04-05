@@ -18,7 +18,9 @@ class HomeScreenView(MethodView):
     decorators = [login_required]
 
     def get(self):
-        teaching = models.Course.query.filter_by(teacher_id=current_user.id).all()
+        teaching = models.Course.query.filter_by(
+            teacher_id=current_user.id,
+            isArchived=False).all()
         return render_template('home.html',
                                courses_enrolled=current_user.courses,
                                courses_teaching=teaching)
@@ -27,7 +29,9 @@ class HomeScreenView(MethodView):
 class ClassListView(MethodView):
     def get(self):
         if current_user.is_authenticated():
-            teaching = models.Course.query.filter_by(teacher_id=current_user.id).all()
+            teaching = models.Course.query.filter_by(
+                teacher_id=current_user.id,
+                isArchived=False).all()
             courses = [c.serialize for c in current_user.courses]
             courses += [c.serialize for c in teaching]
             return flask.json.dumps(courses)

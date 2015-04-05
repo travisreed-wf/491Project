@@ -25,8 +25,11 @@
                 <br>Registration Code &nbsp;&nbsp;<span class="glyphicon glyphicon-lock"></span><br><br>
             </button>
             &nbsp;&nbsp;
-            <button title="Archive this course" class="btn btn-danger" onclick="archiveCourse()">
-                <br>Archive Course &nbsp;&nbsp;<span class="glyphicon glyphicon-folder-open"></span><br><br>
+            <button id="archiveCourse" title="Archive this course" class="btn btn-danger" onclick="archiveCourse()" style="display:none">
+                <br>Archive Course &nbsp;&nbsp;<span class="glyphicon glyphicon-folder-close"></span><br><br>
+            </button>
+            <button id="unarchiveCourse" title="Unarchive this course" class="btn btn-success" onclick="unarchiveCourse()" style="display:none">
+                <br>Unarchive Course &nbsp;&nbsp;<span class="glyphicon glyphicon-folder-open"></span><br><br>
             </button>
         </div>
         {% endif %}
@@ -37,7 +40,29 @@
 {{ super() }}
 <script>    
     function archiveCourse(){
-        alert("not yet implemented.")
+        $.ajax({
+          url           : "{{ url_for('archive_course', courseID=course.id) }}",
+          type          : 'POST',
+          contentType   : 'application/json',
+          success       : function(data){
+              $("#archiveCourse").slideToggle(200, function(){
+                $("#unarchiveCourse").slideToggle(200);
+              });
+          }
+        });
+    }
+
+    function unarchiveCourse(){
+        $.ajax({
+          url           : "{{ url_for('unarchive_course', courseID=course.id) }}",
+          type          : 'POST',
+          contentType   : 'application/json',
+          success       : function(data){
+              $("#unarchiveCourse").slideToggle(200, function(){
+                $("#archiveCourse").slideToggle(200);
+              });
+          }
+        });
     }
 
     function showSecurityCode() {
@@ -101,6 +126,11 @@
         });
     }
     $(document).ready(function() {
+        if("{{ course.isArchived }}" == "True")
+            $("#unarchiveCourse").show();
+        else
+            $("#archiveCourse").show();
+
         getCourseTaskList();
     })
 </script>

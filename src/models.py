@@ -61,10 +61,12 @@ class Course(db.Model):
     name = db.Column(db.String(255))
     title = db.Column(db.String(255))
     securityCode = db.Column(db.Integer)
+    isArchived   = db.Column(db.Boolean, default=False)
     teacher_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     tasks = db.relationship('Task', backref='course', lazy='joined')
 
     def __init__(self, name, title):
+        self.isArchived = False
         self.securityCode = random.randint(100000,999999)
         self.name = name
         self.title = title

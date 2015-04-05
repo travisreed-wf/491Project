@@ -79,7 +79,9 @@ class searchCourseName(MethodView):
         data = flask.request.get_json()
         courseName = data.get('courseName')
         if courseName:
-            courses = models.Course.query.filter(models.Course.name.contains(courseName)).all()
+            courses = models.Course.query.filter(
+                models.Course.name.contains(courseName),
+                models.Course.isArchived == False).all()
         else:
             courses = []
         course_info = [course.serialize for course in courses]
@@ -116,4 +118,4 @@ class securityCode(MethodView):
                 print course.id
                 return "Redirect to:%s" % (url_for("view_course", courseID=course.id+1000))
         else:
-            return "Security Code Incorrect"
+            return "Registration Code Incorrect"

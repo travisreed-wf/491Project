@@ -21,8 +21,8 @@
         <div id="course-admin">
         <hr>
         <h3>Administrative Options</h3>
-            <button title="Show course security code" class="btn btn-primary" onclick="showSecurityCode()">
-                <br>Security Code &nbsp;&nbsp;<span class="glyphicon glyphicon-lock"></span><br><br>
+            <button title="Show course registration code" class="btn btn-primary" onclick="showSecurityCode()">
+                <br>Registration Code &nbsp;&nbsp;<span class="glyphicon glyphicon-lock"></span><br><br>
             </button>
             &nbsp;&nbsp;
             <button title="Archive this course" class="btn btn-danger" onclick="archiveCourse()">
@@ -45,7 +45,7 @@
             alert("You do not have permission to view this.\nContact the course instructor.")
             return;
         }
-        alert("The security code for this course is: " + {{course.securityCode}});
+        alert("The registration code for this course is: " + {{course.securityCode}});
     }
 
     function getCourseTaskList() {

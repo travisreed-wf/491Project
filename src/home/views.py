@@ -21,8 +21,12 @@ class HomeScreenView(MethodView):
         teaching = models.Course.query.filter_by(
             teacher_id=current_user.id,
             isArchived=False).all()
+        enrolled = []
+        for course in current_user.courses:
+            if not course.isArchived:
+                enrolled.append(course)
         return render_template('home.html',
-                               courses_enrolled=current_user.courses,
+                               courses_enrolled=enrolled,
                                courses_teaching=teaching)
 
 
@@ -57,6 +61,8 @@ class TaskListView(MethodView):
         userResponseIDs = [tr.task_id for tr in current_user.task_responses]
         week_ago = DT.date.today() - DT.timedelta(days=7)
         for c in current_user.courses:
+            if c.isArchived:
+                continue
             for t in c.tasks:
                 if(t.id in userResponseIDs and t.duedate.date() > week_ago and t.status != "created"):
                     tasks['complete'].append(t.serialize)

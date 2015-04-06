@@ -80,9 +80,6 @@ class Course(db.Model):
             'teacher_name': self.author.name
         }
 
-    def get_securityCode(self):
-        return self.securityCode
-
     def set_students(self, student_file):
         try:
             students = []

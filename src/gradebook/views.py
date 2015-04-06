@@ -17,6 +17,8 @@ class GradebookScreenView(MethodView):
         if current_user.permissions == 1:
             data = []
             for c in current_user.courses:
+                if c.isArchived:
+                    continue
                 tasks = []
                 d = {
                     'course': c,

@@ -9,3 +9,5 @@ def setup_urls(app):
     app.add_url_rule('/course/searchCourseName', view_func=views.searchCourseName.as_view('search_course_name'))
     app.add_url_rule('/course/searchProfessorName', view_func=views.searchProfessorName.as_view('search_course_professor'))
     app.add_url_rule('/course/securityCode', view_func=views.securityCode.as_view('security_code'))
+    app.add_url_rule('/course/archiveCourse/<courseID>', view_func=views.ArchiveCourse.as_view('archive_course'))
+    app.add_url_rule('/course/unarchiveCourse/<courseID>', view_func=views.UnarchiveCourse.as_view('unarchive_course'))

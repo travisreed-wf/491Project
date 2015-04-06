@@ -67,7 +67,7 @@
                                     <!-- Copy task -->
                                     <form action="{{url_for('taskBuilder_copy', taskID=task.id)}}" style="display:inline">
                                         <button title="Create a copy of this task." class="btn btn-primary">
-                                            <span class="glyphicon glyphicon-copy"></span>
+                                            <span class="glyphicon glyphicon-duplicate"></span>
                                         </button>
                                     </form>
                                     <!-- Edit task -->
@@ -77,8 +77,8 @@
                                         </button>
                                     </form>           
                                     <!-- Delete task -->
-                                    <form action="" style="display:inline" class="wp-delete-task">
-                                        <button title="Delete this task." class="btn btn-danger" onclick="deleteTask({{task.id }})">
+                                    <form action="" style="display:inline" class="wp-no-reload">
+                                        <button title="Delete task {{ task.title }}" class="btn btn-danger" onclick="deleteTask(this,{{task.id }},'{{task.title}}')">
                                             <span class="glyphicon glyphicon-trash"></span>
                                         </button> 
                                     </form>
@@ -118,7 +118,19 @@
 {% block js_bottom %}
 {{ super() }}
 <script>    
-    function deleteTask( task_id ) {
+    function deleteTask( button, task_id, task_title ) {
+        // confim if they want to delete the task
+        var confirmed = confirm("Are you sure you want to delete task " + task_title + "?")
+        if(confirmed != true){
+            // they pressed cancel
+            return;
+        }
+
+        var row = $(button).closest("a.list-group-item")
+        row.fadeOut(400, function(){
+            row.remove();
+        });
+
         var data = {};
         data['task_id'] = task_id;
         $.ajax({
@@ -241,18 +253,9 @@
             addAdmin();
         })
         // prevent some form submissions from reloading the page
-        $('.wp-delete-task').submit(function(event) {
+        $('.wp-no-reload').submit(function(event) {
             // dont' reload the page on form submit
             event.preventDefault();
-
-            // confim if they want to delete the task
-            var confirmed = confirm("Are you sure you want to delete this task?")
-            if(confirmed == true){
-                var row = $(this).closest("a.list-group-item")
-                row.fadeOut(400, function(){
-                    row.remove();
-                });
-            }
         });
     })
 </script>

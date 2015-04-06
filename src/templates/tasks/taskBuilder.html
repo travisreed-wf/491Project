@@ -60,7 +60,7 @@
           <h4 class="modal-title">Create Task</h4>
         </div>
         <div class="modal-body">
-          <form onsubmit="submitClicked()">
+          <form id="submission-modal-form" onsubmit="submitClicked()">
             <div class="form-group">
               <label for="taskTitle">Task Title</label>
               <input type="text" class="form-control" id="taskTitle" placeholder="Task Title" required>
@@ -149,6 +149,11 @@
 
     $("#taskDueDate").datepicker();
     $("#taskDueTime").timepicker();
+
+    $('#submission-modal-form').submit(function(event) {
+        // dont' reload the page on form submit
+        event.preventDefault();
+    });
   });
 </script>
 

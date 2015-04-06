@@ -32,7 +32,7 @@
                             <tr>
                                 <td width="50%">{{ task['task'].title }}</td>
                                 <td width="25%">{{ task['task'].duedate }}</td>
-                                {% if task['response'].status == "grades published" %}
+                                {% if task['task'].status == "grades published"%}
                                 <td width="25%">{{ task['response'].correctness_grade}}</td>
                                 {% elif task['response'].id %}
                                 <td width="25%"><span class="glyphicon glyphicon-time" aria-hidden="true" style="color:#f0ad4e;"></span></td>

@@ -28,11 +28,19 @@
                 </tr>
                 <tr class="admin" style="display: none"><td>&nbsp</td></tr>
                 <tr class="admin" style="display: none">
-                    <td width="35%"><b>Remove User</b></td>
-                    <td width="15%"><input id="removalEmail" type="text" placeholder="User's Email" /></td>
+                    <td width="35%"><b>Remove Author</b></td>
+                    <td width="15%"><input id="removalAuthorEmail" type="text" placeholder="User's Email" /></td>
                     <td width="15%">&nbsp</td>
-                    <td width="15%"><button id="submitRemoveUser" type="button" class="">Remove</button> </td>
-                    <td id="addUserNotification" width="20%" style="color:red; visibility: hidden">  *Incorrect</td>
+                    <td width="15%"><button id="submitRemoveAuthor" type="button" class="">Remove</button> </td>
+                    <td id="removeAuthorNotification" width="20%" style="color:red; visibility: hidden">  *Incorrect</td>
+                </tr>
+                <tr class="admin" style="display: none"><td>&nbsp</td></tr>
+                <tr class="admin" style="display: none">
+                    <td width="35%"><b>Remove Admin</b></td>
+                    <td width="15%"><input id="removalAdminEmail" type="text" placeholder="User's Email" /></td>
+                    <td width="15%">&nbsp</td>
+                    <td width="15%"><button id="submitRemoveAdmin" type="button" class="">Remove</button> </td>
+                    <td id="removeAdminNotification" width="20%" style="color:red; visibility: hidden">  *Incorrect</td>
                 </tr>
             </table>
         </a>
@@ -67,12 +75,15 @@
     }
 
     function addAdmin() {
+        var code = prompt("Please enter this course's Security Code", "123456");
         $.ajax({
               url: '{{ url_for("add_Admin") }}',
               type: 'POST',
               contentType: 'application/json',
               data: JSON.stringify({
                     'email': $("#adminEmail").val(),
+                    'securityCode': code,
+
                 }),
                 success:  function(data) {
                     if(data == "failure"){
@@ -89,17 +100,28 @@
                 }
         });
     }
-    function removeUser(user) {
+    function removeUser(user,removeAdmin) {
+        var code ="";
+        if(removeAdmin){
+            code = prompt("Please enter this course's Security Code", "123456");
+        }
         $.ajax({
               url: '{{ url_for("remove_User") }}',
               type: 'POST',
               contentType: 'application/json',
               data: JSON.stringify({
                     'email': user,
+                    'securityCode': code,
+
                 }),
                 success:  function(data) {
+                    alert(data);
                     if(data == "failure"){
-                        $("#addUserNotification").css("visibility","visible");
+                        if(removeAdmin){
+                            $("#removeAdminNotification").css("visibility","visible");
+                        }else{
+                            $("#removeAuthorNotification").css("visibility","visible");
+                        }
                     }else{
                         alert(data + " is now a Student");
                         $("#addAUserNotification").css("visibility", "hidden");
@@ -119,8 +141,11 @@
         $("#submitAddAdmin").click(function(){
             addAdmin();
         });
-        $("#submitRemoveUser").click(function(){
-            removeUser($("#removalEmail").val());
+        $("#submitRemoveAuthor").click(function(){
+            removeUser($("#removalAuthorEmail").val(),false);
+        });
+        $("#submitRemoveAdmin").click(function(){
+            removeUser($("#removalAdminEmail").val(),true);
         });
     })
 </script>

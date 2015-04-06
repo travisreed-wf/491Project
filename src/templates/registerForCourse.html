@@ -67,7 +67,6 @@
       });
   }
   function courseSecurityCode(courseId){
-    console.log("seomthign");
     var code = prompt("Please enter this course's Security Code", "123456");
     $.ajax({
       url         :'{{ url_for("security_code")}}',

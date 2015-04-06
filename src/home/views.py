@@ -101,14 +101,19 @@ class AddAdminView(MethodView):
     def post(self):
         data = flask.request.get_json()
         email = data.get('email')
+        securityCode = data.get('securityCode')
         if email:
             user = models.User.query.filter(models.User.email.contains(email)).first()
             if user:
                 if user.permissions:
-                    if user.permissions < 100:
-                        user.permissions = 100
-                        models.db.session.commit()
-                        return email
+                    if securityCode == "123456":
+                        user.permissions = 10
+                        if user.permissions < 100:
+                            user.permissions = 100
+                            models.db.session.commit()
+                            return email
+                        else:
+                            return "failure"
                     else:
                         return "failure"
             else: 
@@ -124,11 +129,19 @@ class RemoveUserView(MethodView):
     def post(self):
         data = flask.request.get_json()
         email = data.get('email')
+        securityCode = data.get('securityCode')
         if email:
             user = models.User.query.filter(models.User.email.contains(email)).first()
             if user:
                 if user.permissions:
-                    user.permissions = 10
+                    if user.permissions == 100:
+                        print securityCode
+                        if securityCode == "123456":
+                            user.permissions = 10
+                        else:
+                            return "failure"
+                    else :
+                        user.permissions = 10
                     models.db.session.commit()
                     return email
             else: 

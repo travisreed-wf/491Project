@@ -209,6 +209,12 @@ class TextContentView(MethodView):
     def get(self):
         return render_template("elements/textContent.html")
 
+class ProblemStatementView(MethodView):
+    decorators = [login_required, auth.permissions_author]
+
+    def get(self):
+        return render_template("elements/problemStatement.html")
+
 class CoursesTeachingView(MethodView):
 
     def get(self):

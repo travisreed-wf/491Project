@@ -32,12 +32,62 @@
                 </table>
             </a>
         </div>
+        {% if current_user.permissions == 50 %}
+        <div id="course-admin">
+        <hr>
+        <h3>Administrative Options</h3>
+            <button title="Show course registration code" class="btn btn-primary" onclick="showSecurityCode()">
+                <br>Registration Code &nbsp;&nbsp;<span class="glyphicon glyphicon-lock"></span><br><br>
+            </button>
+            &nbsp;&nbsp;
+            <button id="archiveCourse" title="Archive this course" class="btn btn-danger" onclick="archiveCourse()" style="display:none">
+                <br>Archive Course &nbsp;&nbsp;<span class="glyphicon glyphicon-folder-close"></span><br><br>
+            </button>
+            <button id="unarchiveCourse" title="Unarchive this course" class="btn btn-success" onclick="unarchiveCourse()" style="display:none">
+                <br>Unarchive Course &nbsp;&nbsp;<span class="glyphicon glyphicon-folder-open"></span><br><br>
+            </button>
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
 {% block js_bottom %}
 {{ super() }}
 <script>    
+    function archiveCourse(){
+        $.ajax({
+          url           : "{{ url_for('archive_course', courseID=course.id) }}",
+          type          : 'POST',
+          contentType   : 'application/json',
+          success       : function(data){
+              $("#archiveCourse").slideToggle(200, function(){
+                $("#unarchiveCourse").slideToggle(200);
+              });
+          }
+        });
+    }
+
+    function unarchiveCourse(){
+        $.ajax({
+          url           : "{{ url_for('unarchive_course', courseID=course.id) }}",
+          type          : 'POST',
+          contentType   : 'application/json',
+          success       : function(data){
+              $("#unarchiveCourse").slideToggle(200, function(){
+                $("#archiveCourse").slideToggle(200);
+              });
+          }
+        });
+    }
+
+    function showSecurityCode() {
+        if({{ current_user.permissions }} != 2){
+            alert("You do not have permission to view this.\nContact the course instructor.")
+            return;
+        }
+        alert("The registration code for this course is: " + {{course.securityCode}});
+    }
+
     function getCourseTaskList() {
         $.ajax({
             url         :"{{ url_for('course_task_list', courseID='')}}" + (parseInt("{{course.id}}") + 1000),
@@ -140,6 +190,11 @@
         });
     }
     $(document).ready(function() {
+        if("{{ course.isArchived }}" == "True")
+            $("#unarchiveCourse").show();
+        else
+            $("#archiveCourse").show();
+
         getCourseTaskList();
         $("#submitAddTA").click(function(){
             addTA();

@@ -21,6 +21,8 @@ class HomeScreenView(MethodView):
         teaching = models.Course.query.filter_by(
             teacher_id=current_user.id,
             isArchived=False).all()
+        tas = models.Course.query.filter(models.Course.secondaryTeachers.contains(","+str(current_user.id)+",")).all()
+        teaching += tas
         enrolled = []
         for course in current_user.courses:
             if not course.isArchived:
@@ -36,7 +38,7 @@ class ClassListView(MethodView):
             teaching = models.Course.query.filter_by(
                 teacher_id=current_user.id,
                 isArchived=False).all()
-            tas = models.Course.query.filter(models.Course.secondaryTeachers.contains(str(current_user.id)+",")).all()
+            tas = models.Course.query.filter(models.Course.secondaryTeachers.contains(","+str(current_user.id)+",")).all()
             courses = [c.serialize for c in current_user.courses]
             courses += [c.serialize for c in tas]
             courses += [c.serialize for c in teaching]
@@ -145,7 +147,6 @@ class RemoveUserView(MethodView):
             if user:
                 if user.permissions:
                     if user.permissions == 100:
-                        print securityCode
                         if securityCode == "123456":
                             user.permissions = 10
                         else:

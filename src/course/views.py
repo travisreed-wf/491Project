@@ -37,8 +37,8 @@ class CourseMasterView(MethodView):
 
     def get(self, courseID):
         course = models.Course.query.filter_by(id=int(courseID) - 1000).first()
-        author = models.User.query.filter_by(id=course.teacher_id).first()
-        if course in current_user.courses or course.teacher_id == current_user.id:
+        author = models.User.query.filter_by(id=course.teacher_id).first()     
+        if course in current_user.courses or course.teacher_id == current_user.id or ","+str(current_user.id)+"," in course.secondaryTeachers:
             return render_template("course.html", course=course, author=author)
         else:
             return "You do not have access to view this course", 401
@@ -132,7 +132,6 @@ class securityCode(MethodView):
                 current_user.courses.append(course)
                 models.db.session.commit()
                 author = models.User.query.filter_by(id=course.teacher_id).first()
-                print course.id
                 return "Redirect to:%s" % (url_for("view_course", courseID=course.id+1000))
         else:
             return "Registration Code Incorrect"
@@ -155,9 +154,7 @@ class AddTAView(MethodView):
                         user.permissions = 20
                         secondaryTeachers = course.secondaryTeachers
                         userIdAndComma = str(user.id) + ","
-                        if secondaryTeachers.find(userIdAndComma) == 0:
-                            return "failure"
-                        elif secondaryTeachers.find("," + userIdAndComma) != -1:
+                        if secondaryTeachers.find(userIdAndComma) == False:
                             return "failure"
                         secondaryTeachers = secondaryTeachers + userIdAndComma
                         course.secondaryTeachers = secondaryTeachers
@@ -186,16 +183,13 @@ class RemoveTAView(MethodView):
                 if user.permissions:
                     if user.permissions == 20:
                         newUser = models.User.query.filter_by(email=email).first()
-                        tas = models.Course.query.filter(models.Course.secondaryTeachers.contains(str(newUser.id)+",")).all()
-                        print tas
+                        tas = models.Course.query.filter(models.Course.secondaryTeachers.contains(","+str(newUser.id)+",")).all()
                         if len(tas) <= 1:
                             newUser.permissions = 10
                         secondaryTeachers = course.secondaryTeachers
-                        userIdAndComma = str(user.id) + ","
-                        if secondaryTeachers.find(userIdAndComma) == 0:
-                            secondaryTeachers = secondaryTeachers.replace(userIdAndComma,"",1)
-                        elif secondaryTeachers.find(","+userIdAndComma) != -1:
-                            secondaryTeachers = secondaryTeachers.replace(userIdAndComma,"",1)
+                        userIdAndComma = "," + str(user.id) + ","
+                        if secondaryTeachers.find(userIdAndComma) == False:
+                            secondaryTeachers = secondaryTeachers.replace(userIdAndComma,",",1)
                         else:
                             return "failure"
                         course.secondaryTeachers = secondaryTeachers

@@ -145,7 +145,7 @@ class TaskView(MethodView):
         task = models.Task.query.filter_by(id=int(taskID)).first()
         course = models.Course.query.filter_by(id=task.course_id).first()
         html_content = task.content.strip().replace('\n', '')
-        if current_user.id == course.teacher_id:
+        if current_user.id == course.teacher_id or ","+str(current_user.id)+"," in course.secondaryTeachers:
             return render_template("tasks/taskAuthorView.html", task=task, course=course)
         elif course.id not in [c.id for c in current_user.courses]:
             return "You are not allowed to see this task", 401
@@ -218,7 +218,7 @@ class ProblemStatementView(MethodView):
 class CoursesTeachingView(MethodView):
 
     def get(self):
-        tas = models.Course.query.filter(models.Course.secondaryTeachers.contains(str(current_user.id)+",")).all()
+        tas = models.Course.query.filter(models.Course.secondaryTeachers.contains(","+str(current_user.id)+",")).all()
         courses = [c.serialize for c in current_user.coursesTeaching]
         courses += [c.serialize for c in tas]
         return flask.json.dumps(courses)

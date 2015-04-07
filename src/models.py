@@ -63,7 +63,7 @@ class Course(db.Model):
     securityCode = db.Column(db.Integer)
     isArchived   = db.Column(db.Boolean, default=False)
     teacher_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    secondaryTeachers = db.Column(db.String(255),default="")
+    secondaryTeachers = db.Column(db.String(255),default=",")
     tasks = db.relationship('Task', backref='course', lazy='joined')
 
     def __init__(self, name, title):

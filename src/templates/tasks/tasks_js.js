@@ -150,44 +150,57 @@
     addSuppElement(ctx, '#wp-file-template')
   };
 
+  function upload(f, onsuccess){
+    var form_data = new FormData(f);
+    var uploadUrl = '/upload/{{ session.userid }}';
+    $.ajax({
+        type: 'POST',
+        url: uploadUrl,
+        data: form_data,
+        contentType: false,
+        cache: false,
+        processData: false,
+        async: false,
+        success: onsuccess,
+    });
+  }
+
   function uploadImageFile(f) {
-      var form_data = new FormData(f);
-      var uploadUrl = '/upload/{{ session.userid }}';
-      $.ajax({
-          type: 'POST',
-          url: uploadUrl,
-          data: form_data,
-          contentType: false,
-          cache: false,
-          processData: false,
-          async: false,
-          success: function(data) {
-            var src = $(f).find('input').val();
-            var src = src.split("\\")[2]
-            src = "/static/uploads/{{ session.userid }}/" + src;
-            $(f).closest('div.wp-image').find('img').attr("src", src);
-          },
-      });
-  };
+    var onsuccess = function(data) {
+      var src = $(f).find('input').val();
+      src = src.split("\\")[2]
+      $(f).find('.wp-file-text').html(src)
+      src = "/static/uploads/{{ session.userid }}/" + src;
+      $(f).closest('div.wp-image').find('img').attr("src", src);
+    }
+
+    upload(f, onsuccess);
+  }
+
   function uploadFile(f) {
-      var form_data = new FormData(f);
-      var uploadUrl = '/upload/{{ session.userid }}';
-      $.ajax({
-          type: 'POST',
-          url: uploadUrl,
-          data: form_data,
-          contentType: false,
-          cache: false,
-          processData: false,
-          async: false,
-          success: function(data) {
-            var src = $(f).find('input.wp-file-src').val();
-            var src = src.split("\\")[2];
-            src = "/static/uploads/{{ session.userid }}/" + src;
-            $(f).parent().parent().find('h3').first().attr("src", src);
-          },
-      });
-  };
+    var onsuccess = function(data) {
+      var src = $(f).find('input.wp-file-src').val();
+      src = src.split("\\")[2];
+      $(f).find('.wp-file-text').html(src)
+      src = "/static/uploads/{{ session.userid }}/" + src;
+      $(f).parent().parent().find('h3').first().attr("src", src);
+    }
+
+    upload(f, onsuccess);
+  }
+
+  function uploadAndEmbedFile(f) {
+    var onsuccess = function(data){
+      var src = $(f).find('input.wp-file-src').val();
+      src = src.split("\\")[2];
+      $(f).find('.wp-file-text').html(src)
+      src = "/static/uploads/{{ session.userid }}/" + src;
+      // set the iframe src to the path of where the file was uploaded
+      $(f).closest('.panel-body').find('iframe').first().prop('src', src);
+    }    
+
+    upload(f, onsuccess)
+  }
 
   function changeTitle(element){
     $(element).closest('div.wp-file').find('h3').text($(element).val());
@@ -204,6 +217,11 @@
   function textChangeBySibling(element){
     var id_str = "#p_" + $(element).attr('id');
     $(element).next('p').text($(element).val());
+  }
+
+  function adjustHeight(input, toAdjust) {
+    var newHeight = $(input).val() + "%"
+    $(toAdjust).find('iframe').css('height', newHeight)
   }
 
   function copyTextToInput(textfield, inputfield, parentDepth){

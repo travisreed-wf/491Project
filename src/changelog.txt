@@ -1,3 +1,13 @@
+### April 4th
+create table temp_table as select * from course;
+drop table course;
+create table course (id INTEGER NOT NULL, name VARCHAR(255), title VARCHAR(255), securityCode INTEGER, teacher_id INTEGER, PRIMARY KEY (id), FOREIGN KEY(teacher_id) REFERENCES user (id));
+insert into course select * from temp_table;
+drop table temp_table;
+alter table course add column isArchived BOOLEAN;
+update course set isArchived=0;
+
+
 ### March 12th
 alter table task add column status varchar(20);
 alter table task_response add column graded tinyint(1);

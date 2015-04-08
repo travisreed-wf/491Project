@@ -79,7 +79,9 @@ class searchCourseName(MethodView):
         data = flask.request.get_json()
         courseName = data.get('courseName')
         if courseName:
-            courses = models.Course.query.filter(models.Course.name.contains(courseName)).all()
+            courses = models.Course.query.filter(
+                models.Course.name.contains(courseName),
+                models.Course.isArchived == False).all()
         else:
             courses = []
         course_info = [course.serialize for course in courses]
@@ -87,6 +89,25 @@ class searchCourseName(MethodView):
         print course_info
         return json.dumps(course_info)
 
+class ArchiveCourse(MethodView):
+    decorators = [login_required, auth.permissions_author]
+
+    def post(self, courseID):
+        course = models.Course.query.filter_by(id=int(courseID)).first()
+        course.isArchived = True
+        models.db.session.add(course)
+        models.db.session.commit()
+        return ""
+
+class UnarchiveCourse(MethodView):
+    decorators = [login_required, auth.permissions_author]
+
+    def post(self, courseID):
+        course = models.Course.query.filter_by(id=int(courseID)).first()
+        course.isArchived = False
+        models.db.session.add(course)
+        models.db.session.commit()
+        return ""
 
 class searchProfessorName(MethodView):
     def get(self):
@@ -116,4 +137,4 @@ class securityCode(MethodView):
                 print course.id
                 return "Redirect to:%s" % (url_for("view_course", courseID=course.id+1000))
         else:
-            return "Security Code Incorrect"
+            return "Registration Code Incorrect"

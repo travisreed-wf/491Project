@@ -14,6 +14,7 @@ import datetime as DT
 import auth
 from auth import auth
 
+
 class HomeScreenView(MethodView):
     decorators = [login_required]
 
@@ -21,8 +22,8 @@ class HomeScreenView(MethodView):
         teaching = models.Course.query.filter_by(
             teacher_id=current_user.id,
             isArchived=False).all()
-        tas = models.Course.query.filter(models.Course.secondaryTeachers.contains(","+str(current_user.id)+",")).all()
-        teaching += tas
+        courses_where_ta = current_user.get_coureses_where_ta()
+        teaching += courses_where_ta
         enrolled = []
         for course in current_user.courses:
             if not course.isArchived:
@@ -38,11 +39,10 @@ class ClassListView(MethodView):
             teaching = models.Course.query.filter_by(
                 teacher_id=current_user.id,
                 isArchived=False).all()
-            tas =[]
             courses = [c.serialize for c in current_user.courses]
             if current_user.permissions >= 20:
-                tas = models.Course.query.filter(models.Course.secondaryTeachers.contains(","+str(current_user.id)+",")).all()
-                courses += [c.serialize for c in tas]
+                courses_where_ta = current_user.get_coureses_where_ta()
+                courses += [c.serialize for c in courses_where_ta]
                 courses += [c.serialize for c in teaching]
             return flask.json.dumps(courses)
         else:
@@ -76,13 +76,15 @@ class TaskListView(MethodView):
                     tasks['current'].append(t.serialize)
         tasks['complete'] = sorted(tasks['complete'], key=lambda k: k['duedate'])
         tasks['current'] = sorted(tasks['current'], key=lambda k: k['duedate'])
-        return flask.json.dumps(tasks)    
+        return flask.json.dumps(tasks)
+
 
 class SettingsScreenView(MethodView):
     decorators = [login_required]
 
     def get(self):
         return render_template("settings.html", failure=False)
+
 
 class AddAuthorView(MethodView):
 
@@ -101,10 +103,11 @@ class AddAuthorView(MethodView):
                     return email
                 else:
                     return HttpResponse("error", status=400)
-            else: 
+            else:
                 return HttpResponse("error", status=400)
         else:
             return HttpResponse("error", status=400)
+
 
 class AddAdminView(MethodView):
 
@@ -124,10 +127,11 @@ class AddAdminView(MethodView):
                     return email
                 else:
                     return HttpResponse("error", status=400)
-            else: 
+            else:
                 return HttpResponse("error", status=400)
         else:
             return HttpResponse("error", status=400)
+
 
 class RemoveUserView(MethodView):
 
@@ -146,11 +150,11 @@ class RemoveUserView(MethodView):
                         user.permissions = 10
                     else:
                         return HttpResponse("error", status=400)
-                else :
+                else:
                     user.permissions = 10
                 models.db.session.commit()
                 return email
-            else: 
+            else:
                 return HttpResponse("error", status=400)
         else:
             return HttpResponse("error", status=400)

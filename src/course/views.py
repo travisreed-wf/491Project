@@ -37,9 +37,11 @@ class CourseMasterView(MethodView):
 
     def get(self, courseID):
         course = models.Course.query.filter_by(id=int(courseID) - 1000).first()
-        author = models.User.query.filter_by(id=course.teacher_id).first()     
-        if (course in current_user.courses or course.teacher_id == current_user.id 
-            or "," + str(current_user.id) + "," in course.secondaryTeachers):
+        author = models.User.query.filter_by(id=course.teacher_id).first()
+        courses_where_ta = current_user.get_courses_where_ta()
+        if course in current_user.courses or \
+                course.teacher_id == current_user.id or \
+                course in coureses_where_ta:
             return render_template("course.html", course=course, author=author)
         else:
             return "You do not have access to view this course", 401
@@ -47,7 +49,7 @@ class CourseMasterView(MethodView):
 
 class CourseTaskListView(MethodView):
     def get(self, courseID):
-        tasks = {'current':[], 'complete':[]}
+        tasks = {'current': [], 'complete': []}
         course = models.Course.query.filter_by(id=int(courseID) - 1000).first()
         userResponseIDs = [tr.task_id for tr in current_user.task_responses]
         for t in course.tasks:
@@ -88,6 +90,7 @@ class searchCourseName(MethodView):
         course_info = [course.serialize for course in courses]
         return json.dumps(course_info)
 
+
 class ArchiveCourse(MethodView):
     decorators = [login_required, auth.permissions_author]
 
@@ -97,6 +100,7 @@ class ArchiveCourse(MethodView):
         models.db.session.add(course)
         models.db.session.commit()
         return ""
+
 
 class UnarchiveCourse(MethodView):
     decorators = [login_required, auth.permissions_author]
@@ -108,12 +112,14 @@ class UnarchiveCourse(MethodView):
         models.db.session.commit()
         return ""
 
+
 class searchProfessorName(MethodView):
     def get(self):
         return
 
     def post(self):
         return "Test"
+
 
 class securityCode(MethodView):
     def get(self):
@@ -137,6 +143,7 @@ class securityCode(MethodView):
         else:
             return "Registration Code Incorrect"
 
+
 class AddTAView(MethodView):
 
     def get(self):
@@ -152,18 +159,16 @@ class AddTAView(MethodView):
             if user and user.permissions:
                 if user.permissions < 20:
                     user.permissions = 20
-                secondaryTeachers = course.secondaryTeachers
-                userIdAndComma = str(user.id) + ","
-                if secondaryTeachers.find("," + userIdAndComma) >= 0:
-                    return HttpResponse("error", status=400)
-                secondaryTeachers = secondaryTeachers + userIdAndComma
-                course.secondaryTeachers = secondaryTeachers
+                secondaryTeachers = [t.strip for t in course.secondaryTeachers.split(",")]
+                secondaryTeachers.append(str(user.id))
+                course.secondaryTeachers = ", ".join(secondaryTeachers)
                 models.db.session.commit()
                 return email
-            else: 
+            else:
                 return HttpResponse("error", status=400)
         else:
             return HttpResponse("error", status=400)
+
 
 class RemoveTAView(MethodView):
 
@@ -176,21 +181,20 @@ class RemoveTAView(MethodView):
         courseId = data.get('courseID')
         course = models.Course.query.filter_by(id=courseId).first()
         if email:
-            user = models.User.query.filter(models.User.email.contains(email)).first()
+            user = models.User.query.filter_by(email=email).first()
             if user and user.permissions:
-                tas = models.Course.query.filter(models.Course.secondaryTeachers.contains(","+str(user.id)+",")).all()
-                if len(tas) <= 1 and user.permissions == 20:
+                courses_where_ta = user.get_courses_where_ta()
+                if len(courses_where_ta) <= 1 and user.permissions == 20:
                     user.permissions = 10
-                secondaryTeachers = course.secondaryTeachers
-                userIdAndComma = "," + str(user.id) + ","
-                if secondaryTeachers.find(userIdAndComma) >=0:
-                    secondaryTeachers = secondaryTeachers.replace(userIdAndComma,",",1)
+                secondary_teachers = [t.strip for t in course.secondaryTeachers.split(",")]
+                if str(user.id) in secondary_teachers:
+                    secondaryTeachers = secondaryTeachers.remove(str(user.id))
+                    course.secondaryTeachers = ", ".join(secondaryTeachers)
                 else:
                     return HttpResponse("error", status=400)
-                course.secondaryTeachers = secondaryTeachers
                 models.db.session.commit()
                 return email
-            else: 
+            else:
                 return HttpResponse("error", status=400)
         else:
             return HttpResponse("error", status=400)

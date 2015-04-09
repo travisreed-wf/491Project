@@ -31,6 +31,7 @@ def login(email, password):
         return True
     return False
 
+
 def permissions_student(f):
     def decorated_function(*args, **kwargs):
         if flask.session['permissions'] != 10:
@@ -38,12 +39,14 @@ def permissions_student(f):
         return f(*args, **kwargs)
     return decorated_function
 
+
 def permissions_author(f):
     def decorated_function(*args, **kwargs):
         if flask.session['permissions'] < 20:
             return "Unauthorized", 401
         return f(*args, **kwargs)
     return decorated_function
+
 
 def permissions_admin(f):
     def decorated_function(*args, **kwargs):

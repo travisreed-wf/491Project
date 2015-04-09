@@ -38,10 +38,12 @@ class ClassListView(MethodView):
             teaching = models.Course.query.filter_by(
                 teacher_id=current_user.id,
                 isArchived=False).all()
-            tas = models.Course.query.filter(models.Course.secondaryTeachers.contains(","+str(current_user.id)+",")).all()
+            tas =[]
             courses = [c.serialize for c in current_user.courses]
-            courses += [c.serialize for c in tas]
-            courses += [c.serialize for c in teaching]
+            if current_user.permissions >= 20:
+                tas = models.Course.query.filter(models.Course.secondaryTeachers.contains(","+str(current_user.id)+",")).all()
+                courses += [c.serialize for c in tas]
+                courses += [c.serialize for c in teaching]
             return flask.json.dumps(courses)
         else:
             return flask.json.dumps([])
@@ -98,11 +100,11 @@ class AddAuthorView(MethodView):
                     models.db.session.commit()
                     return email
                 else:
-                    return "failure"
+                    return HttpResponse("error", status=400)
             else: 
-                return "failure"
+                return HttpResponse("error", status=400)
         else:
-            return "failure"
+            return HttpResponse("error", status=400)
 
 class AddAdminView(MethodView):
 
@@ -121,11 +123,11 @@ class AddAdminView(MethodView):
                     models.db.session.commit()
                     return email
                 else:
-                    return "failure"
+                    return HttpResponse("error", status=400)
             else: 
-                return "failure"
+                return HttpResponse("error", status=400)
         else:
-            return "failure"
+            return HttpResponse("error", status=400)
 
 class RemoveUserView(MethodView):
 
@@ -143,12 +145,12 @@ class RemoveUserView(MethodView):
                     if securityCode == "123456":
                         user.permissions = 10
                     else:
-                        return "failure"
+                        return HttpResponse("error", status=400)
                 else :
                     user.permissions = 10
                 models.db.session.commit()
                 return email
             else: 
-                return "failure"
+                return HttpResponse("error", status=400)
         else:
-            return "failure"
+            return HttpResponse("error", status=400)

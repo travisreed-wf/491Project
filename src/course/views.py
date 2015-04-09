@@ -155,15 +155,15 @@ class AddTAView(MethodView):
                 secondaryTeachers = course.secondaryTeachers
                 userIdAndComma = str(user.id) + ","
                 if secondaryTeachers.find("," + userIdAndComma) >= 0:
-                    return "failure"
+                    return HttpResponse("error", status=400)
                 secondaryTeachers = secondaryTeachers + userIdAndComma
                 course.secondaryTeachers = secondaryTeachers
                 models.db.session.commit()
                 return email
             else: 
-                return "failure"
+                return HttpResponse("error", status=400)
         else:
-            return "failure"
+            return HttpResponse("error", status=400)
 
 class RemoveTAView(MethodView):
 
@@ -186,11 +186,11 @@ class RemoveTAView(MethodView):
                 if secondaryTeachers.find(userIdAndComma) >=0:
                     secondaryTeachers = secondaryTeachers.replace(userIdAndComma,",",1)
                 else:
-                    return "failure"
+                    return HttpResponse("error", status=400)
                 course.secondaryTeachers = secondaryTeachers
                 models.db.session.commit()
                 return email
             else: 
-                return "failure"
+                return HttpResponse("error", status=400)
         else:
-            return "failure"
+            return HttpResponse("error", status=400)

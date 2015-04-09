@@ -75,7 +75,7 @@
     }
 
     function addAdmin() {
-        var code = prompt("Please enter this course's Security Code", "123456");
+        var code = prompt("Please enter Security Code to add admin", "123456");
         $.ajax({
               url: '{{ url_for("add_Admin") }}',
               type: 'POST',
@@ -103,7 +103,7 @@
     function removeUser(user,removeAdmin) {
         var code ="";
         if(removeAdmin){
-            code = prompt("Please enter this course's Security Code", "123456");
+            code = prompt("Please enter Security Code to remove admin", "123456");
         }
         $.ajax({
               url: '{{ url_for("remove_User") }}',
@@ -115,7 +115,6 @@
 
                 }),
                 success:  function(data) {
-                    alert(data);
                     if(data == "failure"){
                         if(removeAdmin){
                             $("#removeAdminNotification").css("visibility","visible");

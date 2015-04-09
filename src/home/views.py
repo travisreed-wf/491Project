@@ -92,14 +92,13 @@ class AddAuthorView(MethodView):
         email = data.get('email')
         if email:
             user = models.User.query.filter(models.User.email.contains(email)).first()
-            if user:
-                if user.permissions:
-                    if user.permissions < 50:
-                        user.permissions = 50
-                        models.db.session.commit()
-                        return email
-                    else:
-                        return "failure"
+            if user and user.permissions:
+                if user.permissions < 50:
+                    user.permissions = 50
+                    models.db.session.commit()
+                    return email
+                else:
+                    return "failure"
             else: 
                 return "failure"
         else:
@@ -116,18 +115,13 @@ class AddAdminView(MethodView):
         securityCode = data.get('securityCode')
         if email:
             user = models.User.query.filter(models.User.email.contains(email)).first()
-            if user:
-                if user.permissions:
-                    if securityCode == "123456":
-                        user.permissions = 10
-                        if user.permissions < 100:
-                            user.permissions = 100
-                            models.db.session.commit()
-                            return email
-                        else:
-                            return "failure"
-                    else:
-                        return "failure"
+            if user and user.permissions:
+                if securityCode == "123456" and user.permissions < 100:
+                    user.permissions = 100
+                    models.db.session.commit()
+                    return email
+                else:
+                    return "failure"
             else: 
                 return "failure"
         else:
@@ -144,17 +138,16 @@ class RemoveUserView(MethodView):
         securityCode = data.get('securityCode')
         if email:
             user = models.User.query.filter(models.User.email.contains(email)).first()
-            if user:
-                if user.permissions:
-                    if user.permissions == 100:
-                        if securityCode == "123456":
-                            user.permissions = 10
-                        else:
-                            return "failure"
-                    else :
+            if user and user.permissions:
+                if user.permissions == 100:
+                    if securityCode == "123456":
                         user.permissions = 10
-                    models.db.session.commit()
-                    return email
+                    else:
+                        return "failure"
+                else :
+                    user.permissions = 10
+                models.db.session.commit()
+                return email
             else: 
                 return "failure"
         else:

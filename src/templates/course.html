@@ -32,7 +32,7 @@
                 </table>
             </a>
         </div>
-        {% if current_user.permissions == 50 %}
+        {% if current_user.permissions >= 50 %}
         <div id="course-admin">
         <hr>
         <h3>Administrative Options</h3>

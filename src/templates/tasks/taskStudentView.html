@@ -9,7 +9,8 @@
 {% block body %}
 <div class="row">
   <!-- Question List -->
-  <div class="col-md-9 col-md-offset-2" id="questionList">
+  <div class="col-md-9 col-md-offset-2" id="questionList" style="display:none">
+    {{ content|safe }}
   </div>
 </div>
 <div class="row col-md-8 col-md-offset-2">
@@ -24,9 +25,11 @@
 <script type="text/javascript">
 
   $(document).ready(function(){
-    $('#questionList').html('{{content|safe}}');
     $('.EDIT_ONLY').remove();
     $('.PREVIEW_ONLY').remove();
+    // Don't show the questionList until after the EDIT_ONLY and PREVIEW_ONLY items are removed
+    $('#questionList').show();
+    
     $('#submit').click(function(){
       var automaticQuestions = [];
       var manualQuestions = [];

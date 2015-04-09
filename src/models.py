@@ -48,6 +48,15 @@ class User(db.Model):
 
     def is_admin(self):
         return True
+
+    def get_courses_where_ta(self):
+        courses_where_maybe_ta = models.Course.filter(models.Course.secondaryTeachers.contains(str(self.id)))
+        courses_where_ta = []
+        for c in courses_where_maybe_ta:
+            if user.id in c.secondaryTeachers.split(', '):
+                courses_where_ta.append(c)
+        return courses_where_ta
+
     @property
     def serialize(self):
         return {

@@ -158,12 +158,9 @@ class AddTAView(MethodView):
             if user and user.permissions:
                     if user.permissions < 20:
                         user.permissions = 20
-                    secondaryTeachers = course.secondaryTeachers
-                    userIdAndComma = str(user.id) + ","
-                    if secondaryTeachers.find("," + userIdAndComma) >= 0:
-                        return "failure"
-                    secondaryTeachers = secondaryTeachers + userIdAndComma
-                    course.secondaryTeachers = secondaryTeachers
+                    secondaryTeachers = [t.strip for t in course.secondaryTeachers.split(",")]
+                    secondaryTeachers.append(str(user.id))
+                    course.secondaryTeachers = ", ".join(secondaryTeachers)
                     models.db.session.commit()
                     return email
             else:
@@ -183,20 +180,17 @@ class RemoveTAView(MethodView):
         courseId = data.get('courseID')
         course = models.Course.query.filter_by(id=courseId).first()
         if email:
-            user = models.User.query.filter(models.User.email.contains(email)).first()
+            user = models.User.query.filter_by(email=email).first()
             if user and user.permissions:
-                newUser = models.User.query.filter_by(email=email).first()
-                tas = models.Course.query.filter(models.Course.secondaryTeachers.contains(","+str(newUser.id)+",")).all()
-                if len(tas) <= 1 and user.permissions == 20:
-                    newUser.permissions = 10
-                secondaryTeachers = course.secondaryTeachers
-                userIdAndComma = "," + str(user.id) + ","
-                print secondaryTeachers.find(userIdAndComma)
-                if secondaryTeachers.find(userIdAndComma) >=0:
-                    secondaryTeachers = secondaryTeachers.replace(userIdAndComma,",",1)
+                courses_where_ta = user.get_courses_where_ta()
+                if len(courses_where_ta) <= 1 and user.permissions == 20:
+                    user.permissions = 10
+                secondary_teachers = [t.strip for t in course.secondaryTeachers.split(",")]
+                if str(user.id) in secondary_teachers:
+                    secondaryTeachers = secondaryTeachers.remove(str(user.id))
+                    course.secondaryTeachers = ", ".join(secondaryTeachers)
                 else:
                     return "failure"
-                course.secondaryTeachers = secondaryTeachers
                 models.db.session.commit()
                 return email
             else:

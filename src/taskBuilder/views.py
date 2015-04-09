@@ -81,6 +81,7 @@ class UploadView(MethodView):
 class UploadedFileView(MethodView):
 
     def get(self, filename):
+        print filename
         return flask.send_file("static/uploads/" + filename)
 
 

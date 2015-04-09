@@ -53,7 +53,7 @@ class User(db.Model):
         courses_where_maybe_ta = models.Course.filter(models.Course.secondaryTeachers.contains(str(self.id)))
         courses_where_ta = []
         for c in courses_where_maybe_ta:
-            if user.id in c.secondaryTeachers.split(', '):
+            if str(self.id) in c.secondaryTeachers.split(', '):
                 courses_where_ta.append(c)
         return courses_where_ta
 

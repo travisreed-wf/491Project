@@ -22,7 +22,7 @@ class HomeScreenView(MethodView):
         teaching = models.Course.query.filter_by(
             teacher_id=current_user.id,
             isArchived=False).all()
-        courses_where_ta = current_user.get_coureses_where_ta()
+        courses_where_ta = current_user.get_courses_where_ta()
         teaching += courses_where_ta
         enrolled = []
         for course in current_user.courses:
@@ -41,7 +41,7 @@ class ClassListView(MethodView):
                 isArchived=False).all()
             courses = [c.serialize for c in current_user.courses]
             if current_user.permissions >= 20:
-                courses_where_ta = current_user.get_coureses_where_ta()
+                courses_where_ta = current_user.get_courses_where_ta()
                 courses += [c.serialize for c in courses_where_ta]
                 courses += [c.serialize for c in teaching]
             return flask.json.dumps(courses)

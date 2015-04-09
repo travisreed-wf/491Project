@@ -41,7 +41,7 @@ class CourseMasterView(MethodView):
         courses_where_ta = current_user.get_courses_where_ta()
         if course in current_user.courses or \
                 course.teacher_id == current_user.id or \
-                course in coureses_where_ta:
+                course in courses_where_ta:
             return render_template("course.html", course=course, author=author)
         else:
             return "You do not have access to view this course", 401
@@ -159,9 +159,9 @@ class AddTAView(MethodView):
             if user and user.permissions:
                 if user.permissions < 20:
                     user.permissions = 20
-                secondaryTeachers = [t.strip for t in course.secondaryTeachers.split(",")]
-                secondaryTeachers.append(str(user.id))
-                course.secondaryTeachers = ", ".join(secondaryTeachers)
+                secondary_teachers = [t.strip() for t in course.secondaryTeachers.split(",")] if course.secondaryTeachers else []
+                secondary_teachers.append(str(user.id))
+                course.secondaryTeachers = ", ".join(secondary_teachers)
                 models.db.session.commit()
                 return email
             else:
@@ -186,10 +186,10 @@ class RemoveTAView(MethodView):
                 courses_where_ta = user.get_courses_where_ta()
                 if len(courses_where_ta) <= 1 and user.permissions == 20:
                     user.permissions = 10
-                secondary_teachers = [t.strip for t in course.secondaryTeachers.split(",")]
+                secondary_teachers = [t.strip() for t in course.secondaryTeachers.split(",")] if course.secondaryTeachers else []
                 if str(user.id) in secondary_teachers:
-                    secondaryTeachers = secondaryTeachers.remove(str(user.id))
-                    course.secondaryTeachers = ", ".join(secondaryTeachers)
+                    secondary_teachers.remove(str(user.id))
+                    course.secondaryTeachers = ", ".join(secondary_teachers)
                 else:
                     return HttpResponse("error", status=400)
                 models.db.session.commit()

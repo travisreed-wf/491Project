@@ -50,7 +50,7 @@ class User(db.Model):
         return True
 
     def get_courses_where_ta(self):
-        courses_where_maybe_ta = models.Course.filter(models.Course.secondaryTeachers.contains(str(self.id)))
+        courses_where_maybe_ta = Course.query.filter(Course.secondaryTeachers.contains(str(self.id)))
         courses_where_ta = []
         for c in courses_where_maybe_ta:
             if str(self.id) in c.secondaryTeachers.split(', '):

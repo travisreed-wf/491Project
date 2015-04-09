@@ -89,6 +89,7 @@ class searchCourseName(MethodView):
         course_info = [course.serialize for course in courses]
         return json.dumps(course_info)
 
+
 class ArchiveCourse(MethodView):
     decorators = [login_required, auth.permissions_author]
 
@@ -98,6 +99,7 @@ class ArchiveCourse(MethodView):
         models.db.session.add(course)
         models.db.session.commit()
         return ""
+
 
 class UnarchiveCourse(MethodView):
     decorators = [login_required, auth.permissions_author]
@@ -109,12 +111,14 @@ class UnarchiveCourse(MethodView):
         models.db.session.commit()
         return ""
 
+
 class searchProfessorName(MethodView):
     def get(self):
         return
 
     def post(self):
         return "Test"
+
 
 class securityCode(MethodView):
     def get(self):
@@ -137,6 +141,7 @@ class securityCode(MethodView):
                 return "Redirect to:%s" % (url_for("view_course", courseID=course.id+1000))
         else:
             return "Registration Code Incorrect"
+
 
 class AddTAView(MethodView):
 
@@ -161,10 +166,11 @@ class AddTAView(MethodView):
                     course.secondaryTeachers = secondaryTeachers
                     models.db.session.commit()
                     return email
-            else: 
+            else:
                 return "failure"
         else:
             return "failure"
+
 
 class RemoveTAView(MethodView):
 
@@ -193,8 +199,7 @@ class RemoveTAView(MethodView):
                 course.secondaryTeachers = secondaryTeachers
                 models.db.session.commit()
                 return email
-            else: 
-                print "((((((((((("
+            else:
                 return "failure"
         else:
             return "failure"

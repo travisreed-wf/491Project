@@ -150,17 +150,13 @@
                     'courseID': parseInt("{{course.id}}"),
                 }),
                 success:  function(data) {
-                    if(data == "failure"){
-                        $("#addTANotification").css("visibility","visible");
-                    }else{
-                        alert(data + " is now an TA");
-                        $("#addTANotification").css("visibility", "hidden");
-                        $("#TAEmail").val("");
+                    alert(data + " is a TA for this course.");
+                    $("#addTANotification").css("visibility", "hidden");
+                    $("#TAEmail").val("");
 
-                    }
                 },
                 error: function(data){
-                    
+                    $("#addTANotification").css("visibility","visible");
                 }
         });
     }
@@ -175,17 +171,12 @@
 
                 }),
                 success:  function(data) {
-                    if(data == "failure"){
-                        $("#addTANotification").css("visibility","visible");
-                    }else{
-                        alert(data + " is now a Student");
-                        $("#addTaNotification").css("visibility", "hidden");
-                        $("#TAEmail").val("");
-
-                    }
+                    alert(data + " is no longer a TA for this course.");
+                    $("#addTaNotification").css("visibility", "hidden");
+                    $("#TAEmail").val("");
                 },
                 error: function(data){
-                    
+                    $("#addTANotification").css("visibility","visible");
                 }
         });
     }

@@ -60,16 +60,12 @@
                     'email': $("#authorEmail").val(),
                 }),
                 success:  function(data) {
-                    if(data == "failure"){
-                        $("#addAuthorNotification").css("visibility","visible");
-                    }else{
-                        alert(data + " is now an Author");
-                        $("#addAuthorNotification").css("visibility", "hidden");
-                        $("#addAuthorEmail").val("");
-
-                    }
+                    alert(data + " is now an Author");
+                    $("#addAuthorNotification").css("visibility", "hidden");
+                    $("#addAuthorEmail").val("");
                 },
                 error: function(data){    
+                    $("#addAuthorNotification").css("visibility","visible");
                 }
         });
     }
@@ -86,17 +82,12 @@
 
                 }),
                 success:  function(data) {
-                    if(data == "failure"){
-                        $("#addAdminNotification").css("visibility","visible");
-                    }else{
-                        alert(data + " is now an Admin");
-                        $("#addAdminNotification").css("visibility", "hidden");
-                        $("#addAdminEmail").val("");
-
-                    }
+                    alert(data + " is now an Admin");
+                    $("#addAdminNotification").css("visibility", "hidden");
+                    $("#addAdminEmail").val("");
                 },
                 error: function(data){
-                    
+                    $("#addAdminNotification").css("visibility","visible");
                 }
         });
     }
@@ -115,21 +106,16 @@
 
                 }),
                 success:  function(data) {
-                    if(data == "failure"){
-                        if(removeAdmin){
-                            $("#removeAdminNotification").css("visibility","visible");
-                        }else{
-                            $("#removeAuthorNotification").css("visibility","visible");
-                        }
-                    }else{
-                        alert(data + " is now a Student");
-                        $("#addAUserNotification").css("visibility", "hidden");
-                        $("#removalEmail").val("");
-
-                    }
+                    alert(data + " is now a Student");
+                    $("#addAUserNotification").css("visibility", "hidden");
+                    $("#removalEmail").val("");
                 },
                 error: function(data){
-                    
+                    if(removeAdmin){
+                        $("#removeAdminNotification").css("visibility","visible");
+                    }else{
+                        $("#removeAuthorNotification").css("visibility","visible");
+                    }   
                 }
         });
     }

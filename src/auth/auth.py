@@ -41,7 +41,6 @@ def permissions_student(f):
 def permissions_author(f):
     def decorated_function(*args, **kwargs):
         if flask.session['permissions'] < 20:
-            print "author is true"
             return "Unauthorized", 401
         return f(*args, **kwargs)
     return decorated_function
@@ -49,7 +48,6 @@ def permissions_author(f):
 def permissions_admin(f):
     def decorated_function(*args, **kwargs):
         if flask.session['permissions'] < 100 :
-            print "admin is true"
             return "Unauthorized", 401
         return f(*args, **kwargs)
     return decorated_function

@@ -38,7 +38,8 @@ class CourseMasterView(MethodView):
     def get(self, courseID):
         course = models.Course.query.filter_by(id=int(courseID) - 1000).first()
         author = models.User.query.filter_by(id=course.teacher_id).first()     
-        if course in current_user.courses or course.teacher_id == current_user.id or ","+str(current_user.id)+"," in course.secondaryTeachers:
+        if (course in current_user.courses or course.teacher_id == current_user.id 
+            or "," + str(current_user.id) + "," in course.secondaryTeachers):
             return render_template("course.html", course=course, author=author)
         else:
             return "You do not have access to view this course", 401
@@ -149,16 +150,16 @@ class AddTAView(MethodView):
         if email:
             user = models.User.query.filter(models.User.email.contains(email)).first()
             if user and user.permissions:
-                    if user.permissions < 20:
-                        user.permissions = 20
-                    secondaryTeachers = course.secondaryTeachers
-                    userIdAndComma = str(user.id) + ","
-                    if secondaryTeachers.find("," + userIdAndComma) >= 0:
-                        return "failure"
-                    secondaryTeachers = secondaryTeachers + userIdAndComma
-                    course.secondaryTeachers = secondaryTeachers
-                    models.db.session.commit()
-                    return email
+                if user.permissions < 20:
+                    user.permissions = 20
+                secondaryTeachers = course.secondaryTeachers
+                userIdAndComma = str(user.id) + ","
+                if secondaryTeachers.find("," + userIdAndComma) >= 0:
+                    return "failure"
+                secondaryTeachers = secondaryTeachers + userIdAndComma
+                course.secondaryTeachers = secondaryTeachers
+                models.db.session.commit()
+                return email
             else: 
                 return "failure"
         else:
@@ -177,13 +178,11 @@ class RemoveTAView(MethodView):
         if email:
             user = models.User.query.filter(models.User.email.contains(email)).first()
             if user and user.permissions:
-                newUser = models.User.query.filter_by(email=email).first()
-                tas = models.Course.query.filter(models.Course.secondaryTeachers.contains(","+str(newUser.id)+",")).all()
+                tas = models.Course.query.filter(models.Course.secondaryTeachers.contains(","+str(user.id)+",")).all()
                 if len(tas) <= 1 and user.permissions == 20:
-                    newUser.permissions = 10
+                    user.permissions = 10
                 secondaryTeachers = course.secondaryTeachers
                 userIdAndComma = "," + str(user.id) + ","
-                print secondaryTeachers.find(userIdAndComma)
                 if secondaryTeachers.find(userIdAndComma) >=0:
                     secondaryTeachers = secondaryTeachers.replace(userIdAndComma,",",1)
                 else:
@@ -192,7 +191,6 @@ class RemoveTAView(MethodView):
                 models.db.session.commit()
                 return email
             else: 
-                print "((((((((((("
                 return "failure"
         else:
             return "failure"

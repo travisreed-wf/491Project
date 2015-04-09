@@ -61,7 +61,7 @@ class Course(db.Model):
     name = db.Column(db.String(255))
     title = db.Column(db.String(255))
     securityCode = db.Column(db.Integer)
-    isArchived   = db.Column(db.Boolean, default=False)
+    isArchived = db.Column(db.Boolean, default=False)
     teacher_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     tasks = db.relationship('Task', backref='course', lazy='joined')
 
@@ -86,9 +86,7 @@ class Course(db.Model):
             lines = student_file.read()
             if "," in lines:
                 students = lines.split(",")
-            elif "\n" in lines:
-                students = lines.split("\n")
-            elif " " in lines:
+            else:
                 students = lines.split()
             for email in students:
                 if "@" not in email:

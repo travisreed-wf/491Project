@@ -37,8 +37,10 @@ class CourseMasterView(MethodView):
 
     def get(self, courseID):
         course = models.Course.query.filter_by(id=int(courseID) - 1000).first()
-        author = models.User.query.filter_by(id=course.teacher_id).first()     
-        if course in current_user.courses or course.teacher_id == current_user.id or ","+str(current_user.id)+"," in course.secondaryTeachers:
+        author = models.User.query.filter_by(id=course.teacher_id).first()
+        if course in current_user.courses or \
+                course.teacher_id == current_user.id or \
+                "," + str(current_user.id)+"," in course.secondaryTeachers:
             return render_template("course.html", course=course, author=author)
         else:
             return "You do not have access to view this course", 401
@@ -46,7 +48,7 @@ class CourseMasterView(MethodView):
 
 class CourseTaskListView(MethodView):
     def get(self, courseID):
-        tasks = {'current':[], 'complete':[]}
+        tasks = {'current': [], 'complete': []}
         course = models.Course.query.filter_by(id=int(courseID) - 1000).first()
         userResponseIDs = [tr.task_id for tr in current_user.task_responses]
         for t in course.tasks:

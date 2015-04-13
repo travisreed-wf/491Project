@@ -23,11 +23,11 @@ class User(db.Model):
     coursesTeaching = db.relationship('Course', backref='author',
                                       lazy='dynamic')
     name = db.Column(db.String(255))
-    permissions = db.Column(db.Integer, default=1)
+    permissions = db.Column(db.Integer, default=10)
     task_responses = db.relationship('TaskResponse', backref='user',
                                      lazy='dynamic')
 
-    def __init__(self, email, password, name, permissions=1):
+    def __init__(self, email, password, name, permissions=10):
         self.email = email
         self.password = password
         self.name = name
@@ -48,6 +48,15 @@ class User(db.Model):
 
     def is_admin(self):
         return True
+
+    def get_courses_where_ta(self):
+        courses_where_maybe_ta = Course.query.filter(Course.secondaryTeachers.contains(str(self.id)))
+        courses_where_ta = []
+        for c in courses_where_maybe_ta:
+            if str(self.id) in c.secondaryTeachers.split(', '):
+                courses_where_ta.append(c)
+        return courses_where_ta
+
     @property
     def serialize(self):
         return {
@@ -63,11 +72,12 @@ class Course(db.Model):
     securityCode = db.Column(db.Integer)
     isArchived = db.Column(db.Boolean, default=False)
     teacher_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    secondaryTeachers = db.Column(db.String(255), default="")
     tasks = db.relationship('Task', backref='course', lazy='joined')
 
     def __init__(self, name, title):
         self.isArchived = False
-        self.securityCode = random.randint(100000,999999)
+        self.securityCode = random.randint(100000, 999999)
         self.name = name
         self.title = title
         return

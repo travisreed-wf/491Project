@@ -15,7 +15,7 @@
                 <a href="/course/view/{{1000 + course.id}}" class="list-group-item">{{course.name}}</a>
             {% endfor %}
         </div>
-        {% elif current_user.permissions == 1%}
+        {% elif current_user.permissions == 10%}
         <div class="jumbotron">
             <h1>Welcome!</h1>
             <p>It looks as though you are not enrolled in any classes yet. 
@@ -25,7 +25,7 @@
         </div>
         {% endif %}
 
-        {% if courses_teaching %}
+        {% if courses_teaching and current_user.permissions >=20%}
         <div id="classes-teaching-list" class="list-group">
             <li class="list-group-item active" align="center"><strong>Courses Teaching</strong></li>
             {% for course in courses_teaching %}
@@ -41,7 +41,7 @@
         <div id="task-list-complete" class="list-group">
         </div>
         {% endif %}
-        {% if courses_teaching %}
+        {% if courses_teaching and current_user.permissions >=20%}
         <div id="tasks-teaching-list" class="list-group">
             <li class="list-group-item active" align="center"><strong>Tasks (teaching)</strong></li>
             <a href="" class="list-group-item">
@@ -90,28 +90,6 @@
             {% endfor %}
         </div>
         {% endif %}
-    </div>
-</div>
-<div class="col-md-5 col-sm-10 col-sm-offset-4 admin" style="display: none">
-    <div id="tasks-teaching-list" class="list-group">
-        <li class="list-group-item active" align="center"><strong>Options</strong></li>
-        <a class="list-group-item">
-            <table width="100%">
-                <tr>
-                    <td width="30%"><b>Add Author</b></td>
-                    <td width="40%"><input id="addAuthorEmail" type="text" placeholder="New Author's Email" /></td>
-                    <td width="10%"><button id="submitAddAuthor" type="button" class="">Send</button> </td>
-                    <td id="addAuthorNotification" width="20%" style="color:red; visibility: hidden">  *Not Found</td>
-                </tr>
-                <tr><td>&nbsp</td></tr>
-                <tr>
-                    <td width="30%"><b>Add Admin</b></td>
-                    <td width="40%"><input id="addAdminEmail" type="text" placeholder="New Admin's Email" /></td>
-                    <td width="10%"><button id="submitAddAdmin" type="button" class="">Send</button> </td>
-                    <td id="addAdminNotification" width="20%" style="color:red; visibility: hidden">  *Not Found</td>
-                </tr>
-            </table>
-        </a>
     </div>
 </div>
 {% endblock %}
@@ -197,61 +175,8 @@
             }
         });
     }
-    function addAuthor() {
-        $.ajax({
-              url: '{{ url_for("add_Author") }}',
-              type: 'POST',
-              contentType: 'application/json',
-              data: JSON.stringify({
-                    'email': $("#addAuthorEmail").val(),
-                }),
-                success:  function(data) {
-                    if(data == "failure"){
-                        $("#addAuthorNotification").css("visibility","visible");
-                    }else{
-                        alert(data + " is now an Author");
-                        $("#addAuthorNotification").css("visibility", "hidden");
-                        $("#addAuthorEmail").val("");
-
-                    }
-                },
-                error: function(data){    
-                }
-        });
-    }
-
-    function addAdmin() {
-        $.ajax({
-              url: '{{ url_for("add_Admin") }}',
-              type: 'POST',
-              contentType: 'application/json',
-              data: JSON.stringify({
-                    'email': $("#addAdminEmail").val(),
-                }),
-                success:  function(data) {
-                    if(data == "failure"){
-                        $("#addAdminNotification").css("visibility","visible");
-                    }else{
-                        alert(data + " is now an Admin");
-                        $("#addAdminNotification").css("visibility", "hidden");
-                        $("#addAdminEmail").val("");
-
-                    }
-                },
-                error: function(data){
-                    
-                }
-        });
-    }
-
     $(document).ready(function() {
         getTaskList();
-        $("#submitAddAuthor").click(function(){
-            addAuthor();
-        })
-        $("#submitAddAdmin").click(function(){
-            addAdmin();
-        })
         // prevent some form submissions from reloading the page
         $('.wp-no-reload').submit(function(event) {
             // dont' reload the page on form submit

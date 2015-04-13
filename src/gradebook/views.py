@@ -14,7 +14,7 @@ class GradebookScreenView(MethodView):
     decorators = [login_required]
 
     def get(self):
-        if current_user.permissions == 1:
+        if current_user.permissions == 10:
             data = []
             for c in current_user.courses:
                 if c.isArchived:
@@ -38,7 +38,7 @@ class GradebookScreenView(MethodView):
             return render_template('studentGradebook.html',
                                    courses=current_user.courses,
                                    tasks=data)
-        elif current_user.permissions == 2:
+        elif current_user.permissions == 50:
             teaching = models.Course.query.filter_by(teacher_id=current_user.id).all()
             return render_template('authorGradebook.html', courses=teaching)
 

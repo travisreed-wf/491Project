@@ -17,7 +17,7 @@
       Correctness Grade: <p id="correctnessGrade" class="text-muted">{{task_response.correctness_grade}}%</p>
       Cognitive Grade: <p class="text-muted">{{task_response.cognitive_grade}}%</p>
   </div>
-  {% if permissions > 1 %}
+  {% if permissions > 10 %}
   <div class="col-md-5 vertical-line">
   {% else %}
   <div class="col-md-8 vertical-line">
@@ -57,7 +57,7 @@
         </div>
       {% endfor %}
   </div>
-  {% if permissions > 1 %}
+  {% if permissions > 10 %}
   <div class="col-md-5 vertical-line">
       <h4>Supplementary Material</h4>
       {% for supp in supplementary %}

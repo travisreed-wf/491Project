@@ -26,7 +26,7 @@
             <div class="collapse navbar-collapse">
                 <ul id="page-nav" class="nav navbar-nav">
                     <li><a href="/home">Home</a></li>
-                    <li style="display: none" class="author"><a href="/taskBuilder">Task Builder</a></li>
+                    <li style="display: none" class="author admin ta"><a href="/taskBuilder">Task Builder</a></li>
                     <li class="dropdown">
                         <a id="courses-dropdown" data-target="#" href="" data-toggle="dropdown">Courses 
                             <span class="caret"></span>
@@ -45,9 +45,9 @@
                             {% endif %}
                         </a>
                         <ul class="dropdown-menu">
-                            <li style="display: none" class="student"><a href="">Student Settings</a></li>
-                            <li style="display: none" class="author"><a href="">Author Settings</a></li>
-                            <li style="display: none" class="admin"><a href="">Admin Settings</a></li>
+                            <li style="display: none" class="student ta"><a href="{{ url_for('settings') }}">Student Settings</a></li>
+                            <li style="display: none" class="author"><a href="{{ url_for('settings') }}">Author Settings</a></li>
+                            <li style="display: none" class="admin"><a href="{{ url_for('settings') }}">Admin Settings</a></li>
                             <li><a href="{{ url_for('logout') }}">Log Out</a></li>
                         </ul>
                     </li>
@@ -75,8 +75,8 @@
                 async       :false,
                 success     :function(result) {
                     var classList = $.parseJSON(result);
-                    var strClassList="<li style='display: none;' class='author'><a href='/course/create'>Create Course</a></li>";
-                    var registerforClass = "<li style='display: none;' class='student author'><a href='/course/registerForCourse'>Register For Course</a></li>"
+                    var strClassList="<li style='display: none;' class='author admin'><a href='/course/create'>Create Course</a></li>";
+                    var registerforClass = "<li style='display: none;' class='student author admin ta'><a href='/course/registerForCourse'>Register For Course</a></li>"
                     strClassList += registerforClass;
                     for(var i=0; i < classList.length;i++){
 
@@ -87,13 +87,12 @@
                         strClassList+="</a></li>";
                     }
                     if(classList.length == 0){
-                      strClassList+="<li style='display: none;' class='student'><a>No Courses</a></li>";
+                      strClassList+="<li style='display: none;' class='student ta'><a>No Courses</a></li>";
                     }
                     $('#courses-dropdown-list').html(strClassList);
                 }
             });
         }
-
         $(document).ready(function(){
             var url_path = window.location.pathname.replace('/').split('/');
             $('#page-nav li a').each(function() {
@@ -103,22 +102,24 @@
             });
             buildCoursesList();
             var access = "{{session['permissions']}}";
-            if(access == 1){
+            if(access == 10){
                 $(".student").each(function(){
                     $(this).show();
                 });
-            }else if(access == 2){
+            }else if(access == 20){
+                $(".ta").each(function(){
+                    $(this).show();
+                })
+            }else if(access == 50){
                 $(".author").each(function(){
                     $(this).show();
                 });
-            }else if (access == 3){
+            }else if (access == 100){
                 $(".admin").each(function(){
                     $(this).show();
                 });
             }else{
-
             }
-
         });
     </script>
     {% endblock js_bottom %}

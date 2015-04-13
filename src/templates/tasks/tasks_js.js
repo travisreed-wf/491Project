@@ -368,10 +368,13 @@
       $('[id^=minTime]').each(function(){
         var thisID = $(this).prop('id');
         var index = parseInt(thisID.split("minTime")[1]);
+        var time = parseInt($('#' + thisID).val());
+        if(time <= 0)
+          return;
         var d = {};
         d['id'] = "supplementary" + index;
         d['inputID'] = thisID;
-        d['time'] = parseInt($('#' + thisID).val());
+        d['time'] = time;
         d['title'] = $('#' + thisID).parent().find('#title').val()
         supplementaryInformationMinTimes["supplementary" + index] = d;
       })

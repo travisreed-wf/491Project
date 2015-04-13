@@ -67,6 +67,22 @@ class ManualGradingView(MethodView):
         return json.dumps(correctness)
 
 
+class ManualFeedbackGradingView(MethodView):
+    decorators = [login_required]
+    # TODO come back and verify that the user has permission to do this
+
+    def post(self):
+        data = flask.request.get_json()
+        response_id = data['response_id'].split('?')[0]
+        grader = grading.Grader()
+        grader.grade_manual_question(response_id,
+                                     data['question_id'],
+                                     data['feedback'],
+                                     category="feedback")
+        models.db.session.commit()
+        return ""
+
+
 class ManualCriticalGradingView(MethodView):
     decorators = [login_required]
     # TODO come back and verify that the user has permission to do this

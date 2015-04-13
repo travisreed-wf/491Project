@@ -14,6 +14,7 @@ import datetime as DT
 import auth
 from auth import auth
 
+
 class HomeScreenView(MethodView):
     decorators = [login_required]
 

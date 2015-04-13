@@ -7,6 +7,7 @@ from flask_login import current_user
 from flask_login import login_required
 from flask_login import current_user
 from werkzeug import secure_filename
+import xlsxwriter
 
 import datetime
 import time
@@ -96,6 +97,7 @@ class TaskBuilderView(MethodView):
         store_task(-1)
         return ""
 
+
 class TaskBuilderEditView(MethodView):
     decorators = [login_required, auth.permissions_author]
 
@@ -103,16 +105,17 @@ class TaskBuilderEditView(MethodView):
         elements = helper_functions.get_elements()
         task = models.Task.query.filter_by(id=int(taskID)).first()
         return render_template("tasks/taskBuilder.html", 
-                                elements=elements, 
-                                old_content=task.content.strip(),
-                                supplementary=task.supplementary,
-                                task_id=taskID,
-                                correct_options=task.questions)
+                               elements=elements, 
+                               old_content=task.content.strip(),
+                               supplementary=task.supplementary,
+                               task_id=taskID,
+                               correct_options=task.questions)
 
     def post(self, taskID):
         print "Updating task " + str(taskID)
         store_task(taskID)
         return ""
+
 
 class TaskBuilderCopyView(MethodView):
     decorators = [login_required, auth.permissions_author]
@@ -121,10 +124,10 @@ class TaskBuilderCopyView(MethodView):
         elements = helper_functions.get_elements()
         task = models.Task.query.filter_by(id=int(taskID)).first()
         return render_template("tasks/taskBuilder.html", 
-                                elements=elements, 
-                                old_content=task.content.strip(),
-                                supplementary=task.supplementary,
-                                correct_options=task.questions)
+                               elements=elements, 
+                               old_content=task.content.strip(),
+                               supplementary=task.supplementary,
+                               correct_options=task.questions)
 
 
 class TaskTransitionView(MethodView):
@@ -175,6 +178,99 @@ class TaskView(MethodView):
         grader = grading.Grader()
         grader.grade_automatic_questions(id)
         return "success"
+
+
+class TaskExportView(MethodView):
+    decorators = [login_required]
+
+    def get(self, taskID):
+        task = models.Task.query.filter_by(id=int(taskID)).first()
+        supp = json.loads(task.supplementary)
+        first_response = models.TaskResponse.query.filter(models.TaskResponse.task_id == taskID,
+                                                          models.TaskResponse.graded_response is not None).first()
+        course = models.Course.query.filter_by(id=task.course_id).first()
+        date_format = "%m/%d/%Y %I:%M:%S %p"
+
+        workbook = xlsxwriter.Workbook('src/static/uploads/task_%s.xlsx' % taskID)
+        worksheet = workbook.add_worksheet()
+        worksheet.write(0, 0, "Student ID")
+        worksheet.set_column('A:A', 11)
+        worksheet.write(0, 1, "Student Email")
+        worksheet.set_column('B:B', 25)
+        worksheet.write(0, 2, "Response ID")
+        worksheet.set_column('C:C', 11)
+        worksheet.write(0, 3, "Response Date")
+        worksheet.set_column('D:D', 22)
+        worksheet.write(0, 4, "Correctness Grade")
+        worksheet.set_column('E:E', 18)
+        worksheet.write(0, 5, "Cognitive Grade")
+        worksheet.set_column('F:F', 18)
+        if first_response:
+            response = json.loads(first_response.graded_response)
+            for i, manual_question in enumerate(response['manual_questions']):
+                worksheet.write(0, 6 + (i * 3), "Manual Question:%s - Response" % manual_question['questionID'])
+                worksheet.set_column(6 + (i * 3), 6 + (i * 3), 35)
+                worksheet.write(0, 7 + (i * 3), "Manual Question:%s - Correctness" % manual_question['questionID'])
+                worksheet.set_column(7 + (i * 3), 7 + (i * 3), 35)
+                worksheet.write(0, 8 + (i * 3), "Manual Question:%s - Critical?" % manual_question['questionID'])
+                worksheet.set_column(8 + (i * 3), 8 + (i * 3), 35)
+            for i, automatic_question in enumerate(response['automatic_questions']):
+                worksheet.write(0, 9 + (i * 2), "Automatic Question:%s - Response" % automatic_question['questionID'])
+                worksheet.set_column(9 + (i * 2), 9 + (i * 2), 35)
+                worksheet.write(0, 10 + (i * 2), "Automatic Question:%s - Correctness" % automatic_question['questionID'])
+                worksheet.set_column(10 + (i * 2), 10 + (i * 2), 35)
+            for i, key in enumerate(supp.keys()):
+                worksheet.write(0, 11 + (i * 2), "Supplementary:%s - Title" % key)
+                worksheet.set_column(11 + (i * 4), 11 + (i * 4), 40)
+                worksheet.write(0, 12 + (i * 4), "Supplementary:%s - Min Time" % key)
+                worksheet.set_column(12 + (i * 4), 12 + (i * 4), 40)
+                worksheet.write(0, 13 + (i * 4), "Supplementary:%s - Actual Time" % key)
+                worksheet.set_column(13 + (i * 4), 13 + (i * 4), 42)
+                worksheet.write(0, 14 + (i * 4), "Supplementary:%s - Sufficient" % key)
+                worksheet.set_column(14 + (i * 4), 14 + (i * 4), 42)
+
+        for i, u in enumerate(course.users):
+            response = models.TaskResponse.query.filter(
+                models.TaskResponse.task_id == taskID,
+                models.TaskResponse.student_id == u.id).order_by(
+                models.TaskResponse.datetime.desc()).first()
+            worksheet.write(i + 1, 0, u.id)
+            worksheet.write(i + 1, 1, u.email)
+            if response:
+                time = response.datetime
+                formatted_time = time.strftime(date_format)
+                if response.graded_response:
+                    response_data = json.loads(response.graded_response)
+                else:
+                    response_data = {
+                        'manual_questions': [],
+                        'automatic_questions': []
+                    }
+
+                worksheet.write(i + 1, 2, response.id)
+                worksheet.write(i + 1, 3, formatted_time)
+                worksheet.write(i + 1, 4, response.correctness_grade)
+                worksheet.write(i + 1, 5, response.cognitive_grade)
+                for j, question in enumerate(response_data['manual_questions']):
+                    worksheet.write(i + 1, 6 + (j * 3), question['response'])
+                    worksheet.write(i + 1, 7 + (j * 3), question['correctness'])
+                    worksheet.write(i + 1, 8 + (j * 3), question['critical'])
+                for j, question in enumerate(response_data['automatic_questions']):
+                    worksheet.write(i + 1, 9 + (j * 2), question['selectedOptionText'])
+                    worksheet.write(i + 1, 10 + (j * 2), question['correct'])
+                for j, key in enumerate(supp.keys()):
+                    worksheet.write(i + 1, 11 + (j * 4), supp[key]['title'])
+                    worksheet.write(i + 1, 12 + (j * 4), supp[key]['time'])
+                    if response_data['supplementary'].get(key):
+                        sufficient = response_data['supplementary'].get(key) >= supp[key]['time']
+                        worksheet.write(i + 1, 13 + (j * 4), response_data['supplementary'].get(key))
+                        worksheet.write(i + 1, 14 + (j * 4), sufficient)
+                    else:
+                        worksheet.write(i + 1, 13 + (j * 4), 0)
+                        worksheet.write(i + 1, 14 + (j * 4), False)
+
+        workbook.close()
+        return redirect('/uploads/task_%s.xlsx' % taskID)
 
 
 class MultipleChoiceView(MethodView):

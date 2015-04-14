@@ -53,10 +53,7 @@ class RegisterView(MethodView):
         data = flask.request.get_json()
         name = data.get('displayName')
         email = data.get('email')
-        emailConfirm = data.get('emailConfirm')
         password = data.get('password')
-        passwordConfirm = data.get('passwordConfirm')
-
 
         user = models.User.query.filter_by(email=email).first()
         if user:

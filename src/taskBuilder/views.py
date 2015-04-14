@@ -6,6 +6,7 @@ from flask.views import MethodView
 from flask_login import current_user
 from flask_login import login_required
 from flask_login import current_user
+import traceback
 from werkzeug import secure_filename
 import xlsxwriter
 
@@ -20,6 +21,7 @@ from auth import auth
 import config
 from grading import grading
 import helper_functions
+import logs
 import models
 
 
@@ -159,25 +161,29 @@ class TaskView(MethodView):
             return "This task is no longer available"
 
     def post(self, taskID):
-        data = flask.request.get_json()
-        task_response = models.TaskResponse(json.dumps(data))
-        task_response.datetime = datetime.datetime.now()
-        task_response.task_id = int(taskID)
-        task_response.student_id = current_user.id
-        task_response.supplementary = json.dumps(data.get('supplementary'))
-        start_time = data.get('startTaskTime')
-        end_time = data.get('endTaskTime')
-        date_format = "%m/%d/%Y %I:%M:%S %p"
-        formatted_s_time = datetime.datetime.strptime(start_time, date_format)
-        formatted_e_time = datetime.datetime.strptime(end_time, date_format)
-        task_response.start_time = formatted_s_time
-        task_response.end_time = formatted_e_time
-        models.db.session.add(task_response)
-        models.db.session.commit()
-        id = models.TaskResponse.query.order_by(models.TaskResponse.id.desc()).first().id
-        grader = grading.Grader()
-        grader.grade_automatic_questions(id)
-        return "success"
+        try:
+            data = flask.request.get_json()
+            task_response = models.TaskResponse(json.dumps(data))
+            task_response.datetime = datetime.datetime.now()
+            task_response.task_id = int(taskID)
+            task_response.student_id = current_user.id
+            task_response.supplementary = json.dumps(data.get('supplementary'))
+            start_time = data.get('startTaskTime')
+            end_time = data.get('endTaskTime')
+            date_format = "%m/%d/%Y %I:%M:%S %p"
+            formatted_s_time = datetime.datetime.strptime(start_time, date_format)
+            formatted_e_time = datetime.datetime.strptime(end_time, date_format)
+            task_response.start_time = formatted_s_time
+            task_response.end_time = formatted_e_time
+            models.db.session.add(task_response)
+            models.db.session.commit()
+            id = models.TaskResponse.query.order_by(models.TaskResponse.id.desc()).first().id
+            grader = grading.Grader()
+            grader.grade_automatic_questions(id)
+            return "success"
+        except:
+            logger.critical(traceback.format_exc())
+            raise
 
 
 class TaskExportView(MethodView):
@@ -320,3 +326,4 @@ class CoursesTeachingView(MethodView):
         courses += [c.serialize for c in tas]
         return flask.json.dumps(courses)
 
+logger = logs.get_logger()

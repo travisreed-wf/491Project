@@ -38,8 +38,10 @@ class GradebookScreenView(MethodView):
             return render_template('studentGradebook.html',
                                    courses=current_user.courses,
                                    tasks=data)
-        elif current_user.permissions == 50:
+        elif current_user.permissions >= 20:
             teaching = models.Course.query.filter_by(teacher_id=current_user.id).all()
+            courses_where_ta = current_user.get_courses_where_ta()
+            teaching += courses_where_ta
             return render_template('authorGradebook.html', courses=teaching)
 
 
@@ -47,7 +49,8 @@ class CourseGradeView(MethodView):
 
     def get(self, courseID):
         course = models.Course.query.filter_by(id=int(courseID) - 1000).first()
-        if course.teacher_id != current_user.id:
+        courses_where_ta = current_user.get_courses_where_ta()
+        if course.teacher_id != current_user.id and course not in courses_where_ta:
             return "You are not the instructor for this course", 401
         data = []
         for u in course.users:

@@ -81,7 +81,7 @@
     }
 
     function showSecurityCode() {
-        if({{ current_user.permissions }} != 2){
+        if({{ current_user.permissions }} < 50){
             alert("You do not have permission to view this.\nContact the course instructor.")
             return;
         }

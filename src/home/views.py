@@ -67,8 +67,6 @@ class TaskListView(MethodView):
         userResponseIDs = [tr.task_id for tr in current_user.task_responses]
         week_ago = DT.date.today() - DT.timedelta(days=7)
         for c in current_user.courses:
-            if c.isArchived:
-                continue
             for t in c.tasks:
                 if(t.id in userResponseIDs and t.duedate.date() > week_ago and t.status != "created"):
                     tasks['complete'].append(t.serialize)
@@ -76,7 +74,7 @@ class TaskListView(MethodView):
                     tasks['current'].append(t.serialize)
         tasks['complete'] = sorted(tasks['complete'], key=lambda k: k['duedate'])
         tasks['current'] = sorted(tasks['current'], key=lambda k: k['duedate'])
-        return flask.json.dumps(tasks)
+        return flask.json.dumps(tasks)  
 
 
 class SettingsScreenView(MethodView):

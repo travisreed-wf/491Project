@@ -15,27 +15,25 @@ class Grader:
         total_graded = 0
         total = len(response['manual_questions']) + len(response['automatic_questions'])
         for question in response['automatic_questions']:
-            correct += 100 if question['correct'] else 0
+            correct += 1 if question['correct'] else 0
             total_graded += 1
         for question in response['manual_questions']:
-            correct += int(question['correctness']) if int(question['correctness']) >= 0 else 0
-            total_graded += 1 if int(question.get('correctness')) >= 0 else 0
+            correct += 1 if question.get('correct') else 0
+            total_graded += 1 if question.get('correct') is not None else 0
         task_response.graded = (total == total_graded)
-        return int(float(correct) / total_graded) if total_graded else 0
+        return int(float(100 * correct) / total_graded) if total_graded else 0
 
-    def grade_manual_question(self, response_id, question_id, correct,
-                              category='correctness'):
+    def grade_manual_questions(self, response_id, question_id, correct):
         response = models.TaskResponse.query.filter_by(id=response_id).first()
         graded_response = json.loads(response.graded_response)
         for question in graded_response['manual_questions']:
             if question['questionID'] == question_id:
-                question[category] = correct
+                question['correct'] = correct
         response.graded_response = json.dumps(graded_response)
-        if category == 'correctness':
-            correctness_grade = self.calculate_correctness(response_id)
-            response.correctness_grade = correctness_grade
-            models.db.session.commit()
-            return correctness_grade
+        correctness_grade = self.calculate_correctness(response_id)
+        response.correctness_grade = correctness_grade
+        models.db.session.commit()
+        return correctness_grade
 
     def grade_automatic_questions(self, response_id):
         task_response = models.TaskResponse.query.filter_by(id=response_id).first()

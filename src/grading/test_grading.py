@@ -83,6 +83,18 @@ class TestCalculate_Correctness(unittest.TestCase):
             self.assertEqual(taskResponse.graded, False)
             self.assertEqual(ret,0)
 
+        def test_ABHIJLMOHIJLMOHPRS(self):
+            grader = grading.Grader()
+            taskResponse = Mock()
+            self.models.TaskResponse.query.filter_by.return_value.first.return_value = taskResponse
+            taskResponse.graded_response = json.dumps({
+            'automatic_questions':[],
+            'manual_questions':[{'correct':True},{'correct':True}]
+            })
+            taskResponse.graded = None
+            ret = grader.calculate_correctness(1)
+            self.assertEqual(taskResponse.graded, True)
+            self.assertEqual(ret,100)
 
 
 

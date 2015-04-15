@@ -53,10 +53,7 @@ class RegisterView(MethodView):
         data = flask.request.get_json()
         name = data.get('displayName')
         email = data.get('email')
-        emailConfirm = data.get('emailConfirm')
         password = data.get('password')
-        passwordConfirm = data.get('passwordConfirm')
-
 
         user = models.User.query.filter_by(email=email).first()
         if user:
@@ -68,7 +65,7 @@ class RegisterView(MethodView):
             user = models.User(email, password, name)
             models.db.session.add(user)
             if data.get("author"):
-                user.permissions = 2
+                user.permissions = 50
 
         models.db.session.commit()
 

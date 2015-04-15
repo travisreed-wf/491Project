@@ -13,13 +13,16 @@
             <p class="text-muted">{{course.name}} <small>{{course.title}}</small></p><br>
             Due Date: {{task.duedate}}<br>
             <p id="status">Status: {{task.status.capitalize()}}</p>
-            {% if task.status == "created" %}
-            <button id="status_button" type="button" class="btn btn-default" onclick="transition('available')">Make Available to Students</button>
-            {% elif task.status == "available" %}
-            <button id="status_button" type="button" class="btn btn-default" onclick="transition('closed')">Close to Students</button>
-            {% elif task.status == "closed" %}
-            <button id="status_button" type="button" class="btn btn-default" onclick="transition('grades published')">Publish Grades to Students</button>
-            {% endif %}
+            <form action='/task/{{task.id}}/export' class='form-inline'>
+              <button id="export" type="submit" class="btn btn-default">Export Response Data</button>
+              {% if task.status == "created" %}
+              <button id="status_button" type="button" class="btn btn-default" onclick="transition('available')">Make Available to Students</button>
+              {% elif task.status == "available" %}
+              <button id="status_button" type="button" class="btn btn-default" onclick="transition('closed')">Close to Students</button>
+              {% elif task.status == "closed" %}
+              <button id="status_button" type="button" class="btn btn-default" onclick="transition('grades published')">Publish Grades to Students</button>
+              {% endif %}
+            </form>
         </div>
     </div>
 </div>

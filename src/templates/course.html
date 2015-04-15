@@ -17,12 +17,77 @@
         </div>
         <div id="course-task-list-complete" class="list-group">
         </div>
+        <div id="tasks-teaching-list author" class="list-group">
+            <li class="list-group-item active" align="center"><strong>Options</strong></li>
+            <a class="list-group-item">
+                <table width="100%">
+                    <tr class="admin author" style="display: none">
+                        <td width="35%"><b>Add/Remove TA from course</b></td>
+                        <td width="15%"><input id="TAEmail" type="text" class="form-control" placeholder="User's Email" /></td>
+                        <td width="5%">&nbsp</td>
+                        <td width="15%"><button id="submitAddTA" type="button" class="btn btn-lg btn-success pull-right">Add TA</button> </td>
+                        <td width="15%"><button id="submitDeleteTA" type="button" class="btn btn-lg btn-danger pull-right">Delete TA</button> </td>
+                        <td id="addTANotification" width="15%" style="color:red; visibility: hidden">  *Incorrect</td>
+                    </tr>
+                </table>
+            </a>
+        </div>
+        {% if current_user.permissions >= 50 %}
+        <div id="course-admin">
+        <hr>
+        <h3>Administrative Options</h3>
+            <button title="Show course registration code" class="btn btn-primary" onclick="showSecurityCode()">
+                <br>Registration Code &nbsp;&nbsp;<span class="glyphicon glyphicon-lock"></span><br><br>
+            </button>
+            &nbsp;&nbsp;
+            <button id="archiveCourse" title="Archive this course" class="btn btn-danger" onclick="archiveCourse()" style="display:none">
+                <br>Archive Course &nbsp;&nbsp;<span class="glyphicon glyphicon-folder-close"></span><br><br>
+            </button>
+            <button id="unarchiveCourse" title="Unarchive this course" class="btn btn-success" onclick="unarchiveCourse()" style="display:none">
+                <br>Unarchive Course &nbsp;&nbsp;<span class="glyphicon glyphicon-folder-open"></span><br><br>
+            </button>
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
 {% block js_bottom %}
 {{ super() }}
 <script>    
+    function archiveCourse(){
+        $.ajax({
+          url           : "{{ url_for('archive_course', courseID=course.id) }}",
+          type          : 'POST',
+          contentType   : 'application/json',
+          success       : function(data){
+              $("#archiveCourse").slideToggle(200, function(){
+                $("#unarchiveCourse").slideToggle(200);
+              });
+          }
+        });
+    }
+
+    function unarchiveCourse(){
+        $.ajax({
+          url           : "{{ url_for('unarchive_course', courseID=course.id) }}",
+          type          : 'POST',
+          contentType   : 'application/json',
+          success       : function(data){
+              $("#unarchiveCourse").slideToggle(200, function(){
+                $("#archiveCourse").slideToggle(200);
+              });
+          }
+        });
+    }
+
+    function showSecurityCode() {
+        if({{ current_user.permissions }} < 50){
+            alert("You do not have permission to view this.\nContact the course instructor.")
+            return;
+        }
+        alert("The registration code for this course is: " + {{course.securityCode}});
+    }
+
     function getCourseTaskList() {
         $.ajax({
             url         :"{{ url_for('course_task_list', courseID='')}}" + (parseInt("{{course.id}}") + 1000),
@@ -75,8 +140,59 @@
             }
         });
     }
+    function addTA() {
+        $.ajax({
+              url: '{{ url_for("add_TA") }}',
+              type: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify({
+                    'email': $("#TAEmail").val(),
+                    'courseID': parseInt("{{course.id}}"),
+                }),
+                success:  function(data) {
+                    alert(data + " is a TA for this course.");
+                    $("#addTANotification").css("visibility", "hidden");
+                    $("#TAEmail").val("");
+
+                },
+                error: function(data){
+                    $("#addTANotification").css("visibility","visible");
+                }
+        });
+    }
+    function removeTA(TA) {
+        $.ajax({
+              url: '{{ url_for("remove_TA") }}',
+              type: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify({
+                    'email': TA,
+                    'courseID': parseInt("{{course.id}}"),
+
+                }),
+                success:  function(data) {
+                    alert(data + " is no longer a TA for this course.");
+                    $("#addTaNotification").css("visibility", "hidden");
+                    $("#TAEmail").val("");
+                },
+                error: function(data){
+                    $("#addTANotification").css("visibility","visible");
+                }
+        });
+    }
     $(document).ready(function() {
+        if("{{ course.isArchived }}" == "True")
+            $("#unarchiveCourse").show();
+        else
+            $("#archiveCourse").show();
+
         getCourseTaskList();
+        $("#submitAddTA").click(function(){
+            addTA();
+        });
+        $("#submitDeleteTA").click(function(){
+            removeTA($("#TAEmail").val());
+        });
     })
 </script>
 {% endblock %}

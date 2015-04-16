@@ -291,40 +291,40 @@ class MultipleChoiceView(MethodView):
     decorators = [login_required, auth.permissions_author]
 
     def get(self):
-        return render_template("elements/multipleChoice.html")
+        return render_template("tasks/elements/multipleChoice.html")
 
 
 class TrueFalseView(MethodView):
     decorators = [login_required, auth.permissions_author]
 
     def get(self):
-        return render_template("elements/trueFalse.html")
+        return render_template("tasks/elements/trueFalse.html")
 
 
 class FreeResponseView(MethodView):
     decorators = [login_required, auth.permissions_author]
 
     def get(self):
-        return render_template("elements/freeResponse.html")
+        return render_template("tasks/elements/freeResponse.html")
 
 
 class SupplementaryView(MethodView):
     decorators = [login_required, auth.permissions_author]
 
     def get(self):
-        return render_template("elements/supplementary.html")
+        return render_template("tasks/elements/supplementary.html")
 
 class TextContentView(MethodView):
     decorators = [login_required, auth.permissions_author]
 
     def get(self):
-        return render_template("elements/textContent.html")
+        return render_template("tasks/elements/textContent.html")
 
 class ProblemStatementView(MethodView):
     decorators = [login_required, auth.permissions_author]
 
     def get(self):
-        return render_template("elements/problemStatement.html")
+        return render_template("tasks/elements/problemStatement.html")
 
 class CoursesTeachingView(MethodView):
 

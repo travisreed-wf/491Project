@@ -1,3 +1,4 @@
+import hashlib
 import flask
 from flask_login import LoginManager
 from flask_login import login_user
@@ -19,10 +20,12 @@ def load_user(user_id):
 
 def login(email, password):
     user = models.User.query.filter_by(email=email).first()
+
     if not user:
         return False
 
-    if user.password == password:
+    enteredPW = hashlib.sha224(password).hexdigest()
+    if enteredPW == user.password:
         flask.session['email'] = user.email
         flask.session['name'] = user.name
         flask.session['permissions'] = user.permissions

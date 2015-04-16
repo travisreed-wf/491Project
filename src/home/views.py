@@ -55,7 +55,7 @@ class DeleteTaskView(MethodView):
     def post(self):
         data = flask.request.get_json()
         task = models.Task.query.filter_by(id=int(data['task_id'])).first()
-        course = task.course:
+        course = task.course
         if course.teacher_id != current_user.id and current_user.permissions < 100:
             return "Permission Denied", 401
         models.db.session.delete(task)

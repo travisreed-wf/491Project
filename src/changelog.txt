@@ -1,3 +1,10 @@
+### April 16th
+Need to run migration script to encrypt passwords in your local database.
+1 - uncomment the /auth/migrate line in /src/auth/urls.py
+2 - go the the /auth/migrate url while your server is running to run the migration script
+3 - comment the /auth/migrate line again so you can't accidentally double encrypt passwords
+
+
 ### April 12th
 alter table course add column secondaryTeachers varchar(255);
 

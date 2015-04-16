@@ -1,6 +1,6 @@
 import re
 import json
-
+import hashlib
 import auth
 import logs
 import models
@@ -44,6 +44,19 @@ class LogoutView(MethodView):
         return redirect(url_for("login"))
 
 
+# This view is commented out in urls, this is only used to encrypt all passwords
+# in the database.
+class MigratePasswords(MethodView):
+
+    def get(self):
+        users = models.User.query.all()
+        for user in users:
+            if user.password:
+                user.password = hashlib.sha224(user.password).hexdigest()
+        models.db.session.commit()
+        return "Success"
+
+
 class RegisterView(MethodView):
 
     def get(self):
@@ -60,12 +73,10 @@ class RegisterView(MethodView):
             if user.password:
                 return "Failure, user already exists", 401
             else:
-                user.password = password
+                user.password = hashlib.sha224(password).hexdigest()
         else:
             user = models.User(email, password, name)
             models.db.session.add(user)
-            if data.get("author"):
-                user.permissions = 50
 
         models.db.session.commit()
 

@@ -40,6 +40,10 @@ class ManualGradingView(MethodView):
     def post(self):
         data = flask.request.get_json()
         response_id = data['response_id'].split('?')[0]
+        response = models.TaskResponse.query.filter_by(id=response_id).first()
+        course = response.task.course
+        if course.teacher_id != current_user.id:
+            return "Permission Denied", 401
         grader = grading.Grader()
         correctness = grader.grade_manual_question(response_id,
                                                    data['question_id'],
@@ -54,6 +58,10 @@ class ManualFeedbackGradingView(MethodView):
     def post(self):
         data = flask.request.get_json()
         response_id = data['response_id'].split('?')[0]
+        response = models.TaskResponse.query.filter_by(id=response_id).first()
+        course = response.task.course
+        if course.teacher_id != current_user.id:
+            return "Permission Denied", 401
         grader = grading.Grader()
         grader.grade_manual_question(response_id,
                                      data['question_id'],
@@ -70,6 +78,10 @@ class ManualCriticalGradingView(MethodView):
     def post(self):
         data = flask.request.get_json()
         response_id = data['response_id'].split('?')[0]
+        response = models.TaskResponse.query.filter_by(id=response_id).first()
+        course = response.task.course
+        if course.teacher_id != current_user.id:
+            return "Permission Denied", 401
         grader = grading.Grader()
         grader.grade_manual_question(response_id,
                                      data['question_id'],

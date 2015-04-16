@@ -64,6 +64,7 @@ def store_task(taskID):
     models.db.session.add(task)
     models.db.session.commit()
     print "Stored task " + str(task.id) + " into db."
+    return "Stored task " + str(task.id) + " into db."
 
 
 class UploadView(MethodView):

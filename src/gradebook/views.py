@@ -16,7 +16,6 @@ class GradebookScreenView(MethodView):
 
     def get(self):
         if current_user.permissions == 10:
-            print "SHER"
             data = []
             for c in current_user.courses:
                 if c.isArchived:

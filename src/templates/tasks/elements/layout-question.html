@@ -13,16 +13,27 @@
       {% block answer_details %}
       {% endblock %}
       <div class="panel-footer EDIT_ONLY">
-        <button type="button" class="delete-question btn btn-danger pull-left">Delete Element</button>
-        <div class="clearfix"></div>
+        <div style="height:33px;display:inline-block;">
+          <button type="button" class="delete-question btn btn-danger pull-left">Delete Element</button>
+          &nbsp;&nbsp;<input type="checkbox" name="my-checkbox" checked data-on-text="Graded" data-off-text="Not Graded" data-handle-width="110">
+        </div>
       </div>
     </div>
   </div>
 </div>
 {% block js_bottom %}
 {% endblock %}
+<script src="/static/bootstrap-switch/dist/js/bootstrap-switch.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
   applyQuestionJS();
+  $.fn.bootstrapSwitch.defaults.size = 'small';
+  $("[name='my-checkbox']").bootstrapSwitch();
+  $('input[name="my-checkbox"]').on('switchChange.bootstrapSwitch', function(event, state) {
+    $(this).closest('.panel-primary').find('.panel-body').toggleClass('automatic-grading', state);
+    $(this).closest('.panel-primary').find('.panel-body').toggleClass('manual-grading', state);
+    console.log(this); // DOM element
+    console.log(state); // true | false
+  });
 });
 </script>

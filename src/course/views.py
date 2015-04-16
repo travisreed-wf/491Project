@@ -13,7 +13,7 @@ from auth import auth
 
 
 class CreateView(MethodView):
-    decorators = [login_required]
+    decorators = [login_required, auth.permissions_author]
 
     def get(self):
         return render_template("courseCreation.html")
@@ -48,6 +48,8 @@ class CourseMasterView(MethodView):
 
 
 class CourseTaskListView(MethodView):
+    decorators = [login_required]
+
     def get(self, courseID):
         tasks = {'current': [], 'complete': []}
         course = models.Course.query.filter_by(id=int(courseID) - 1000).first()
@@ -75,6 +77,8 @@ class RegisterForCourseView(MethodView):
 
 
 class searchCourseName(MethodView):
+    decorators = [login_required]
+
     def get(self):
         return
 
@@ -122,6 +126,8 @@ class searchProfessorName(MethodView):
 
 
 class securityCode(MethodView):
+    decorators = [login_required]
+
     def get(self):
         return
 
@@ -145,6 +151,7 @@ class securityCode(MethodView):
 
 
 class AddTAView(MethodView):
+    decorators = [login_required, auth.permissions_author]
 
     def get(self):
         return
@@ -171,6 +178,7 @@ class AddTAView(MethodView):
 
 
 class RemoveTAView(MethodView):
+    decorators = [login_required, auth.permissions_author]
 
     def get(self):
         return

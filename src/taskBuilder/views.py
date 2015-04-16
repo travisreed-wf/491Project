@@ -63,6 +63,7 @@ def store_task(taskID):
 
 
 class UploadView(MethodView):
+    decorators = [login_required, auth.permissions_author]
 
     def get(self):
         return render_template('upload.html')
@@ -82,6 +83,7 @@ class UploadView(MethodView):
 
 
 class UploadedFileView(MethodView):
+    decorators = [login_required]
 
     def get(self, filename):
         return flask.send_file("static/uploads/" + filename)
@@ -133,7 +135,7 @@ class TaskBuilderCopyView(MethodView):
 
 
 class TaskTransitionView(MethodView):
-    decorators = [login_required]
+    decorators = [login_required, auth.permissions_author]
 
     def post(self):
         data = flask.request.get_json()
@@ -187,7 +189,7 @@ class TaskView(MethodView):
 
 
 class TaskExportView(MethodView):
-    decorators = [login_required]
+    decorators = [login_required, auth.permissions_author]
 
     def get(self, taskID):
         task = models.Task.query.filter_by(id=int(taskID)).first()

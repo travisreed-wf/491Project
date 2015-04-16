@@ -8,30 +8,9 @@ from flask_login import current_user
 from flask_login import login_required
 import json
 
+from auth import auth
 import grading
 import models
-
-
-class MigrateDataView(MethodView):
-
-    def get(self):
-        responses = models.TaskResponse.query.all()
-        for response in responses:
-            if response.graded_response:
-                graded_response = json.loads(response.graded_response)
-                for question in graded_response['manual_questions']:
-                    if question.get('correctness'):
-                        continue
-                    question['critical'] = None
-                    if question.get('correct'):
-                        question['correctness'] = 100
-                    elif question.get('correct') is False:
-                        question['correctness'] = 0
-                    else:
-                        question['correctness'] = -1
-                response.graded_response = json.dumps(graded_response)
-        models.db.session.commit()
-        return "Success"
 
 
 class ResponseView(MethodView):
@@ -54,7 +33,8 @@ class ResponseView(MethodView):
 
 
 class ManualGradingView(MethodView):
-    decorators = [login_required]
+    decorators = [login_required, auth.permissions_author]
+
     # TODO come back and verify that the user has permission to do this
 
     def post(self):
@@ -68,7 +48,7 @@ class ManualGradingView(MethodView):
 
 
 class ManualFeedbackGradingView(MethodView):
-    decorators = [login_required]
+    decorators = [login_required, auth.permissions_author]
     # TODO come back and verify that the user has permission to do this
 
     def post(self):
@@ -84,7 +64,7 @@ class ManualFeedbackGradingView(MethodView):
 
 
 class ManualCriticalGradingView(MethodView):
-    decorators = [login_required]
+    decorators = [login_required, auth.permissions_author]
     # TODO come back and verify that the user has permission to do this
 
     def post(self):

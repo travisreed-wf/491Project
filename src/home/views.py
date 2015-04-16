@@ -62,6 +62,8 @@ class DeleteTaskView(MethodView):
 
 
 class TaskListView(MethodView):
+    decorators = [login_required]
+
     def get(self):
         tasks = {'current':[], 'complete':[]}
         userResponseIDs = [tr.task_id for tr in current_user.task_responses]
@@ -80,13 +82,14 @@ class TaskListView(MethodView):
 
 
 class SettingsScreenView(MethodView):
-    decorators = [login_required]
+    decorators = [login_required, auth.permissions_author]
 
     def get(self):
         return render_template("settings.html", failure=False)
 
 
 class AddAuthorView(MethodView):
+    decorators = [login_required, auth.permissions_admin]
 
     def get(self):
         return
@@ -110,6 +113,7 @@ class AddAuthorView(MethodView):
 
 
 class AddAdminView(MethodView):
+    decorators = [login_required, auth.permissions_admin]
 
     def get(self):
         return
@@ -134,6 +138,7 @@ class AddAdminView(MethodView):
 
 
 class RemoveUserView(MethodView):
+    decorators = [login_required, auth.permissions_admin]
 
     def get(self):
         return

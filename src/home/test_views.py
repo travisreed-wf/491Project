@@ -26,16 +26,8 @@ class TestTaskListView(unittest.TestCase):
             'duedate': "dd1"
         }
 
-        self.task2 = Mock()
-        self.task2.serialize = {
-            'duedate': "dd2"
-        }
-
         self.course1 = Mock()
         self.course1.tasks = []
-
-        self.course2 = Mock()
-        self.course2.tasks = []
 
     def test_clause1_true(self):
         duedate = datetime.date(2014, 01, 30)
@@ -47,3 +39,14 @@ class TestTaskListView(unittest.TestCase):
         ret = views.TaskListView().get()
         ret = json.loads(ret)
         self.assertEqual(ret['complete'], [self.task1.serialize])
+
+    def test_clause1_false(self):
+        duedate = datetime.date(2014, 01, 30)
+        self.task1.duedate.date.return_value = duedate
+        self.task1.status = "available"
+        self.task1.id = 1
+        self.course1.tasks = [self.task1]
+        self.current_user.courses = []
+        ret = views.TaskListView().get()
+        ret = json.loads(ret)
+        self.assertEqual(ret['complete'], [])

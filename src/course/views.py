@@ -100,6 +100,8 @@ class ArchiveCourse(MethodView):
 
     def post(self, courseID):
         course = models.Course.query.filter_by(id=int(courseID)).first()
+        if course.teacher_id != current_user.id and current_user.permissions < 100:
+            return "Permission Denied", 401
         course.isArchived = True
         models.db.session.add(course)
         models.db.session.commit()
@@ -111,6 +113,8 @@ class UnarchiveCourse(MethodView):
 
     def post(self, courseID):
         course = models.Course.query.filter_by(id=int(courseID)).first()
+        if course.teacher_id != current_user.id and current_user.permissions < 100:
+            return "Permission Denied", 401
         course.isArchived = False
         models.db.session.add(course)
         models.db.session.commit()
@@ -132,7 +136,6 @@ class securityCode(MethodView):
         return
 
     def post(self):
-
         data = flask.request.get_json()
         securityCode = data.get('securityCode')
         courseId = data.get('courseId')
@@ -161,6 +164,8 @@ class AddTAView(MethodView):
         email = data.get('email')
         courseId = data.get('courseID')
         course = models.Course.query.filter_by(id=courseId).first()
+        if course.teacher_id != current_user.id and current_user.permissions < 100:
+            return HttpResponse("error", status=401)
         if email:
             user = models.User.query.filter(models.User.email.contains(email)).first()
             if user and user.permissions:
@@ -188,6 +193,8 @@ class RemoveTAView(MethodView):
         email = data.get('email')
         courseId = data.get('courseID')
         course = models.Course.query.filter_by(id=courseId).first()
+        if course.teacher_id != current_user.id and current_user.permissions < 100:
+            return HttpResponse("error", status=401)
         if email:
             user = models.User.query.filter_by(email=email).first()
             if user and user.permissions:

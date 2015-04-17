@@ -40,15 +40,19 @@ def get_thumbnail(extension):
     else:
         return models.Thumbnail.query.filter_by(id=3).first()
 
+
 def store_task(taskID):
     if taskID == -1:
         task = models.Task("")
-    else :
+    else:
         task = models.Task.query.filter_by(id=int(taskID)).first()
     pattern = r"<script.*?</script>"
     data = flask.request.get_json()
     content = data.get('html')
     courseID = data.get('course_id')
+    course = models.Course.query.filter_by(id=courseID).first()
+    if course.teacher_id != current_user.id:
+        return "Permission Denied", 401
     taskTitle = data.get('taskTitle')
     taskDueDate = data.get('taskDue')
     task.title = taskTitle
@@ -60,6 +64,7 @@ def store_task(taskID):
     models.db.session.add(task)
     models.db.session.commit()
     print "Stored task " + str(task.id) + " into db."
+    return "Stored task " + str(task.id) + " into db."
 
 
 class UploadView(MethodView):
@@ -98,8 +103,7 @@ class TaskBuilderView(MethodView):
 
     def post(self):
         print "Creating a new task"
-        store_task(-1)
-        return ""
+        return store_task(-1)
 
 
 class TaskBuilderEditView(MethodView):
@@ -117,8 +121,7 @@ class TaskBuilderEditView(MethodView):
 
     def post(self, taskID):
         print "Updating task " + str(taskID)
-        store_task(taskID)
-        return ""
+        return store_task(taskID)
 
 
 class TaskBuilderCopyView(MethodView):
@@ -140,6 +143,8 @@ class TaskTransitionView(MethodView):
     def post(self):
         data = flask.request.get_json()
         task = models.Task.query.filter_by(id=data['task_id']).first()
+        if task.course.teacher_id != current_user.id:
+            return "Permission Denied", 401
         task.status = data['status']
         models.db.session.commit()
         return "success"
@@ -197,6 +202,8 @@ class TaskExportView(MethodView):
         first_response = models.TaskResponse.query.filter(models.TaskResponse.task_id == taskID,
                                                           models.TaskResponse.graded_response is not None).first()
         course = models.Course.query.filter_by(id=task.course_id).first()
+        if course.teacher_id != current_user.id and current_user.permissions < 100:
+            return "Permission Denied", 401
         date_format = "%m/%d/%Y %I:%M:%S %p"
 
         workbook = xlsxwriter.Workbook('src/static/uploads/task_%s.xlsx' % taskID)

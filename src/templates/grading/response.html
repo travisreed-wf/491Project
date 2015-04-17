@@ -24,20 +24,22 @@
   {% endif %}
       <h4>Manual Grading Required</h4>
       {% for manual_question in response['manual_questions'] %}
-        {% if manual_question['correctness'] > 60 and manual_question['critical'] is not none %}
+        {% if (manual_question['correctness'] > 60 and manual_question['critical'] is not none) or manual_question['not-graded'] %}
         <div class="panel panel-success">
         {% elif manual_question['correctness'] >= 0 and manual_question['critical'] is not none %}
         <div class="panel panel-danger">
         {% else %}
         <div class="panel panel-warning">
         {% endif %}
-          <div class="panel-heading">{{manual_question['questionID']}}</div>
+          <div class="panel-heading">{{manual_question['questionID']}}{% if manual_question['not-graded'] %} - Not Included in Grade{% endif %}</div>
           <div class="panel-body">
             Question Content: {{manual_question['questionContent']}}<br>
             Response: {{manual_question['response']}}<br>
-            <form class="form-inline"><div class="form-group"><label style="font-weight: normal">Correctness (0-100):  </label><input type="text" size="3" {% if permissions <= 1 %}disabled{% endif %} class="form-control" onkeyup="markCorrectness(this, {{ (manual_question['critical'] is not none)|int }})" placeholder="{% if manual_question['correctness'] >= 0 %}{{manual_question['correctness']}}{% else %} {% endif %}"></div></form><br>
+            {% if not manual_question['not-graded'] %}
+            <form class="form-inline"><div class="form-group"><label style="font-weight: normal">Correctness (0-100):  </label><input type="text" size="3" {% if permissions <= 10 %}disabled{% endif %} class="form-control" onkeyup="markCorrectness(this, {{ (manual_question['critical'] is not none)|int }})" placeholder="{% if manual_question['correctness'] >= 0 %}{{manual_question['correctness']}}{% else %} {% endif %}"></div></form><br>
+            {% endif %}
             <div class="manual-radio">
-              {% if permissions > 1 %}
+              {% if permissions > 10 and not manual_question['not-graded'] %}
               <div class="radio">
                 <label class="radio-inline"><input type="radio" {% if manual_question['critical'] %}checked{% endif %} onclick="markCritical(true, this, {{manual_question['correctness']}})">Critical Thinking</label>
                 <label class="radio-inline"><input type="radio" {% if manual_question['critical'] == False %}checked{% endif %} onclick="markCritical(false, this, {{manual_question['correctness']}})">Simple Response</label>
@@ -46,7 +48,7 @@
             </div><br>
             <div class="form-group">
               <label for="feedback">Feedback:</label>
-              <textarea rows="4" cols="50" class="form-control" id="feedback" onkeyup="updateFeedback(this)" {% if permissions <= 1 %}disabled{% endif %}>{{manual_question['feedback']}}</textarea>
+              <textarea rows="4" cols="50" class="form-control" id="feedback" onkeyup="updateFeedback(this)" {% if permissions <= 10 %}disabled{% endif %}>{{manual_question['feedback']}}</textarea>
             </div>
           </div>
         </div>
@@ -54,7 +56,7 @@
       <h4>Automatically Graded</h4>
       {% for automatic_question in response['automatic_questions'] %}
         <div class="panel {% if automatic_question['correct'] %}panel-success{% else %}panel-danger{% endif %}">
-          <div class="panel-heading">{{automatic_question['questionID']}}</div>
+          <div class="panel-heading">{{automatic_question['questionID']}}{% if automatic_question['not-graded'] %} - Not Included in Grade{% endif %}</div>
           <div class="panel-body">
             Question Content: {{automatic_question['questionContent']}}<br>
             Correct Answer: {{automatic_question['correctOptionText']}}<br>

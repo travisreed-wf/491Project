@@ -14,6 +14,7 @@
         var question = $(this);
         var data = {};
         data['options'] = [];
+        data['not-graded'] = $(this).hasClass('not-graded');
         data['questionID'] = question.attr('id');
         data['questionContent'] = question.find(".question-content").text();
         question.find(':radio:visible').each(function(){
@@ -26,6 +27,7 @@
       $('.manual-grading').each(function(){
         var question = $(this);
         var data = {};
+        data['not-graded'] = $(this).hasClass('not-graded');
         data['questionID'] = question.attr('id');
         data['response'] = question.find('#student-response').val();
         data['questionContent'] = question.find(".question-content").text();

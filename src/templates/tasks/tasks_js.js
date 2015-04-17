@@ -5,6 +5,9 @@
     var ret = true;
     $('.automatic-grading').each(function(){
           var question = $(this);
+          if (question.hasClass('not-graded')){
+            return;
+          }
           if (question.find(':radio:checked').length == 0){
             ret = false;
           }
@@ -383,6 +386,7 @@
           var question = $(this);
           var data = {};
           data['options'] = [];
+          data['not-graded'] = $(this).hasClass('not-graded');
           data['questionID'] = question.attr('id');
           question.find(':radio:visible').each(function(){
             data['options'].push($(this).attr('id'));

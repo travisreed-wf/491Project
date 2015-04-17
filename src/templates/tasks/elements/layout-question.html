@@ -30,10 +30,11 @@ $(document).ready(function(){
   $.fn.bootstrapSwitch.defaults.size = 'small';
   $("[name='my-checkbox']").bootstrapSwitch();
   $('input[name="my-checkbox"]').on('switchChange.bootstrapSwitch', function(event, state) {
-    $(this).closest('.panel-primary').find('.panel-body').toggleClass('automatic-grading', state);
-    $(this).closest('.panel-primary').find('.panel-body').toggleClass('manual-grading', state);
-    console.log(this); // DOM element
-    console.log(state); // true | false
+    $(this).closest('.panel-primary').find('.panel-body').toggleClass('not-graded', !state);
+    if (!state){
+      $(this).closest('.panel-primary').find('.wp-supp-input').val("");
+    }
+    hideAnswerKeyAlertIfAppropriate();
   });
 });
 </script>

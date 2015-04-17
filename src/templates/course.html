@@ -17,16 +17,17 @@
         </div>
         <div id="course-task-list-complete" class="list-group">
         </div>
-        <div id="tasks-teaching-list author" class="list-group">
+        {% if current_user.permissions >= 50 %}
+        <div id="tasks-teaching-list" class="list-group">
             <li class="list-group-item active" align="center"><strong>Administrative Options</strong></li>
             <a class="list-group-item">
                 <table width="100%">
-                    <tr class="admin author" style="display: none">
-                        <td width="35%"><b>Add/Remove TA from course</b></td>
-                        <td width="15%"><input id="TAEmail" type="text" class="form-control" placeholder="User's Email" /></td>
-                        <td width="5%">&nbsp</td>
-                        <td width="15%"><button id="submitAddTA" type="button" class="btn btn-lg btn-success pull-right">Add TA</button> </td>
-                        <td width="15%"><button id="submitDeleteTA" type="button" class="btn btn-lg btn-danger pull-right">Delete TA</button> </td>
+                    <tr>
+                        <td width="30%"><b>Add/Remove TA from course</b></td>
+                        <td width="35%"><input id="TAEmail" type="text" class="form-control" placeholder="User's Email" /></td>
+                        <td width="1%">&nbsp</td>
+                        <td width="10%"><button id="submitAddTA" type="button" class="btn btn-lg btn-success pull-right">Add TA</button> </td>
+                        <td width="10%"><button id="submitDeleteTA" type="button" class="btn btn-lg btn-danger pull-right">Delete TA</button> </td>
                         <td id="addTANotification" width="15%" style="color:red; visibility: hidden">  *Incorrect</td>
                     </tr>
                     <tr>
@@ -34,7 +35,6 @@
                             <br>Registration Code &nbsp;&nbsp;<span class="glyphicon glyphicon-lock"></span><br><br>
                             </button>     
                         </td>
-                        <td></td>
                         <td> <button id="archiveCourse" title="Archive this course" class="btn btn-danger" onclick="archiveCourse()" style="display:none">
                                 <br>Archive Course &nbsp;&nbsp;<span class="glyphicon glyphicon-folder-close"></span><br><br>
                             </button>
@@ -45,21 +45,6 @@
                     </tr>
                 </table>
             </a>
-        </div>
-        {% if current_user.permissions >= 50 %}
-        <div id="course-admin">
-        <hr>
-        <h3>Administrative Options</h3>
-            <button title="Show course registration code" class="btn btn-primary" onclick="showSecurityCode()">
-                <br>Registration Code &nbsp;&nbsp;<span class="glyphicon glyphicon-lock"></span><br><br>
-            </button>
-            &nbsp;&nbsp;
-            <button id="archiveCourse" title="Archive this course" class="btn btn-danger" onclick="archiveCourse()" style="display:none">
-                <br>Archive Course &nbsp;&nbsp;<span class="glyphicon glyphicon-folder-close"></span><br><br>
-            </button>
-            <button id="unarchiveCourse" title="Unarchive this course" class="btn btn-success" onclick="unarchiveCourse()" style="display:none">
-                <br>Unarchive Course &nbsp;&nbsp;<span class="glyphicon glyphicon-folder-open"></span><br><br>
-            </button>
         </div>
         {% endif %}
     </div>

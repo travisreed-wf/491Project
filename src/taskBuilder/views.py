@@ -200,7 +200,7 @@ class TaskExportView(MethodView):
         task = models.Task.query.filter_by(id=int(taskID)).first()
         supp = json.loads(task.supplementary)
         first_response = models.TaskResponse.query.filter(models.TaskResponse.task_id == taskID,
-                                                          models.TaskResponse.graded_response is not None).first()
+                                                          models.TaskResponse.graded_response != None).first()
         course = models.Course.query.filter_by(id=task.course_id).first()
         if course.teacher_id != current_user.id and current_user.permissions < 100:
             return "Permission Denied", 401

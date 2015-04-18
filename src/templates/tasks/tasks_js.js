@@ -152,6 +152,9 @@
   function addOtherFile(ctx){
     addSuppElement(ctx, '#wp-file-template')
   };
+  function addTextLabel(ctx){
+    addSuppElement(ctx, '#wp-text-label-template')
+  };
 
   function upload(f, onsuccess){
     var form_data = new FormData(f);

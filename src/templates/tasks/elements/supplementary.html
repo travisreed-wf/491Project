@@ -11,17 +11,18 @@
       </button>
       <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
         <li role="presentation"><a role="menuitem" tabindex="-1" onclick="addVideo(this)">Youtube Video</a></li>
-        <li role="presentation"><a role="menuitem" tabindex="-1" onclick="addAudio(this)">Audio</a></li>
-        <li role="presentation"><a role="menuitem" tabindex="-1" onclick="addText(this)">Text</a></li>
+        <!-- TODO <li role="presentation"><a role="menuitem" tabindex="-1" onclick="addAudio(this)">Audio</a></li> -->
+        <!-- TODO <li role="presentation"><a role="menuitem" tabindex="-1" onclick="addText(this)">Text</a></li> -->
         <li role="presentation"><a role="menuitem" tabindex="-1" onclick="addImage(this)">Image</a></li>
-        <li role="presentation"><a role="menuitem" tabindex="-1" onclick="addOtherFile(this)">Other File Upload</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" onclick="addOtherFile(this)">Document</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" onclick="addTextLabel(this)">Text Label</a></li>
       </ul>
     </div>
   </div>
   <div>
   <div id="wp-video-template" style="display:none">
     <div class="wp-video wp-supplementary">
-      <div class="panel-body wp-video-panel col-md-3" align="center" onclick="clickVideo(this)" style="border:3px;border-style:outset;border-radius:25px;cursor:pointer">
+      <div class="panel-body wp-video-panel col-md-3" align="center" onclick="clickVideo(this)" style="height:232px;border:3px;border-style:outset;border-radius:25px;cursor:pointer">
         <img src="../static/images/video-button.png" style="width:140px;height:140px">
         <h3 id="p_title" class="TAKE_ONLY wp-pair-text-2" align="center"/>
       </div>
@@ -49,7 +50,7 @@
   <div id="wp-audio-template" style="display:none">
     <div class="wp-video wp-supplementary">
       <!-- TODO implement a clickAudio function -->
-      <div class="panel-body wp-video-panel col-md-3" align="center" style="border:3px;border-style:outset;border-radius:25px;cursor:pointer">
+      <div class="panel-body wp-video-panel col-md-3" align="center" style="height:232px;border:3px;border-style:outset;border-radius:25px;cursor:pointer">
         <img src="../static/images/audio-button.jpg" style="width:140px;height:140px">
         <h3 id="p_title" class="TAKE_ONLY wp-pair-text-2" align="center"/>
       </div>
@@ -85,7 +86,7 @@
   <div id="wp-text-template" style="display:none">
     <div class="wp-video wp-supplementary">
       <!-- TODO implement a clickText function -->
-      <div class="panel-body wp-video-panel col-md-3" align="center" style="border:3px;border-style:outset;border-radius:25px;cursor:pointer">
+      <div class="panel-body wp-video-panel col-md-3" align="center" style="height:232px;border:3px;border-style:outset;border-radius:25px;cursor:pointer">
         <img src="../static/images/text-button.png" style="width:140px;height:140px">
         <h3 id="p_title" class="TAKE_ONLY wp-pair-text-2" align="center"/>
       </div>
@@ -117,7 +118,7 @@
 
   <div id="wp-image-template" style="display:none">
     <div class="wp-image wp-supplementary">
-      <div class="panel-body wp-video-panel col-md-3" align="center" onclick="clickImage(this)" style="border:3px;border-style:outset;border-radius:25px;cursor:pointer">
+      <div class="panel-body wp-video-panel col-md-3" align="center" onclick="clickImage(this)" style="height:232px;border:3px;border-style:outset;border-radius:25px;cursor:pointer">
         <img src="../static/images/image-button.png" style="width:140px;height:140px">
         <h3 id="p_title" class="TAKE_ONLY wp-pair-text-2" align="center"/>
       </div>
@@ -152,8 +153,8 @@
 
   <div id="wp-file-template" style="display:none">
     <div class="wp-file wp-supplementary">
-      <div class="panel-body wp-file-panel col-md-3" align="center" onclick="clickFile(this)" style="border:3px;border-style:outset;border-radius:25px;cursor:pointer">
-        <h3 class="wp-file-title-label pull-left wp-pair-text-2"></h3>
+      <div class="panel-body wp-file-panel col-md-3" align="center" onclick="clickFile(this)" style="height:232px;border:3px;border-style:outset;border-radius:25px;cursor:pointer">
+        <h3 class="wp-file-title-label wp-pair-text-2"></h3>
       </div>
       <div class="EDIT_ONLY">
         <div class="row"/>
@@ -182,6 +183,19 @@
           </div>
         </div>
       </div>    
+    </div>
+  </div>
+
+  <div id="wp-text-label-template" style="display:none">
+    <div class="wp-file wp-supplementary">
+      <div class="panel-body col-md-3" align="center" style="height:232px;border:1px;border-style:outset;border-radius:5px;background-color:#CCCCCC">
+        <h3 class="wp-file-title-label wp-pair-text-2"></h3>
+      </div>
+      <div class="EDIT_ONLY">
+        <div class="row"/>
+        <input type="text" id="title" class="EDIT_ONLY form-control wp-pair-input-2" name="material_title" placeholder="Element Title" onchange="changeTitle(this)">
+        <br><br>
+      </div>
     </div>
   </div>
 {% endblock %}

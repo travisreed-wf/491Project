@@ -3,6 +3,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
 import random
+import hashlib
 
 db = SQLAlchemy()
 
@@ -29,7 +30,7 @@ class User(db.Model):
 
     def __init__(self, email, password, name, permissions=10):
         self.email = email
-        self.password = password
+        self.password = hashlib.sha224(password).hexdigest()
         self.name = name
         self.permissions = permissions
         return

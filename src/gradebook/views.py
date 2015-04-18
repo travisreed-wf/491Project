@@ -7,6 +7,7 @@ from flask.views import MethodView
 from flask_login import login_required
 from flask_login import current_user
 
+from auth import auth
 import models
 
 
@@ -46,6 +47,7 @@ class GradebookScreenView(MethodView):
 
 
 class CourseGradeView(MethodView):
+    decorators = [login_required, auth.permissions_author]
 
     def get(self, courseID):
         course = models.Course.query.filter_by(id=int(courseID) - 1000).first()
@@ -73,4 +75,3 @@ class CourseGradeView(MethodView):
         }
         return render_template("courseGrades.html", data=data,
                                course_tasks=course_tasks)
-

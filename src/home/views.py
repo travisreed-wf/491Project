@@ -55,6 +55,9 @@ class DeleteTaskView(MethodView):
     def post(self):
         data = flask.request.get_json()
         task = models.Task.query.filter_by(id=int(data['task_id'])).first()
+        course = task.course
+        if course.teacher_id != current_user.id and current_user.permissions < 100:
+            return "Permission Denied", 401
         models.db.session.delete(task)
         models.db.session.commit()
         print "Deleted task " + str(data['task_id'])
@@ -62,6 +65,8 @@ class DeleteTaskView(MethodView):
 
 
 class TaskListView(MethodView):
+    decorators = [login_required]
+
     def get(self):
         tasks = {'current':[], 'complete':[]}
         userResponseIDs = [tr.task_id for tr in current_user.task_responses]
@@ -80,13 +85,14 @@ class TaskListView(MethodView):
 
 
 class SettingsScreenView(MethodView):
-    decorators = [login_required]
+    decorators = [login_required, auth.permissions_author]
 
     def get(self):
         return render_template("settings.html", failure=False)
 
 
 class AddAuthorView(MethodView):
+    decorators = [login_required, auth.permissions_admin]
 
     def get(self):
         return
@@ -110,6 +116,7 @@ class AddAuthorView(MethodView):
 
 
 class AddAdminView(MethodView):
+    decorators = [login_required, auth.permissions_admin]
 
     def get(self):
         return
@@ -134,6 +141,7 @@ class AddAdminView(MethodView):
 
 
 class RemoveUserView(MethodView):
+    decorators = [login_required, auth.permissions_admin]
 
     def get(self):
         return

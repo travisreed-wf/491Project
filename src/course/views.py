@@ -13,7 +13,7 @@ from auth import auth
 
 
 class CreateView(MethodView):
-    decorators = [login_required]
+    decorators = [login_required, auth.permissions_author]
 
     def get(self):
         return render_template("courseCreation.html")
@@ -48,6 +48,8 @@ class CourseMasterView(MethodView):
 
 
 class CourseTaskListView(MethodView):
+    decorators = [login_required]
+
     def get(self, courseID):
         tasks = {'current': [], 'complete': []}
         course = models.Course.query.filter_by(id=int(courseID) - 1000).first()
@@ -75,6 +77,8 @@ class RegisterForCourseView(MethodView):
 
 
 class searchCourseName(MethodView):
+    decorators = [login_required]
+
     def get(self):
         return
 
@@ -96,6 +100,8 @@ class ArchiveCourse(MethodView):
 
     def post(self, courseID):
         course = models.Course.query.filter_by(id=int(courseID)).first()
+        if course.teacher_id != current_user.id and current_user.permissions < 100:
+            return "Permission Denied", 401
         course.isArchived = True
         models.db.session.add(course)
         models.db.session.commit()
@@ -107,6 +113,8 @@ class UnarchiveCourse(MethodView):
 
     def post(self, courseID):
         course = models.Course.query.filter_by(id=int(courseID)).first()
+        if course.teacher_id != current_user.id and current_user.permissions < 100:
+            return "Permission Denied", 401
         course.isArchived = False
         models.db.session.add(course)
         models.db.session.commit()
@@ -122,11 +130,12 @@ class searchProfessorName(MethodView):
 
 
 class securityCode(MethodView):
+    decorators = [login_required]
+
     def get(self):
         return
 
     def post(self):
-
         data = flask.request.get_json()
         securityCode = data.get('securityCode')
         courseId = data.get('courseId')
@@ -145,6 +154,7 @@ class securityCode(MethodView):
 
 
 class AddTAView(MethodView):
+    decorators = [login_required, auth.permissions_author]
 
     def get(self):
         return
@@ -154,6 +164,8 @@ class AddTAView(MethodView):
         email = data.get('email')
         courseId = data.get('courseID')
         course = models.Course.query.filter_by(id=courseId).first()
+        if course.teacher_id != current_user.id and current_user.permissions < 100:
+            return HttpResponse("error", status=401)
         if email:
             user = models.User.query.filter(models.User.email.contains(email)).first()
             if user and user.permissions:
@@ -171,6 +183,7 @@ class AddTAView(MethodView):
 
 
 class RemoveTAView(MethodView):
+    decorators = [login_required, auth.permissions_author]
 
     def get(self):
         return
@@ -180,6 +193,8 @@ class RemoveTAView(MethodView):
         email = data.get('email')
         courseId = data.get('courseID')
         course = models.Course.query.filter_by(id=courseId).first()
+        if course.teacher_id != current_user.id and current_user.permissions < 100:
+            return HttpResponse("error", status=401)
         if email:
             user = models.User.query.filter_by(email=email).first()
             if user and user.permissions:

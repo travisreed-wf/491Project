@@ -24,8 +24,8 @@ class Grader:
             if question.get('not-graded'):
                 total -= 1
                 continue
-            correct += int(question['correctness']) if int(question['correctness']) >= 0 else 0
-            total_graded += 1 if int(question.get('correctness')) >= 0 else 0
+            correct += int(question['correctness']) if int(question.get('correctness', -1)) >= 0 else 0
+            total_graded += 1 if int(question.get('correctness', -1)) >= 0 else 0
         task_response.graded = (total == total_graded)
         return int(float(correct) / total_graded) if total_graded else 0
 

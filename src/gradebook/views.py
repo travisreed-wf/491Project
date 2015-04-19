@@ -41,7 +41,7 @@ class GradebookScreenView(MethodView):
                                    tasks=data)
         elif current_user.permissions >= 20:
             courses = current_user.get_courses_where_teacher_or_ta()
-            return render_template('authorGradebook.html', courses=teaching)
+            return render_template('authorGradebook.html', courses=courses)
 
 
 class CourseGradeView(MethodView):

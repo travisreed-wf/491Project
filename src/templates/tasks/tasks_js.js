@@ -129,6 +129,23 @@
 
   }
 
+  function setBtnWidth(ctx, newSize){
+    var newClass = 'col-md-';
+    if(newSize == 4) newClass += "3";
+    else if(newSize == 3) newClass += "4";
+    else if(newSize == 2) newClass += "6";
+    else newClass += "12";
+    var container = $(ctx).closest('div.question-parent');
+    $(container).find('.wp-supplementary').each(function(){
+      var cur = $(this).find('.panel-body')
+      $(cur).removeClass('col-md-3')
+      $(cur).removeClass('col-md-4') 
+      $(cur).removeClass('col-md-6') 
+      $(cur).removeClass('col-md-12') 
+      $(cur).addClass(newClass)
+    })
+  }
+
   function addSuppElement(ctx, appendID){
     var toAppend = $(ctx).closest('.panel-body').find('.supplementary-target');
     var html = $(appendID).html();

@@ -1,10 +1,23 @@
 {% extends "tasks/elements/layout-question.html" %}
 {% block answer_details %}
   <div class="panel-body">
+    <div class="dropdown EDIT_ONLY">
+      <button class="btn btn-default dropdown-toggle" type="button" id="buttonsPerRow" data-toggle="dropdown" aria-expanded="true">
+        Elements Per Row
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu" aria-labelledby="buttonsPerRow">
+        <li role="presentation"><a role="menuitem" tabindex="-1" onclick="setBtnWidth(this,1)">1</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" onclick="setBtnWidth(this,2)">2</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" onclick="setBtnWidth(this,3)">3</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" onclick="setBtnWidth(this,4)">4</a></li>
+      </ul>
+      <br>
+    </div>
     <div class="supplementary-target">
     </div>  
-    <br>
     <div class="dropdown EDIT_ONLY">
+      <br>
       <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
         Add Material
         <span class="caret"></span>

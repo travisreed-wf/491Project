@@ -46,8 +46,7 @@ class ManualGradingView(MethodView):
         response_id = data['response_id'].split('?')[0]
         response = models.TaskResponse.query.filter_by(id=response_id).first()
         course = response.task.course
-        courses_where_ta = current_user.get_courses_where_ta()
-        if course.teacher_id != current_user.id and course not in courses_where_ta:
+        if course not in current_user.get_courses_where_teacher_or_ta():
             return "Permission Denied", 401
         grader = grading.Grader()
         correctness = grader.grade_manual_question(response_id,
@@ -64,8 +63,7 @@ class ManualFeedbackGradingView(MethodView):
         response_id = data['response_id'].split('?')[0]
         response = models.TaskResponse.query.filter_by(id=response_id).first()
         course = response.task.course
-        courses_where_ta = current_user.get_courses_where_ta()
-        if course.teacher_id != current_user.id and course not in courses_where_ta:
+        if course not in current_user.get_courses_where_teacher_or_ta():
             return "Permission Denied", 401
         grader = grading.Grader()
         grader.grade_manual_question(response_id,
@@ -84,8 +82,7 @@ class ManualCriticalGradingView(MethodView):
         response_id = data['response_id'].split('?')[0]
         response = models.TaskResponse.query.filter_by(id=response_id).first()
         course = response.task.course
-        courses_where_ta = current_user.get_courses_where_ta()
-        if course.teacher_id != current_user.id and course not in courses_where_ta:
+        if course not in current_user.get_courses_where_teacher_or_ta():
             return "Permission Denied", 401
         grader = grading.Grader()
         grader.grade_manual_question(response_id,

@@ -37,11 +37,7 @@ class CourseMasterView(MethodView):
 
     def get(self, courseID):
         course = models.Course.query.filter_by(id=int(courseID) - 1000).first()
-        author = models.User.query.filter_by(id=course.teacher_id).first()
-        courses_where_ta = current_user.get_courses_where_ta()
-        if course in current_user.courses or \
-                course.teacher_id == current_user.id or \
-                course in courses_where_ta:
+        if course in current_user.get_courses_where_teacher_or_ta():
             return render_template("course.html", course=course, author=author)
         else:
             return "You do not have access to view this course", 401

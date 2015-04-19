@@ -194,6 +194,10 @@
   };
 
   function upload(f, onsuccess){
+    if($(f).find('input').val().trim().length < 5){
+      // the user didn't select anything in the file chooser window. exit.
+      return;
+    }
     var form_data = new FormData(f);
     var uploadUrl = '/upload/{{ session.userid }}';
     $.ajax({

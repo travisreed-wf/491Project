@@ -52,7 +52,7 @@ class User(db.Model):
 
     def get_courses_where_ta(self):
         courses_where_maybe_ta = Course.query.filter(Course.secondaryTeachers.contains(str(self.id)),
-                                                     Course.isArchived=False).all()
+                                                     Course.isArchived==False).all()
         courses_where_ta = []
         for c in courses_where_maybe_ta:
             if str(self.id) in c.secondaryTeachers.split(', '):
@@ -62,11 +62,11 @@ class User(db.Model):
     def get_courses_where_teacher_or_ta(self):
         courses = []
         if current_user.permissions >= 100:
-            courses = models.Course.query.all()
+            courses = Course.query.all()
         elif self.permissions >= 20:
-            courses = models.Course.query.filter_by(
-                teacher_id=self.id,
-                isArchived=False).all()
+            courses = Course.query.filter(
+                Course.teacher_id==self.id,
+                Course.isArchived==False).all()
             courses += self.get_courses_where_ta()
         return courses
 

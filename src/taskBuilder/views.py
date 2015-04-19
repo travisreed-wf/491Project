@@ -51,7 +51,7 @@ def store_task(taskID):
     content = data.get('html')
     courseID = data.get('course_id')
     course = models.Course.query.filter_by(id=courseID).first()
-    if course.teacher_id != current_user.id:
+    if course.teacher_id != current_user.id and current_user.permissions < 100:
         return "Permission Denied", 401
     taskTitle = data.get('taskTitle')
     taskDueDate = data.get('taskDue')
@@ -112,14 +112,19 @@ class TaskBuilderEditView(MethodView):
     def get(self, taskID):
         elements = helper_functions.get_elements()
         task = models.Task.query.filter_by(id=int(taskID)).first()
-        return render_template("tasks/taskBuilder.html", 
-                               elements=elements, 
+        if task.course.teacher_id != current_user.id and current_user.permissions < 100:
+            return "Permission Denied", 401
+        return render_template("tasks/taskBuilder.html",
+                               elements=elements,
                                old_content=task.content.strip(),
                                supplementary=task.supplementary,
                                task_id=taskID,
                                correct_options=task.questions)
 
     def post(self, taskID):
+        task = models.Task.query.filter_by(id=int(taskID)).first()
+        if task.course.teacher_id != current_user.id and current_user.permissions < 100:
+            return "Permission Denied", 401
         print "Updating task " + str(taskID)
         return store_task(taskID)
 
@@ -130,8 +135,10 @@ class TaskBuilderCopyView(MethodView):
     def get(self, taskID):
         elements = helper_functions.get_elements()
         task = models.Task.query.filter_by(id=int(taskID)).first()
-        return render_template("tasks/taskBuilder.html", 
-                               elements=elements, 
+        if task.course.teacher_id != current_user.id and current_user.permissions < 100:
+            return "Permission Denied", 401
+        return render_template("tasks/taskBuilder.html",
+                               elements=elements,
                                old_content=task.content.strip(),
                                supplementary=task.supplementary,
                                correct_options=task.questions)
@@ -143,7 +150,7 @@ class TaskTransitionView(MethodView):
     def post(self):
         data = flask.request.get_json()
         task = models.Task.query.filter_by(id=data['task_id']).first()
-        if task.course.teacher_id != current_user.id:
+        if task.course.teacher_id != current_user.id and current_user.permissions < 100:
             return "Permission Denied", 401
         task.status = data['status']
         models.db.session.commit()
@@ -315,11 +322,13 @@ class SupplementaryView(MethodView):
     def get(self):
         return render_template("tasks/elements/supplementary.html")
 
+
 class TextContentView(MethodView):
     decorators = [login_required, auth.permissions_author]
 
     def get(self):
         return render_template("tasks/elements/textContent.html")
+
 
 class ProblemStatementView(MethodView):
     decorators = [login_required, auth.permissions_author]
@@ -327,12 +336,12 @@ class ProblemStatementView(MethodView):
     def get(self):
         return render_template("tasks/elements/problemStatement.html")
 
+
 class CoursesTeachingView(MethodView):
 
     def get(self):
-        tas = current_user.get_courses_where_ta()
-        courses = [c.serialize for c in current_user.coursesTeaching]
-        courses += [c.serialize for c in tas]
+        courses = current_user.get_courses_where_teacher_or_admin()
+        courses = [c.serialize for c in courses]
         return flask.json.dumps(courses)
 
 logger = logs.get_logger()

@@ -61,7 +61,7 @@ class User(db.Model):
 
     def get_courses_where_teacher_or_ta(self):
         courses = []
-        if current_user.permissions >= 100:
+        if self.permissions >= 100:
             courses = Course.query.all()
         elif self.permissions >= 20:
             courses = Course.query.filter(

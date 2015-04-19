@@ -1,0 +1,5 @@
+- Question is answered correctly: [True, False, Not Graded, Not Answered]
+- Percent Graded: [0, 1-99, 100]
+- Number of questions: [0, 1, multiple]
+- Response_id is valid: [True, False]
+- Question type: [manual, automatic]

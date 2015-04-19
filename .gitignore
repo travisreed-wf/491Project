@@ -1,6 +1,22 @@
 *.py[cod]
 settingslocal.py
-src/static/uploads/
+src/static/uploads/*
 build-*.zip
 data
 *.db
+
+# unit test & coverage reports
+cover
+.coverage
+.tox
+nosetests.xml
+htmlcov
+coverage.xml
+*,cover
+*.db
+
+# Mac Specific ignore
+.DS_Store
+
+# Logs
+*.log

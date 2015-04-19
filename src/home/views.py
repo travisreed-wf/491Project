@@ -19,7 +19,7 @@ class HomeScreenView(MethodView):
     decorators = [login_required]
 
     def get(self):
-        teaching = current_user.get_courses_where_teaching_or_ta()
+        teaching = current_user.get_courses_where_teacher_or_ta()
         enrolled = []
         for course in current_user.courses:
             if not course.isArchived:
@@ -33,7 +33,7 @@ class ClassListView(MethodView):
     def get(self):
         if current_user.is_authenticated():
             courses = current_user.courses
-            courses += current_user.get_courses_where_teaching_or_ta()
+            courses += current_user.get_courses_where_teacher_or_ta()
             courses = [c.serialize for c in courses]
             return flask.json.dumps(courses)
         else:

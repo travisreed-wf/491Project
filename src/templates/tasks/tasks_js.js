@@ -20,6 +20,23 @@
       $("#key_alert").hide();
     }
   }
+
+  function allFilesUploaded(){
+    var ret = true;
+    $('.supplementary-target').each(function(){
+      if($(this).find('div.wp-file-text').html().trim().length < 5){
+        ret = false;
+      }
+    })
+    return ret;
+  }
+
+  function hideFileAlertIfAppropriate(){
+    if (allFilesUploaded()){
+      $("#file_alert").hide();
+    }
+  }
+
   function createElement(elementWell, elementToCreate){
       $('#elementWell').css("height","100px");
       $('#elementWell').html("<br><br>Add more elements here.");
@@ -77,11 +94,14 @@
   }
 
   function showModal(idToShow){
-    if (answerKeyCompleted() == true){
-      $("#"+idToShow).find('.modal').modal('toggle');
-    }
-    else{
+    if (answerKeyCompleted() == false){
       $('#key_alert').show();
+    }
+    else if(allFilesUploaded() == false){
+      $('#file_alert').show();
+    }
+    else {
+      $("#"+idToShow).find('.modal').modal('toggle');
     }
   }
   function clickVideo(clkevent){
@@ -195,6 +215,7 @@
       $(f).find('.wp-file-text').html(src)
       src = "/static/uploads/{{ session.userid }}/" + src;
       $(f).closest('div.wp-image').find('img').attr("src", src);
+      hideFileAlertIfAppropriate();
     }
 
     upload(f, onsuccess);
@@ -207,6 +228,7 @@
       $(f).find('.wp-file-text').html(src)
       src = "/static/uploads/{{ session.userid }}/" + src;
       $(f).parent().parent().find('h3').first().attr("src", src);
+      hideFileAlertIfAppropriate();
     }
 
     upload(f, onsuccess);
@@ -220,6 +242,7 @@
       src = "/static/uploads/{{ session.userid }}/" + src;
       // set the iframe src to the path of where the file was uploaded
       $(f).closest('.panel-body').find('iframe').first().prop('src', src);
+      hideFileAlertIfAppropriate();
     }    
 
     upload(f, onsuccess)
@@ -323,6 +346,7 @@
       row.fadeOut(200, function(){
         row.remove();
         hideAnswerKeyAlertIfAppropriate();
+        hideFileAlertIfAppropriate();
       });
       if($(".question-parent").length <= 1){
         $('#elementWell').css("height","300px");

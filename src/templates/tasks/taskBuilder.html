@@ -33,6 +33,11 @@
       <span class="sr-only">Error:</span>
       Finish the answer key by filling out all radio buttons
     </div>
+    <div id="file_alert" class="alert alert-danger col-md-9" style="display:none;position:fixed;z-index:100" role="alert">
+      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+      <span class="sr-only">Error:</span>
+      One of the supplementary buttons did not have a file attached to it
+    </div>
     {% if old_content %}    
       {{ old_content|safe }}
     {% else %}

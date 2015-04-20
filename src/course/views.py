@@ -37,6 +37,7 @@ class CourseMasterView(MethodView):
 
     def get(self, courseID):
         course = models.Course.query.filter_by(id=int(courseID) - 1000).first()
+        author = models.User.query.filter_by(id=course.teacher_id).first()
         if course in current_user.get_courses_where_teacher_or_ta():
             return render_template("course.html", course=course, author=author)
         else:

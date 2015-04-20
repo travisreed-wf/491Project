@@ -63,7 +63,7 @@ class DeleteTaskView(MethodView):
 
 class TaskListView(MethodView):
     def get(self):
-        tasks = {'current':[], 'complete':[]}
+        tasks = {'current': [], 'complete': []}
         userResponseIDs = [tr.task_id for tr in current_user.task_responses]
         week_ago = DT.date.today() - DT.timedelta(days=7)
         for c in current_user.courses:
@@ -74,7 +74,7 @@ class TaskListView(MethodView):
                     tasks['current'].append(t.serialize)
         tasks['complete'] = sorted(tasks['complete'], key=lambda k: k['duedate'])
         tasks['current'] = sorted(tasks['current'], key=lambda k: k['duedate'])
-        return flask.json.dumps(tasks)  
+        return json.dumps(tasks)
 
 
 class SettingsScreenView(MethodView):

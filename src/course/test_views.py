@@ -7,6 +7,221 @@ from mock import patch
 import views
 
 
+class TestRemoveTAView(unittest.TestCase):
+
+    @patch.object(views, "current_user")
+    @patch.object(views, "models")
+    @patch.object(views, "flask")
+    def test_post(self, flask, models, current_user, ):
+        data = {
+            'email': "email",
+            'courseID': 12
+        }
+        flask.request.get_json.return_value = data
+        course = Mock(secondaryTeachers="14", teacher_id=3)
+        course.id = 12
+        user = Mock(permissions=20)
+        user.id = 14
+        user.get_courses_where_ta.return_value = ["12"]
+        models.Course.query.filter_by.return_value.first.return_value = course
+        models.User.query.filter_by.return_value.first.return_value = user
+        current_user.id = 3
+
+        ret = views.RemoveTAView().post()
+        self.assertEqual(ret, "email")
+        self.assertEqual(user.permissions, 10)
+        self.assertEqual(course.secondaryTeachers, "")
+
+    @patch.object(views, "current_user")
+    @patch.object(views, "models")
+    @patch.object(views, "flask")
+    def test_already_teacher(self, flask, models, current_user, ):
+        data = {
+            'email': "email",
+            'courseID': 12
+        }
+        flask.request.get_json.return_value = data
+        course = Mock(secondaryTeachers="14", teacher_id=3)
+        user = Mock(permissions=50)
+        user.id = 14
+        user.get_courses_where_ta.return_value = []
+        models.Course.query.filter_by.return_value.first.return_value = course
+        models.User.query.filter_by.return_value.first.return_value = user
+        current_user.id = 3
+
+        ret = views.RemoveTAView().post()
+        self.assertEqual(ret, "email")
+        self.assertEqual(user.permissions, 50)
+        self.assertEqual(course.secondaryTeachers, "")
+
+    @patch.object(views, "current_user")
+    @patch.object(views, "models")
+    @patch.object(views, "flask")
+    def test_perms(self, flask, models, current_user, ):
+        data = {
+            'email': "email",
+            'courseID': 12
+        }
+        flask.request.get_json.return_value = data
+        course = Mock(secondaryTeachers="", teacher_id=3)
+        user = Mock(permissions=10)
+        user.id = 14
+        models.Course.query.filter_by.return_value.first.return_value = course
+        models.User.query.filter_by.return_value.first.return_value = user
+        current_user.id = 4
+        current_user.permissions = 50
+
+        ret = views.RemoveTAView().post()
+        self.assertEqual(ret, ("error", 401))
+        self.assertEqual(user.permissions, 10)
+        self.assertEqual(course.secondaryTeachers, "")
+
+    @patch.object(views, "current_user")
+    @patch.object(views, "models")
+    @patch.object(views, "flask")
+    def test_email(self, flask, models, current_user, ):
+        data = {
+            'email': "",
+            'courseID': 12
+        }
+        flask.request.get_json.return_value = data
+        course = Mock(secondaryTeachers="", teacher_id=3)
+        user = Mock(permissions=10)
+        user.id = 14
+        models.Course.query.filter_by.return_value.first.return_value = course
+        models.User.query.filter_by.return_value.first.return_value = user
+        current_user.id = 3
+
+        ret = views.RemoveTAView().post()
+        self.assertEqual(ret, ("error", 400))
+        self.assertEqual(user.permissions, 10)
+        self.assertEqual(course.secondaryTeachers, "")
+
+    @patch.object(views, "current_user")
+    @patch.object(views, "models")
+    @patch.object(views, "flask")
+    def test_user(self, flask, models, current_user, ):
+        data = {
+            'email': "email",
+            'courseID': 12
+        }
+        flask.request.get_json.return_value = data
+        course = Mock(secondaryTeachers="", teacher_id=3)
+        models.Course.query.filter_by.return_value.first.return_value = course
+        models.User.query.filter_by.return_value.first.return_value = None
+        current_user.id = 3
+
+        ret = views.RemoveTAView().post()
+        self.assertEqual(ret, ("error", 400))
+        self.assertEqual(course.secondaryTeachers, "")
+
+
+class TestAddTAView(unittest.TestCase):
+
+    @patch.object(views, "current_user")
+    @patch.object(views, "models")
+    @patch.object(views, "flask")
+    def test_post(self, flask, models, current_user, ):
+        data = {
+            'email': "email",
+            'courseID': 12
+        }
+        flask.request.get_json.return_value = data
+        course = Mock(secondaryTeachers="", teacher_id=3)
+        user = Mock(permissions=10)
+        user.id = 14
+        models.Course.query.filter_by.return_value.first.return_value = course
+        models.User.query.filter.return_value.first.return_value = user
+        current_user.id = 3
+
+        ret = views.AddTAView().post()
+        self.assertEqual(ret, "email")
+        self.assertEqual(user.permissions, 20)
+        self.assertEqual(course.secondaryTeachers, "14")
+
+    @patch.object(views, "current_user")
+    @patch.object(views, "models")
+    @patch.object(views, "flask")
+    def test_already_teacher(self, flask, models, current_user, ):
+        data = {
+            'email': "email",
+            'courseID': 12
+        }
+        flask.request.get_json.return_value = data
+        course = Mock(secondaryTeachers="", teacher_id=3)
+        user = Mock(permissions=50)
+        user.id = 14
+        models.Course.query.filter_by.return_value.first.return_value = course
+        models.User.query.filter.return_value.first.return_value = user
+        current_user.id = 3
+
+        ret = views.AddTAView().post()
+        self.assertEqual(ret, "email")
+        self.assertEqual(user.permissions, 50)
+        self.assertEqual(course.secondaryTeachers, "14")
+
+    @patch.object(views, "current_user")
+    @patch.object(views, "models")
+    @patch.object(views, "flask")
+    def test_perms(self, flask, models, current_user, ):
+        data = {
+            'email': "email",
+            'courseID': 12
+        }
+        flask.request.get_json.return_value = data
+        course = Mock(secondaryTeachers="", teacher_id=3)
+        user = Mock(permissions=10)
+        user.id = 14
+        models.Course.query.filter_by.return_value.first.return_value = course
+        models.User.query.filter.return_value.first.return_value = user
+        current_user.id = 4
+        current_user.permissions = 50
+
+        ret = views.AddTAView().post()
+        self.assertEqual(ret, ("error", 401))
+        self.assertEqual(user.permissions, 10)
+        self.assertEqual(course.secondaryTeachers, "")
+
+    @patch.object(views, "current_user")
+    @patch.object(views, "models")
+    @patch.object(views, "flask")
+    def test_email(self, flask, models, current_user, ):
+        data = {
+            'email': "",
+            'courseID': 12
+        }
+        flask.request.get_json.return_value = data
+        course = Mock(secondaryTeachers="", teacher_id=3)
+        user = Mock(permissions=10)
+        user.id = 14
+        models.Course.query.filter_by.return_value.first.return_value = course
+        models.User.query.filter.return_value.first.return_value = user
+        current_user.id = 3
+
+        ret = views.AddTAView().post()
+        self.assertEqual(ret, ("error", 400))
+        self.assertEqual(user.permissions, 10)
+        self.assertEqual(course.secondaryTeachers, "")
+
+    @patch.object(views, "current_user")
+    @patch.object(views, "models")
+    @patch.object(views, "flask")
+    def test_user(self, flask, models, current_user, ):
+        data = {
+            'email': "email",
+            'courseID': 12
+        }
+        flask.request.get_json.return_value = data
+        course = Mock(secondaryTeachers="", teacher_id=3)
+        models.Course.query.filter_by.return_value.first.return_value = course
+        models.User.query.filter.return_value.first.return_value = None
+        current_user.id = 3
+
+        ret = views.AddTAView().post()
+        self.assertEqual(ret, ("error", 400))
+        self.assertEqual(course.secondaryTeachers, "")
+
+
 class TestArchiveCourse(unittest.TestCase):
 
     @patch.object(views, "current_user")

@@ -35,7 +35,10 @@ class Grader:
         graded_response = json.loads(response.graded_response)
         for question in graded_response['manual_questions']:
             if question['questionID'] == question_id:
+                print question['questionID']
                 question[category] = correct
+                print question['correctness']
+
         response.graded_response = json.dumps(graded_response)
         if category == 'correctness':
             correctness_grade = self.calculate_correctness(response_id)

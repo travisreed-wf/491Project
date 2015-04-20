@@ -8,30 +8,9 @@ from flask_login import current_user
 from flask_login import login_required
 import json
 
+from auth import auth
 import grading
 import models
-
-
-class MigrateDataView(MethodView):
-
-    def get(self):
-        responses = models.TaskResponse.query.all()
-        for response in responses:
-            if response.graded_response:
-                graded_response = json.loads(response.graded_response)
-                for question in graded_response['manual_questions']:
-                    if question.get('correctness'):
-                        continue
-                    question['critical'] = None
-                    if question.get('correct'):
-                        question['correctness'] = 100
-                    elif question.get('correct') is False:
-                        question['correctness'] = 0
-                    else:
-                        question['correctness'] = -1
-                response.graded_response = json.dumps(graded_response)
-        models.db.session.commit()
-        return "Success"
 
 
 class ResponseView(MethodView):
@@ -42,6 +21,12 @@ class ResponseView(MethodView):
         grader.grade_automatic_questions(responseID)
         grader.grade_supplementary_material(responseID)
         task_response = models.TaskResponse.query.filter_by(id=responseID).first()
+        course = task_response.task.course
+        courses_where_ta = current_user.get_courses_where_ta()
+        if task_response.student_id != current_user.id and \
+                course.teacher_id != current_user.id and \
+                course not in courses_where_ta:
+            return "Permission Denied", 401
         formatted_time = task_response.datetime.strftime("%a %b %d %H:%M:%S")
         response = json.loads(task_response.graded_response)
         supplementary = json.loads(task_response.graded_supplementary)
@@ -54,12 +39,15 @@ class ResponseView(MethodView):
 
 
 class ManualGradingView(MethodView):
-    decorators = [login_required]
-    # TODO come back and verify that the user has permission to do this
+    decorators = [login_required, auth.permissions_author]
 
     def post(self):
         data = flask.request.get_json()
         response_id = data['response_id'].split('?')[0]
+        response = models.TaskResponse.query.filter_by(id=response_id).first()
+        course = response.task.course
+        if course not in current_user.get_courses_where_teacher_or_ta():
+            return "Permission Denied", 401
         grader = grading.Grader()
         correctness = grader.grade_manual_question(response_id,
                                                    data['question_id'],
@@ -68,12 +56,15 @@ class ManualGradingView(MethodView):
 
 
 class ManualFeedbackGradingView(MethodView):
-    decorators = [login_required]
-    # TODO come back and verify that the user has permission to do this
+    decorators = [login_required, auth.permissions_author]
 
     def post(self):
         data = flask.request.get_json()
         response_id = data['response_id'].split('?')[0]
+        response = models.TaskResponse.query.filter_by(id=response_id).first()
+        course = response.task.course
+        if course not in current_user.get_courses_where_teacher_or_ta():
+            return "Permission Denied", 401
         grader = grading.Grader()
         grader.grade_manual_question(response_id,
                                      data['question_id'],
@@ -84,12 +75,15 @@ class ManualFeedbackGradingView(MethodView):
 
 
 class ManualCriticalGradingView(MethodView):
-    decorators = [login_required]
-    # TODO come back and verify that the user has permission to do this
+    decorators = [login_required, auth.permissions_author]
 
     def post(self):
         data = flask.request.get_json()
         response_id = data['response_id'].split('?')[0]
+        response = models.TaskResponse.query.filter_by(id=response_id).first()
+        course = response.task.course
+        if course not in current_user.get_courses_where_teacher_or_ta():
+            return "Permission Denied", 401
         grader = grading.Grader()
         grader.grade_manual_question(response_id,
                                      data['question_id'],

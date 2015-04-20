@@ -7,6 +7,7 @@ from flask.views import MethodView
 from flask_login import login_required
 from flask_login import current_user
 
+from auth import auth
 import models
 
 
@@ -39,18 +40,16 @@ class GradebookScreenView(MethodView):
                                    courses=current_user.courses,
                                    tasks=data)
         elif current_user.permissions >= 20:
-            teaching = models.Course.query.filter_by(teacher_id=current_user.id).all()
-            courses_where_ta = current_user.get_courses_where_ta()
-            teaching += courses_where_ta
-            return render_template('authorGradebook.html', courses=teaching)
+            courses = current_user.get_courses_where_teacher_or_ta()
+            return render_template('authorGradebook.html', courses=courses)
 
 
 class CourseGradeView(MethodView):
+    decorators = [login_required, auth.permissions_author]
 
     def get(self, courseID):
         course = models.Course.query.filter_by(id=int(courseID) - 1000).first()
-        courses_where_ta = current_user.get_courses_where_ta()
-        if course.teacher_id != current_user.id and course not in courses_where_ta:
+        if course not in current_user.get_courses_where_teacher_or_ta():
             return "You are not the instructor for this course", 401
         data = []
         for u in course.users:
@@ -73,4 +72,3 @@ class CourseGradeView(MethodView):
         }
         return render_template("courseGrades.html", data=data,
                                course_tasks=course_tasks)
-

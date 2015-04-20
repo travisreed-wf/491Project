@@ -1,9 +1,11 @@
+{% include "tasks/taskBuilder.js" %}
 {% include "tasks/tasks_js.js" %}
 {% extends "layout.html" %}
 {% block header_css %}
 <head>
     <title>Layout Selector</title>
     {{ super() }}
+    <link href="/static/bootstrap-switch/dist/css/bootstrap-switch.css" rel="stylesheet">
 </head>
 {% endblock %}
 {% block body %}
@@ -30,6 +32,11 @@
       <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
       <span class="sr-only">Error:</span>
       Finish the answer key by filling out all radio buttons
+    </div>
+    <div id="file_alert" class="alert alert-danger col-md-9" style="display:none;position:fixed;z-index:100" role="alert">
+      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+      <span class="sr-only">Error:</span>
+      One of the supplementary buttons did not have a file attached to it
     </div>
     {% if old_content %}    
       {{ old_content|safe }}
@@ -96,65 +103,6 @@
 <script src="{{url_for('static', filename='jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.min.js')}}"></script>
 <script type="text/javascript" src="/static/jquery.timepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="/static/jquery.timepicker.css" />
-<script type="text/javascript">
-  $(document).ready(function(){
-    initEditTask();
-    makeDroppable($('div.elementWell'));
 
-    // fills in courses in the submission dropdown
-    getCoursesTeaching();
-
-    $("div.element").draggable({
-      scroll: false,
-      revert: true,
-      distance: 25,
-      appendTo: 'body',
-      helper: 'clone'
-    });
-
-    $('#preview').click(function(){
-      if (answerKeyCompleted() == false){
-        $("#key_alert").show();
-      }
-      else {
-        $('.EDIT_ONLY').toggle();
-        $('.TAKE_ONLY').toggle();
-        $('.delete-if-empty').each(function(){
-          var toCheck;
-          if($(this).hasClass('panel-heading')){
-            toCheck = $(this).find('h3');
-          } else if($(this).hasClass('question-content')){
-            toCheck = $(this).find('textarea')
-          } else{
-            toCheck = $(this)
-          }
-          if(toCheck.html().trim().length == 0){
-            $(this).hide();
-          }
-        });
-        if ($(this).text() == "Preview"){
-          $(this).text("Edit");
-        }
-        else {
-          $(this).text("Preview");
-        }
-      }      
-    });
-
-    $('#delete-all').click(function(){
-      $('button.delete-question').each(function(){
-        deleteAllQuestions();
-      });
-    });
-
-    $("#taskDueDate").datepicker();
-    $("#taskDueTime").timepicker();
-
-    $('#submission-modal-form').submit(function(event) {
-        // dont' reload the page on form submit
-        event.preventDefault();
-    });
-  });
-</script>
 
 {% endblock %}

@@ -3,6 +3,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
 import random
+import hashlib
 
 db = SQLAlchemy()
 
@@ -29,7 +30,7 @@ class User(db.Model):
 
     def __init__(self, email, password, name, permissions=10):
         self.email = email
-        self.password = password
+        self.password = hashlib.sha224(password).hexdigest()
         self.name = name
         self.permissions = permissions
         return
@@ -50,12 +51,24 @@ class User(db.Model):
         return True
 
     def get_courses_where_ta(self):
-        courses_where_maybe_ta = Course.query.filter(Course.secondaryTeachers.contains(str(self.id)))
+        courses_where_maybe_ta = Course.query.filter(Course.secondaryTeachers.contains(str(self.id)),
+                                                     Course.isArchived==False).all()
         courses_where_ta = []
         for c in courses_where_maybe_ta:
             if str(self.id) in c.secondaryTeachers.split(', '):
                 courses_where_ta.append(c)
         return courses_where_ta
+
+    def get_courses_where_teacher_or_ta(self):
+        courses = []
+        if self.permissions >= 100:
+            courses = Course.query.all()
+        elif self.permissions >= 20:
+            courses = Course.query.filter(
+                Course.teacher_id==self.id,
+                Course.isArchived==False).all()
+            courses += self.get_courses_where_ta()
+        return courses
 
     @property
     def serialize(self):

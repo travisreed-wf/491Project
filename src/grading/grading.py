@@ -15,11 +15,17 @@ class Grader:
         total_graded = 0
         total = len(response['manual_questions']) + len(response['automatic_questions'])
         for question in response['automatic_questions']:
+            if question.get('not-graded'):
+                total -= 1
+                continue
             correct += 100 if question['correct'] else 0
             total_graded += 1
         for question in response['manual_questions']:
-            correct += int(question['correctness']) if int(question['correctness']) >= 0 else 0
-            total_graded += 1 if int(question.get('correctness')) >= 0 else 0
+            if question.get('not-graded'):
+                total -= 1
+                continue
+            correct += int(question['correctness']) if int(question.get('correctness', -1)) >= 0 else 0
+            total_graded += 1 if int(question.get('correctness', -1)) >= 0 else 0
         task_response.graded = (total == total_graded)
         return int(float(correct) / total_graded) if total_graded else 0
 
@@ -47,7 +53,7 @@ class Grader:
         for question in response['automatic_questions']:
             for task_question in task_questions:
                 if task_question['questionID'] == question['questionID']:
-                    correctOption = task_question['correctOption']
+                    correctOption = task_question.get('correctOption')
                     correct = (question.get('selectedOption') == correctOption)
                     question['correctOption'] = correctOption
                     question['correct'] = correct

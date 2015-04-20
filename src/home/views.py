@@ -19,11 +19,7 @@ class HomeScreenView(MethodView):
     decorators = [login_required]
 
     def get(self):
-        teaching = models.Course.query.filter_by(
-            teacher_id=current_user.id,
-            isArchived=False).all()
-        courses_where_ta = current_user.get_courses_where_ta()
-        teaching += courses_where_ta
+        teaching = current_user.get_courses_where_teacher_or_ta()
         enrolled = []
         for course in current_user.courses:
             if not course.isArchived:
@@ -36,14 +32,9 @@ class HomeScreenView(MethodView):
 class ClassListView(MethodView):
     def get(self):
         if current_user.is_authenticated():
-            teaching = models.Course.query.filter_by(
-                teacher_id=current_user.id,
-                isArchived=False).all()
-            courses = [c.serialize for c in current_user.courses]
-            if current_user.permissions >= 20:
-                courses_where_ta = current_user.get_courses_where_ta()
-                courses += [c.serialize for c in courses_where_ta]
-                courses += [c.serialize for c in teaching]
+            courses = current_user.courses
+            courses += current_user.get_courses_where_teacher_or_ta()
+            courses = [c.serialize for c in courses]
             return flask.json.dumps(courses)
         else:
             return flask.json.dumps([])
@@ -55,6 +46,9 @@ class DeleteTaskView(MethodView):
     def post(self):
         data = flask.request.get_json()
         task = models.Task.query.filter_by(id=int(data['task_id'])).first()
+        course = task.course
+        if course.teacher_id != current_user.id and current_user.permissions < 100:
+            return "Permission Denied", 401
         models.db.session.delete(task)
         models.db.session.commit()
         print "Deleted task " + str(data['task_id'])
@@ -62,8 +56,10 @@ class DeleteTaskView(MethodView):
 
 
 class TaskListView(MethodView):
+    decorators = [login_required]
+
     def get(self):
-        tasks = {'current':[], 'complete':[]}
+        tasks = {'current': [], 'complete': []}
         userResponseIDs = [tr.task_id for tr in current_user.task_responses]
         week_ago = DT.date.today() - DT.timedelta(days=7)
         for c in current_user.courses:
@@ -80,13 +76,14 @@ class TaskListView(MethodView):
 
 
 class SettingsScreenView(MethodView):
-    decorators = [login_required]
+    decorators = [login_required, auth.permissions_author]
 
     def get(self):
         return render_template("settings.html", failure=False)
 
 
 class AddAuthorView(MethodView):
+    decorators = [login_required, auth.permissions_admin]
 
     def get(self):
         return
@@ -110,6 +107,7 @@ class AddAuthorView(MethodView):
 
 
 class AddAdminView(MethodView):
+    decorators = [login_required, auth.permissions_admin]
 
     def get(self):
         return
@@ -134,6 +132,7 @@ class AddAdminView(MethodView):
 
 
 class RemoveUserView(MethodView):
+    decorators = [login_required, auth.permissions_admin]
 
     def get(self):
         return

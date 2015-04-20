@@ -104,6 +104,41 @@ class TestGradeAutomaticQuestions(unittest.TestCase):
         self.assertEqual(taskResponse.correctness_grade, 0)
         self.assertEqual(ret, [])
 
+    def test_has_questions(self):
+        trquestion1 = {
+            'questionID': 1,
+            'correctOption': "A",
+            'correctOptionText': "text"
+        }
+        question1 = {
+            'questionID': 1,
+            'selectedOption': "A",
+        }
+        taskResponse = Mock()
+        taskResponse.graded_response = False
+        taskResponse.response = json.dumps({
+            'automatic_questions': [question1],
+            'manual_questions': []
+        })
+        taskResponse.correctness_grade = None
+        taskResponse.task = Mock()
+        taskResponse.task.questions = json.dumps([trquestion1])
+        self.models.TaskResponse.query.filter_by.return_value.first.return_value = taskResponse
+        grader = grading.Grader()
+        grader.calculate_correctness = Mock()
+        grader.calculate_correctness.return_value = "grade"
+
+        ret = grader.grade_automatic_questions(1)
+        self.assertEqual(taskResponse.correctness_grade, "grade")
+        exp = {
+            'questionID': 1,
+            'selectedOption': "A",
+            'correctOption': "A",
+            'correct': True,
+            'correctOptionText': "text"
+        }
+        self.assertEqual(ret, [exp])
+
 
 class TestCalculateCorrectness(unittest.TestCase):
 

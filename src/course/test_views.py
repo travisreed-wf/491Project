@@ -7,6 +7,110 @@ from mock import patch
 import views
 
 
+class TestArchiveCourse(unittest.TestCase):
+
+    @patch.object(views, "current_user")
+    @patch.object(views, "models")
+    def test_post(self, models, current_user):
+        current_user.id = 12
+        course = Mock(teacher_id=12)
+        models.Course.query.filter_by.return_value.first.return_value = course
+        ret = views.ArchiveCourse().post(1)
+        self.assertEqual(ret, "")
+        self.assertTrue(models.db.session.commit.called)
+
+    @patch.object(views, "current_user")
+    @patch.object(views, "models")
+    def test_post_perms(self, models, current_user):
+        current_user.id = 12
+        current_user.permissions = 50
+        course = Mock(teacher_id=11)
+        models.Course.query.filter_by.return_value.first.return_value = course
+        ret = views.ArchiveCourse().post(1)
+        self.assertEqual(ret, ("Permission Denied", 401))
+        self.assertFalse(models.db.session.commit.called)
+
+
+class TestUnarchiveCourse(unittest.TestCase):
+
+    @patch.object(views, "current_user")
+    @patch.object(views, "models")
+    def test_post(self, models, current_user):
+        current_user.id = 12
+        course = Mock(teacher_id=12)
+        models.Course.query.filter_by.return_value.first.return_value = course
+        ret = views.UnarchiveCourse().post(1)
+        self.assertEqual(ret, "")
+        self.assertTrue(models.db.session.commit.called)
+
+    @patch.object(views, "current_user")
+    @patch.object(views, "models")
+    def test_post_perms(self, models, current_user):
+        current_user.id = 12
+        current_user.permissions = 50
+        course = Mock(teacher_id=11)
+        models.Course.query.filter_by.return_value.first.return_value = course
+        ret = views.UnarchiveCourse().post(1)
+        self.assertEqual(ret, ("Permission Denied", 401))
+        self.assertFalse(models.db.session.commit.called)
+
+
+class TestSecurityCode(unittest.TestCase):
+
+    @patch.object(views, "url_for")
+    @patch.object(views, "current_user")
+    @patch.object(views, "models")
+    @patch.object(views, "flask")
+    def test_security(self, flask, models, current_user, url_for):
+        data = {
+            'securityCode': "code",
+            'courseId': 12,
+        }
+        c1 = Mock(securityCode="code", id=12)
+        current_user.courses = []
+        flask.request.get_json.return_value = data
+        models.Course.query.filter_by.return_value.first.return_value = c1
+
+        views.securityCode().post()
+        self.assertEqual(current_user.courses, [c1])
+
+    @patch.object(views, "url_for")
+    @patch.object(views, "current_user")
+    @patch.object(views, "models")
+    @patch.object(views, "flask")
+    def test_bad_code(self, flask, models, current_user, url_for):
+        data = {
+            'securityCode': "code",
+            'courseId': 12,
+        }
+        c1 = Mock(securityCode="asdf", id=12)
+        current_user.courses = []
+        flask.request.get_json.return_value = data
+        models.Course.query.filter_by.return_value.first.return_value = c1
+
+        ret = views.securityCode().post()
+        self.assertEqual(current_user.courses, [])
+        self.assertEqual(ret, "Registration Code Incorrect")
+
+    @patch.object(views, "url_for")
+    @patch.object(views, "current_user")
+    @patch.object(views, "models")
+    @patch.object(views, "flask")
+    def test_already_reg(self, flask, models, current_user, url_for):
+        data = {
+            'securityCode': "code",
+            'courseId': 12,
+        }
+        c1 = Mock(securityCode="code", id=12)
+        current_user.courses = [c1]
+        flask.request.get_json.return_value = data
+        models.Course.query.filter_by.return_value.first.return_value = c1
+
+        ret = views.securityCode().post()
+        self.assertEqual(current_user.courses, [c1])
+        self.assertEqual(ret, "Already Registered")
+
+
 class TestSearchCourseName(unittest.TestCase):
 
     @patch.object(views, "models")

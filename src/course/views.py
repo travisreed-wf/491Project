@@ -142,7 +142,7 @@ class AddTAView(MethodView):
         courseId = data.get('courseID')
         course = models.Course.query.filter_by(id=courseId).first()
         if course.teacher_id != current_user.id and current_user.permissions < 100:
-            return HttpResponse("error", status=401)
+            return "error", 401
         if email:
             user = models.User.query.filter(models.User.email.contains(email)).first()
             if user and user.permissions:
@@ -154,9 +154,9 @@ class AddTAView(MethodView):
                 models.db.session.commit()
                 return email
             else:
-                return HttpResponse("error", status=400)
+                return "error", 400
         else:
-            return HttpResponse("error", status=400)
+            return "error", 400
 
 
 class RemoveTAView(MethodView):
@@ -168,7 +168,7 @@ class RemoveTAView(MethodView):
         courseId = data.get('courseID')
         course = models.Course.query.filter_by(id=courseId).first()
         if course.teacher_id != current_user.id and current_user.permissions < 100:
-            return HttpResponse("error", status=401)
+            return "error", 401
         if email:
             user = models.User.query.filter_by(email=email).first()
             if user and user.permissions:
@@ -180,10 +180,10 @@ class RemoveTAView(MethodView):
                     secondary_teachers.remove(str(user.id))
                     course.secondaryTeachers = ", ".join(secondary_teachers)
                 else:
-                    return HttpResponse("error", status=400)
+                    return "error", 400
                 models.db.session.commit()
                 return email
             else:
-                return HttpResponse("error", status=400)
+                return "error", 400
         else:
-            return HttpResponse("error", status=400)
+            return "error", 400

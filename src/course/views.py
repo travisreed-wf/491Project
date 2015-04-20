@@ -69,15 +69,9 @@ class RegisterForCourseView(MethodView):
     def get(self):
         return render_template("registerForCourse.html")
 
-    def post(self):
-        return "TEST"
 
-
-class searchCourseName(MethodView):
+class SearchCourseName(MethodView):
     decorators = [login_required]
-
-    def get(self):
-        return
 
     def post(self):
         data = flask.request.get_json()
@@ -118,19 +112,8 @@ class UnarchiveCourse(MethodView):
         return ""
 
 
-class searchProfessorName(MethodView):
-    def get(self):
-        return
-
-    def post(self):
-        return "Test"
-
-
 class securityCode(MethodView):
     decorators = [login_required]
-
-    def get(self):
-        return
 
     def post(self):
         data = flask.request.get_json()
@@ -152,9 +135,6 @@ class securityCode(MethodView):
 
 class AddTAView(MethodView):
     decorators = [login_required, auth.permissions_author]
-
-    def get(self):
-        return
 
     def post(self):
         data = flask.request.get_json()
@@ -181,9 +161,6 @@ class AddTAView(MethodView):
 
 class RemoveTAView(MethodView):
     decorators = [login_required, auth.permissions_author]
-
-    def get(self):
-        return
 
     def post(self):
         data = flask.request.get_json()

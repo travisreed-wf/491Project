@@ -62,8 +62,7 @@ class TestGradebookScreenView(unittest.TestCase):
         courses = [course2,course]
         self.current_user.courses = courses
         response = Mock()
-        self.models.TaskResponse.query.filter.return_value.
-            order_by.return_value.first.return_value = response
+        self.models.TaskResponse.query.filter.return_value.order_by.return_value.first.return_value = response
         t = {
             'task': task,
             'response': response

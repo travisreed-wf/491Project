@@ -82,7 +82,7 @@ class TestRegisterView(unittest.TestCase):
         self.models.User.query.filter_by.return_value.first.return_value = user
 
         ret = views.RegisterView().post()
-        self.assertEqual(user.password, "password")
+        self.assertEqual(user.password, "d63dc919e201d7bc4c825630d2cf25fdc93d4b2f0d46706d29038d01")
         self.assertTrue(self.models.db.session.commit.called)
 
     def test_new_user(self):
@@ -94,18 +94,6 @@ class TestRegisterView(unittest.TestCase):
 
         ret = views.RegisterView().post()
         self.assertEqual(user.permissions, 0)
-        self.assertTrue(self.models.db.session.commit.called)
-
-    def test_new_user_author(self):
-        self.data['author'] = True
-        self.flask.request.get_json.return_value = self.data
-        self.flask.request.args = {}
-        user = Mock(permissions=0)
-        self.models.User.return_value = user
-        self.models.User.query.filter_by.return_value.first.return_value = None
-
-        ret = views.RegisterView().post()
-        self.assertEqual(user.permissions, 50)
         self.assertTrue(self.models.db.session.commit.called)
 
 

@@ -19,12 +19,9 @@ class HomeScreenView(MethodView):
     decorators = [login_required]
 
     def get(self):
-        teaching = models.Course.query.filter_by(
-            teacher_id=current_user.id,
-            isArchived=False).all()
-        courses_where_ta = current_user.get_courses_where_ta()
-        teaching += courses_where_ta
+        teaching = current_user.get_courses_where_teacher_or_ta()
         enrolled = current_user.get_courses_enrolled()
+
         return render_template('home.html',
                                courses_enrolled=enrolled,
                                courses_teaching=teaching)
@@ -33,14 +30,9 @@ class HomeScreenView(MethodView):
 class ClassListView(MethodView):
     def get(self):
         if current_user.is_authenticated():
-            teaching = models.Course.query.filter_by(
-                teacher_id=current_user.id,
-                isArchived=False).all()
-            courses = [c.serialize for c in current_user.get_courses_enrolled()]
-            if current_user.permissions >= 20:
-                courses_where_ta = current_user.get_courses_where_ta()
-                courses += [c.serialize for c in courses_where_ta]
-                courses += [c.serialize for c in teaching]
+            courses = current_user.get_courses_enrolled()
+            courses += current_user.get_courses_where_teacher_or_ta()
+            courses = [c.serialize for c in courses]
             return flask.json.dumps(courses)
         else:
             return flask.json.dumps([])
@@ -65,7 +57,7 @@ class TaskListView(MethodView):
     decorators = [login_required]
 
     def get(self):
-        tasks = {'current':[], 'complete':[]}
+        tasks = {'current': [], 'complete': []}
         userResponseIDs = [tr.task_id for tr in current_user.task_responses]
         week_ago = DT.date.today() - DT.timedelta(days=7)
         for c in current_user.courses:

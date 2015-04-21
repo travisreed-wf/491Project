@@ -20,6 +20,23 @@
       $("#key_alert").hide();
     }
   }
+
+  function allFilesUploaded(){
+    var ret = true;
+    $('.supplementary-target').each(function(){
+      if($(this).find('div.wp-file-text').html().trim().length < 5){
+        ret = false;
+      }
+    })
+    return ret;
+  }
+
+  function hideFileAlertIfAppropriate(){
+    if (allFilesUploaded()){
+      $("#file_alert").hide();
+    }
+  }
+
   function createElement(elementWell, elementToCreate){
       $('#elementWell').css("height","100px");
       $('#elementWell').html("<br><br>Add more elements here.");
@@ -77,11 +94,14 @@
   }
 
   function showModal(idToShow){
-    if (answerKeyCompleted() == true){
-      $("#"+idToShow).find('.modal').modal('toggle');
-    }
-    else{
+    if (answerKeyCompleted() == false){
       $('#key_alert').show();
+    }
+    else if(allFilesUploaded() == false){
+      $('#file_alert').show();
+    }
+    else {
+      $("#"+idToShow).find('.modal').modal('toggle');
     }
   }
   function clickVideo(clkevent){
@@ -129,6 +149,23 @@
 
   }
 
+  function setBtnWidth(ctx, newSize){
+    var newClass = 'col-md-';
+    if(newSize == 4) newClass += "3";
+    else if(newSize == 3) newClass += "4";
+    else if(newSize == 2) newClass += "6";
+    else newClass += "12";
+    var container = $(ctx).closest('div.question-parent');
+    $(container).find('.wp-supplementary').each(function(){
+      var cur = $(this).find('.panel-body')
+      $(cur).removeClass('col-md-3')
+      $(cur).removeClass('col-md-4') 
+      $(cur).removeClass('col-md-6') 
+      $(cur).removeClass('col-md-12') 
+      $(cur).addClass(newClass)
+    })
+  }
+
   function addSuppElement(ctx, appendID){
     var toAppend = $(ctx).closest('.panel-body').find('.supplementary-target');
     var html = $(appendID).html();
@@ -152,8 +189,15 @@
   function addOtherFile(ctx){
     addSuppElement(ctx, '#wp-file-template')
   };
+  function addTextLabel(ctx){
+    addSuppElement(ctx, '#wp-text-label-template')
+  };
 
   function upload(f, onsuccess){
+    if($(f).find('input').val().trim().length < 5){
+      // the user didn't select anything in the file chooser window. exit.
+      return;
+    }
     var form_data = new FormData(f);
     var uploadUrl = '/upload/{{ session.userid }}';
     $.ajax({
@@ -175,6 +219,7 @@
       $(f).find('.wp-file-text').html(src)
       src = "/static/uploads/{{ session.userid }}/" + src;
       $(f).closest('div.wp-image').find('img').attr("src", src);
+      hideFileAlertIfAppropriate();
     }
 
     upload(f, onsuccess);
@@ -187,6 +232,7 @@
       $(f).find('.wp-file-text').html(src)
       src = "/static/uploads/{{ session.userid }}/" + src;
       $(f).parent().parent().find('h3').first().attr("src", src);
+      hideFileAlertIfAppropriate();
     }
 
     upload(f, onsuccess);
@@ -200,6 +246,7 @@
       src = "/static/uploads/{{ session.userid }}/" + src;
       // set the iframe src to the path of where the file was uploaded
       $(f).closest('.panel-body').find('iframe').first().prop('src', src);
+      hideFileAlertIfAppropriate();
     }    
 
     upload(f, onsuccess)
@@ -303,6 +350,7 @@
       row.fadeOut(200, function(){
         row.remove();
         hideAnswerKeyAlertIfAppropriate();
+        hideFileAlertIfAppropriate();
       });
       if($(".question-parent").length <= 1){
         $('#elementWell').css("height","300px");

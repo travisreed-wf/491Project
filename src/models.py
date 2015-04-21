@@ -64,6 +64,7 @@ class User(db.Model):
         for course in self.courses:
             if not course.isArchived:
                 courses.append(course)
+        return courses
 
     def get_courses_where_teacher_or_ta(self):
         courses = []

@@ -31,6 +31,7 @@ class ClassListView(MethodView):
     def get(self):
         if current_user.is_authenticated():
             courses = current_user.get_courses_enrolled()
+            print courses
             courses += current_user.get_courses_where_teacher_or_ta()
             courses = [c.serialize for c in courses]
             return flask.json.dumps(courses)

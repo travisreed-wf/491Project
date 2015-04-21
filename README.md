@@ -13,6 +13,15 @@ ISU Web Portal
 * [Group Website](http://may1518.ece.iastate.edu/)
 * [Project Plan](https://drive.google.com/a/iastate.edu/file/d/0B6mbCLySBSQxOUxYQ196eUY5cXc/view?usp=sharing)
 
+* [Python Unit Testing](https://docs.python.org/2/library/unittest.html)
+* [Python Mocking In Tests](https://docs.python.org/3/library/unittest.mock.html)
+* [Flask](http://flask.pocoo.org/)
+* [Jinja2](http://jinja.pocoo.org/docs/dev/)
+* [Flask-SQLAlchemy](https://pythonhosted.org/Flask-SQLAlchemy/)
+* [SQLAlchemy](http://www.sqlalchemy.org/)
+* [Bootstrap](http://getbootstrap.com/getting-started/)
+* [Jquery](http://api.jquery.com/)
+
 ===
 ### Deplyoment Instructions
 01. Package the source folder locally (except for the settingslocal)<br>

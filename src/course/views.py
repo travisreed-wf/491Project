@@ -38,10 +38,7 @@ class CourseMasterView(MethodView):
     def get(self, courseID):
         course = models.Course.query.filter_by(id=int(courseID) - 1000).first()
         author = models.User.query.filter_by(id=course.teacher_id).first()
-        courses_where_ta = current_user.get_courses_where_ta()
-        if course in current_user.courses or \
-                course.teacher_id == current_user.id or \
-                course in courses_where_ta:
+        if course in current_user.get_courses_where_teacher_or_ta():
             return render_template("course.html", course=course, author=author)
         else:
             return "You do not have access to view this course", 401
@@ -72,15 +69,9 @@ class RegisterForCourseView(MethodView):
     def get(self):
         return render_template("registerForCourse.html")
 
-    def post(self):
-        return "TEST"
 
-
-class searchCourseName(MethodView):
+class SearchCourseName(MethodView):
     decorators = [login_required]
-
-    def get(self):
-        return
 
     def post(self):
         data = flask.request.get_json()
@@ -121,19 +112,8 @@ class UnarchiveCourse(MethodView):
         return ""
 
 
-class searchProfessorName(MethodView):
-    def get(self):
-        return
-
-    def post(self):
-        return "Test"
-
-
 class securityCode(MethodView):
     decorators = [login_required]
-
-    def get(self):
-        return
 
     def post(self):
         data = flask.request.get_json()
@@ -156,16 +136,13 @@ class securityCode(MethodView):
 class AddTAView(MethodView):
     decorators = [login_required, auth.permissions_author]
 
-    def get(self):
-        return
-
     def post(self):
         data = flask.request.get_json()
         email = data.get('email')
         courseId = data.get('courseID')
         course = models.Course.query.filter_by(id=courseId).first()
         if course.teacher_id != current_user.id and current_user.permissions < 100:
-            return HttpResponse("error", status=401)
+            return "error", 401
         if email:
             user = models.User.query.filter(models.User.email.contains(email)).first()
             if user and user.permissions:
@@ -177,16 +154,13 @@ class AddTAView(MethodView):
                 models.db.session.commit()
                 return email
             else:
-                return HttpResponse("error", status=400)
+                return "error", 400
         else:
-            return HttpResponse("error", status=400)
+            return "error", 400
 
 
 class RemoveTAView(MethodView):
     decorators = [login_required, auth.permissions_author]
-
-    def get(self):
-        return
 
     def post(self):
         data = flask.request.get_json()
@@ -194,7 +168,7 @@ class RemoveTAView(MethodView):
         courseId = data.get('courseID')
         course = models.Course.query.filter_by(id=courseId).first()
         if course.teacher_id != current_user.id and current_user.permissions < 100:
-            return HttpResponse("error", status=401)
+            return "error", 401
         if email:
             user = models.User.query.filter_by(email=email).first()
             if user and user.permissions:
@@ -206,10 +180,10 @@ class RemoveTAView(MethodView):
                     secondary_teachers.remove(str(user.id))
                     course.secondaryTeachers = ", ".join(secondary_teachers)
                 else:
-                    return HttpResponse("error", status=400)
+                    return "error", 400
                 models.db.session.commit()
                 return email
             else:
-                return HttpResponse("error", status=400)
+                return "error", 400
         else:
-            return HttpResponse("error", status=400)
+            return "error", 400

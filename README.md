@@ -13,7 +13,7 @@ ISU Web Portal
 * [Group Website](http://may1518.ece.iastate.edu/)
 * [Project Plan](https://drive.google.com/a/iastate.edu/file/d/0B6mbCLySBSQxOUxYQ196eUY5cXc/view?usp=sharing)
 
-
+### Dev Resources
 * [Python Unit Testing](https://docs.python.org/2/library/unittest.html)
 * [Python Mocking In Tests](https://docs.python.org/3/library/unittest.mock.html)
 * [Flask](http://flask.pocoo.org/)

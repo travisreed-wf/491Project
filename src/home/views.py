@@ -24,10 +24,7 @@ class HomeScreenView(MethodView):
             isArchived=False).all()
         courses_where_ta = current_user.get_courses_where_ta()
         teaching += courses_where_ta
-        enrolled = []
-        for course in current_user.courses:
-            if not course.isArchived:
-                enrolled.append(course)
+        enrolled = current_user.get_courses_enrolled()
         return render_template('home.html',
                                courses_enrolled=enrolled,
                                courses_teaching=teaching)
@@ -39,7 +36,7 @@ class ClassListView(MethodView):
             teaching = models.Course.query.filter_by(
                 teacher_id=current_user.id,
                 isArchived=False).all()
-            courses = [c.serialize for c in current_user.courses]
+            courses = [c.serialize for c in current_user.get_courses_enrolled()]
             if current_user.permissions >= 20:
                 courses_where_ta = current_user.get_courses_where_ta()
                 courses += [c.serialize for c in courses_where_ta]

@@ -58,6 +58,13 @@ class User(db.Model):
                 courses_where_ta.append(c)
         return courses_where_ta
 
+    def get_courses_enrolled(self):
+        courses = []
+        for course in self.courses:
+            if not course.isArchived:
+                courses.append(course)
+        return courses
+
     @property
     def serialize(self):
         return {

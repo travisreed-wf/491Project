@@ -125,7 +125,7 @@ class Task(db.Model):
     questions = db.Column(db.Text)
     duedate = db.Column(db.DateTime())
     task_responses = db.relationship('TaskResponse', backref='task', lazy='dynamic')
-    supplementaryOrder = db.Column(db.String(255))
+    supplementary = db.Column(db.Text)
     status = db.Column(db.String(20))
 
     def __init__(self, title):
@@ -155,7 +155,7 @@ class TaskResponse(db.Model):
     correctness_grade = db.Column(db.Float)
     cognitive_grade = db.Column(db.Float)
     supplementary = db.Column(db.Text)
-    supplementaryOrder = db.Column(db.String(255))
+    supplementaryOrder = db.Column(db.Text)
     graded_supplementary = db.Column(db.Text)
     graded = db.Column(db.Boolean)
     start_time = db.Column(db.DateTime())

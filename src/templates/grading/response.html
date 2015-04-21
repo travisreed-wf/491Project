@@ -79,6 +79,14 @@
           </div>
         </div>
       {% endfor %}<br>
+      
+      {% if supplementaryOrder %}  
+      <div id="supplementaryOrder">
+      {% for suppOrder in supplementaryOrder%}
+        {{suppOrder}}<br>
+      {% endfor %}
+      </div>
+      {% endif %}
   </div>
   {% endif %}
 </div>

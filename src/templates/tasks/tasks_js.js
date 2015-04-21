@@ -403,7 +403,6 @@
       data['html'] = $('#questionList').html();
       data['questions'] = questions;
       data['supplementary'] = supplementaryInformationMinTimes;
-      data['supplementaryOrder'] = supplementartInformationOrder;
       data['course_id'] = $('#taskbuilder_viewable_courses option:selected').prop('id')
       data['taskTitle'] = $('#taskTitle').val()
 

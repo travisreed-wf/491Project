@@ -41,3 +41,9 @@ ISU Web Portal
 09. Ensure database.db is writeable
 10. Start the server <br>
 `python src/run_sandbox.py 2> stderr.log &`
+
+===
+### Important Files
+* models.py: Defines structure of database
+* settingslocal.py: Local settings such as passwords
+* run_sandbox.py: Starts the application, imports urls and initializes db

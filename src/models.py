@@ -59,6 +59,13 @@ class User(db.Model):
                 courses_where_ta.append(c)
         return courses_where_ta
 
+    def get_courses_enrolled(self):
+        courses = []
+        for course in self.courses:
+            if not course.isArchived:
+                courses.append(course)
+        return courses
+
     def get_courses_where_teacher_or_ta(self):
         courses = []
         if self.permissions >= 100:

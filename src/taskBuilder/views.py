@@ -341,7 +341,7 @@ class ProblemStatementView(MethodView):
 class CoursesTeachingView(MethodView):
 
     def get(self):
-        courses = current_user.get_courses_where_teacher_or_admin()
+        courses = current_user.get_courses_where_teacher_or_ta()
         courses = [c.serialize for c in courses]
         return flask.json.dumps(courses)
 

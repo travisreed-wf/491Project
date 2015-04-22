@@ -1,7 +1,7 @@
 <script type="text/javascript">  
   var supplementaryInformationTimes = {}; 
   var supplementaryInformationMinTimes = {};
-  var supplementartInformationOrder = [];
+  var supplementaryInformationOrder = [];
   function answerKeyCompleted(){
     var ret = true;
     $('.automatic-grading').each(function(){
@@ -117,7 +117,7 @@
     }); 
     var modalID = $(modal).attr('id');
     var startTime = startDate.getTime();
-    supplementartInformationOrder.push($(modal).attr('id'));
+    supplementaryInformationOrder.push($(modal).attr('id'));
     $('.modal').on('hide.bs.modal', {startTime: startTime, modalID: modalID}, modalTiming);
   }
   function clickImage(clkevent){
@@ -132,7 +132,7 @@
     });
     var modalID = $(modal).attr('id');
     var startTime = startDate.getTime();
-    supplementartInformationOrder.push($(modal).attr('id'));
+    supplementaryInformationOrder.push($(modal).attr('id'));
     $('.modal').on('hide.bs.modal', {startTime: startTime, modalID: modalID}, modalTiming);
 
   }
@@ -148,7 +148,7 @@
     });
     var modalID = $(modal).attr('id');
     var startTime = startDate.getTime();
-    supplementartInformationOrder.push($(modal).attr('id'));
+    supplementaryInformationOrder.push($(modal).attr('id'));
     $('.modal').on('hide.bs.modal', {startTime: startTime, modalID: modalID}, modalTiming);
 
   }

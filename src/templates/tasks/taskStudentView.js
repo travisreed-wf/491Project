@@ -41,7 +41,7 @@
       var data = {};
       data['automatic_questions'] = automaticQuestions;
       data['supplementary'] = supplementaryInformationTimes;
-      data['supplementaryOrder'] = supplementartInformationOrder;
+      data['supplementaryOrder'] = supplementaryInformationOrder;
       data['manual_questions'] = manualQuestions;
       data['startTaskTime'] = getFormattedDatetime(startTaskTime);
       data['endTaskTime'] = getFormattedDatetime(endTaskTime);

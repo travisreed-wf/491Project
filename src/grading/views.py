@@ -37,6 +37,9 @@ class ResponseExportView(MethodView):
             if element['col'] == 0:
                 f.write('\n\t\t\t<dimension>%s</dimension>' % element['text'])
         f.write('\n\t\t</dimensions>')
+        f.write('\n\t</labels>')
+        f.write('\n\t<interactions>')
+        f.write('\n\t</interactions>')
         f.write('\n</decision_matrix>')
         f.close()
         fn = 'static/uploads/response_%s.xml' % response_id

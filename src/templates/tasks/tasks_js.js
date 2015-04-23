@@ -88,6 +88,7 @@
     }else{
           supplementaryInformationTimes[event.data.modalID] = duration/1000;
     }
+    supplementaryInformation
     $('.modal').off('hide.bs.modal');       
     
   }

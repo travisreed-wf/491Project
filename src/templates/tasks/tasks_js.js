@@ -25,7 +25,8 @@
   function allFilesUploaded(){
     var ret = true;
     $('.supplementary-target').each(function(){
-      if($(this).find('div.wp-file-text').html().trim().length < 5){
+      var url_field = $(this).find('div.wp-file-text');
+      if(url_field.length > 0 && url_field.html().trim().length < 5){
         ret = false;
       }
     })
@@ -198,7 +199,8 @@
   };
 
   function upload(f, onsuccess){
-    if($(f).find('input').val().trim().length < 5){
+    if($(f).find('input:file').val().trim().length < 5){
+      console.log("Nothing selected");
       // the user didn't select anything in the file chooser window. exit.
       return;
     }
@@ -230,7 +232,9 @@
   }
 
   function uploadFile(f) {
+    console.log("Uploading");
     var onsuccess = function(data) {
+      console.log("HERE");
       var src = $(f).find('input.wp-file-src').val();
       src = src.split("\\")[2];
       $(f).find('.wp-file-text').html(src)

@@ -182,6 +182,7 @@ class TaskView(MethodView):
             task_response.task_id = int(taskID)
             task_response.student_id = current_user.id
             task_response.supplementary = json.dumps(data.get('supplementary'))
+            task_response.supplementary_order = json.dumps(data.get('supplementaryOrder'))
             start_time = data.get('startTaskTime')
             end_time = data.get('endTaskTime')
             date_format = "%m/%d/%Y %I:%M:%S %p"
@@ -242,7 +243,7 @@ class TaskExportView(MethodView):
                 worksheet.write(0, 10 + (i * 2), "Automatic Question:%s - Correctness" % automatic_question['questionID'])
                 worksheet.set_column(10 + (i * 2), 10 + (i * 2), 35)
             for i, key in enumerate(supp.keys()):
-                worksheet.write(0, 11 + (i * 2), "Supplementary:%s - Title" % key)
+                worksheet.write(0, 11 + (i * 4), "Supplementary:%s - Title" % key)
                 worksheet.set_column(11 + (i * 4), 11 + (i * 4), 40)
                 worksheet.write(0, 12 + (i * 4), "Supplementary:%s - Min Time" % key)
                 worksheet.set_column(12 + (i * 4), 12 + (i * 4), 40)

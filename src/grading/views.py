@@ -30,12 +30,14 @@ class ResponseView(MethodView):
         formatted_time = task_response.datetime.strftime("%a %b %d %H:%M:%S")
         response = json.loads(task_response.graded_response)
         supplementary = json.loads(task_response.graded_supplementary)
+        supplementary_order = json.loads(task_response.supplementary_order)
 
         return render_template("grading/response.html", response=response,
                                student=task_response.user, task=task_response.task,
                                task_response=task_response, time=formatted_time,
                                supplementary=supplementary,
-                               permissions=current_user.permissions)
+                               permissions=current_user.permissions,
+                               supplementaryOrder=supplementary_order)
 
 
 class ManualGradingView(MethodView):

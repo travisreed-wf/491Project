@@ -1,3 +1,6 @@
+###April  21st
+alter table task_response add supplementary_order Text default "[]";
+
 ### April 16th
 Need to run migration script to encrypt passwords in your local database.
 1 - uncomment the /auth/migrate line in /src/auth/urls.py

@@ -1,6 +1,7 @@
 <script type="text/javascript">  
   var supplementaryInformationTimes = {}; 
   var supplementaryInformationMinTimes = {};
+  var supplementaryInformationOrder = [];
   function answerKeyCompleted(){
     var ret = true;
     $('.automatic-grading').each(function(){
@@ -24,7 +25,8 @@
   function allFilesUploaded(){
     var ret = true;
     $('.supplementary-target').each(function(){
-      if($(this).find('div.wp-file-text').html().trim().length < 5){
+      var url_field = $(this).find('div.wp-file-text');
+      if(url_field.length > 0 && url_field.html().trim().length < 5){
         ret = false;
       }
     })
@@ -116,6 +118,7 @@
     }); 
     var modalID = $(modal).attr('id');
     var startTime = startDate.getTime();
+    supplementaryInformationOrder.push($(modal).attr('id'));
     $('.modal').on('hide.bs.modal', {startTime: startTime, modalID: modalID}, modalTiming);
   }
   function clickImage(clkevent){
@@ -130,6 +133,7 @@
     });
     var modalID = $(modal).attr('id');
     var startTime = startDate.getTime();
+    supplementaryInformationOrder.push($(modal).attr('id'));
     $('.modal').on('hide.bs.modal', {startTime: startTime, modalID: modalID}, modalTiming);
 
   }
@@ -145,6 +149,7 @@
     });
     var modalID = $(modal).attr('id');
     var startTime = startDate.getTime();
+    supplementaryInformationOrder.push($(modal).attr('id'));
     $('.modal').on('hide.bs.modal', {startTime: startTime, modalID: modalID}, modalTiming);
 
   }
@@ -194,7 +199,8 @@
   };
 
   function upload(f, onsuccess){
-    if($(f).find('input').val().trim().length < 5){
+    if($(f).find('input:file').val().trim().length < 5){
+      console.log("Nothing selected");
       // the user didn't select anything in the file chooser window. exit.
       return;
     }

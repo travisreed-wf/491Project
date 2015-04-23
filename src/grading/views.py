@@ -39,12 +39,28 @@ class ResponseExportView(MethodView):
         f.write('\n\t\t</dimensions>')
         f.write('\n\t</labels>')
         f.write('\n\t<interactions>')
+        for interaction in json.loads(response.xml_data):
+            for element in xml_data:
+                if element.get('id') == interaction['id']:
+                    (alternative, dimension) = self.get_alternative_and_dimension(element, xml_data)
+                    message = '\n\t\t<info dimension="%s" alternative="%s" timestamp="%s" endtime="%s" />' % (dimension, alternative, interaction['start'], interaction['end'])
+                    f.write(message)
+                    break
         f.write('\n\t</interactions>')
         f.write('\n</decision_matrix>')
         f.close()
         fn = 'static/uploads/response_%s.xml' % response_id
         # return ""
         return flask.send_file(fn, as_attachment=True)
+
+    def get_alternative_and_dimension(self, element, xml_data):
+        for possible_element in xml_data:
+            if possible_element['row'] == element['row'] and possible_element['col'] == 0:
+                dimension = possible_element['text']
+            elif possible_element['col'] == element['col'] and possible_element['row'] == 0:
+                alternative = possible_element['text']
+        return (alternative, dimension)
+
 
 
 class ResponseView(MethodView):

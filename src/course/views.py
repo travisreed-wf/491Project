@@ -53,7 +53,7 @@ class CourseTaskListView(MethodView):
         course = models.Course.query.filter_by(id=int(courseID) - 1000).first()
         userResponseIDs = [tr.task_id for tr in current_user.task_responses]
         for t in course.tasks:
-            if t.status == "created" and current_user.id != t.course.teacher_id:
+            if t.status == "created" and current_user.id != t.course.teacher_id and current_user.permissions < 100:
                 continue
             if(t.id in userResponseIDs):
                 tasks['complete'].append(t.serialize)

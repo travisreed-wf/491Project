@@ -61,6 +61,7 @@ def store_task(taskID):
     task.course = models.Course.query.filter_by(id=courseID).first()
     task.duedate = datetime.datetime.fromtimestamp(taskDueDate/1000.0)
     task.supplementary = json.dumps(data.get('supplementary'))
+    task.xml_data = json.dumps(data['xmlData']);
     models.db.session.add(task)
     models.db.session.commit()
     print "Stored task " + str(task.id) + " into db."

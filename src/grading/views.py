@@ -18,10 +18,30 @@ class ResponseExportView(MethodView):
 
     def get(self, response_id):
         response = models.TaskResponse.query.filter_by(id=response_id).first()
+        xml_data = json.loads(response.task.xml_data)
         course = response.task.course
         if course not in current_user.get_courses_where_teacher_or_ta():
             return "Permission Denied", 401
-        return ""
+        filename = 'src/static/uploads/response_%s.xml' % response_id
+        f = open(filename, 'w')
+        f.write('<?xml version="1.0" encoding="utf-8"?>')
+        f.write('\n<decision_matrix name="ResponseMatrix">')
+        f.write('\n\t<labels>')
+        f.write('\n\t\t<alternatives>')
+        for element in xml_data:
+            if element['row'] == 0:
+                f.write('\n\t\t\t<alternative>%s</alternative>' % element['text'])
+        f.write('\n\t\t</alternatives>')
+        f.write('\n\t\t<dimensions>')
+        for element in xml_data:
+            if element['col'] == 0:
+                f.write('\n\t\t\t<dimension>%s</dimension>' % element['text'])
+        f.write('\n\t\t</dimensions>')
+        f.write('\n</decision_matrix>')
+        f.close()
+        fn = 'static/uploads/response_%s.xml' % response_id
+        # return ""
+        return flask.send_file(fn, as_attachment=True)
 
 
 class ResponseView(MethodView):

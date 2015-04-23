@@ -146,6 +146,7 @@ class Task(db.Model):
     task_responses = db.relationship('TaskResponse', backref='task', lazy='dynamic')
     supplementary = db.Column(db.Text)
     status = db.Column(db.String(20))
+    xml_data = db.Column(db.Text())
 
     def __init__(self, title):
         self.title = title

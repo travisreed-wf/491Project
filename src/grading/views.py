@@ -13,6 +13,17 @@ import grading
 import models
 
 
+class ResponseExportView(MethodView):
+    decorators = [login_required, auth.permissions_author]
+
+    def get(self, response_id):
+        response = models.TaskResponse.query.filter_by(id=response_id).first()
+        course = response.task.course
+        if course not in current_user.get_courses_where_teacher_or_ta():
+            return "Permission Denied", 401
+        return ""
+
+
 class ResponseView(MethodView):
     decorators = [login_required]
 

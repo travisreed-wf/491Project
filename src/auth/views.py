@@ -44,19 +44,6 @@ class LogoutView(MethodView):
         return redirect(url_for("login"))
 
 
-# This view is commented out in urls, this is only used to encrypt all passwords
-# in the database.
-class MigratePasswords(MethodView):
-
-    def get(self):
-        users = models.User.query.all()
-        for user in users:
-            if user.password:
-                user.password = hashlib.sha224(user.password).hexdigest()
-        models.db.session.commit()
-        return "Success"
-
-
 class RegisterView(MethodView):
 
     def get(self):

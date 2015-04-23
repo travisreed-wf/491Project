@@ -191,6 +191,7 @@ class TaskView(MethodView):
             formatted_e_time = datetime.datetime.strptime(end_time.encode('ascii', 'ignore'), date_format)
             task_response.start_time = formatted_s_time
             task_response.end_time = formatted_e_time
+            task_response.xml_data = json.dumps(data.get('xmlData'))
             models.db.session.add(task_response)
             models.db.session.commit()
             id = models.TaskResponse.query.order_by(models.TaskResponse.id.desc()).first().id

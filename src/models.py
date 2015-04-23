@@ -180,6 +180,7 @@ class TaskResponse(db.Model):
     graded = db.Column(db.Boolean)
     start_time = db.Column(db.DateTime())
     end_time = db.Column(db.DateTime())
+    xml_data = db.Column(db.Text())
 
     def __init__(self, response):
         self.response = response

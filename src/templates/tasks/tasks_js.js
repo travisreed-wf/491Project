@@ -232,9 +232,7 @@
   }
 
   function uploadFile(f) {
-    console.log("Uploading");
     var onsuccess = function(data) {
-      console.log("HERE");
       var src = $(f).find('input.wp-file-src').val();
       src = src.split("\\")[2];
       $(f).find('.wp-file-text').html(src)

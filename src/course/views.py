@@ -53,7 +53,6 @@ class CourseTaskListView(MethodView):
         course = models.Course.query.filter_by(id=int(courseID) - 1000).first()
         userResponseIDs = [tr.task_id for tr in current_user.task_responses]
         for t in course.tasks:
-            print t.title
             if t.status == "created" and current_user.id != t.course.teacher_id:
                 continue
             if(t.id in userResponseIDs):

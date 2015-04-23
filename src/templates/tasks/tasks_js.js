@@ -88,7 +88,11 @@
     }else{
           supplementaryInformationTimes[event.data.modalID] = duration/1000;
     }
-    supplementaryInformation
+    var xmlData = {};
+    xmlData['start'] = event.data.startTime;
+    xmlData['end'] = endTime;
+    xmlData['id'] = event.data.modalID;
+    informationForXML.push(xmlData);
     $('.modal').off('hide.bs.modal');       
     
   }

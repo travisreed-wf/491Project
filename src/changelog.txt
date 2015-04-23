@@ -1,7 +1,7 @@
 ###April  21st
 Need to run migartion script since added new column to models task_response
 
-alter table task_reponse add supplementary_order Text
+alter table task_response add supplementary_order Text
 
 	--Andy you have the expertise, can you look at this ^ and make sure it's ok. All it is
 		is to add a new column in the task_response table with a text object called supplementaryOrder

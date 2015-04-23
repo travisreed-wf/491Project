@@ -79,6 +79,15 @@
           </div>
         </div>
       {% endfor %}<br>
+
+      {% if supplementaryOrder %}  
+      <div id="supplementaryOrder">
+      <h4>Order of Supplementary Information Clicked</h4>
+      {% for suppOrder in supplementaryOrder%}
+        {{suppOrder}}<br>
+      {% endfor %}
+      </div>
+      {% endif %}
   </div>
   {% endif %}
 </div>

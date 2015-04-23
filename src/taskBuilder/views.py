@@ -182,6 +182,7 @@ class TaskView(MethodView):
             task_response.task_id = int(taskID)
             task_response.student_id = current_user.id
             task_response.supplementary = json.dumps(data.get('supplementary'))
+            task_response.supplementary_order = json.dumps(data.get('supplementaryOrder'))
             start_time = data.get('startTaskTime')
             end_time = data.get('endTaskTime')
             date_format = "%m/%d/%Y %I:%M:%S %p"

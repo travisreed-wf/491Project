@@ -165,7 +165,7 @@ class TaskView(MethodView):
         course = models.Course.query.filter_by(id=task.course_id).first()
         html_content = task.content.strip().replace('\n', '')
         secondary_teachers = [t.strip() for t in course.secondaryTeachers.split(",")] if course.secondaryTeachers else []
-        if current_user.id == course.teacher_id or str(current_user.id) in secondary_teachers:
+        if current_user.id == course.teacher_id or str(current_user.id) in secondary_teachers or current_user.permissions >= 100:
             return render_template("tasks/taskAuthorView.html", task=task, course=course)
         elif course.id not in [c.id for c in current_user.courses]:
             return "You are not allowed to see this task", 401

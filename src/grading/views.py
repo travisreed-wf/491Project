@@ -24,9 +24,11 @@ class ResponseView(MethodView):
         course = task_response.task.course
         courses_where_ta = current_user.get_courses_where_ta()
         if task_response.student_id != current_user.id and \
-                course.teacher_id != current_user.id and \
-                course not in courses_where_ta:
+                course not in current_user.get_courses_where_teacher_or_ta():
             return "Permission Denied", 401
+        if task_response.student_id == current_user.id and \
+                task_response.task.status != "grades published":
+            return "Task Not Yet Released"
         formatted_time = task_response.datetime.strftime("%a %b %d %H:%M:%S")
         response = json.loads(task_response.graded_response)
         supplementary = json.loads(task_response.graded_supplementary)

@@ -29,12 +29,12 @@ class ResponseExportView(MethodView):
         f.write('\n\t<labels>')
         f.write('\n\t\t<alternatives>')
         for element in xml_data:
-            if element['row'] == 0:
+            if element['row'] == 0 and element['col'] > 0:
                 f.write('\n\t\t\t<alternative>%s</alternative>' % element['text'])
         f.write('\n\t\t</alternatives>')
         f.write('\n\t\t<dimensions>')
         for element in xml_data:
-            if element['col'] == 0:
+            if element['col'] == 0 and element['row'] > 0:
                 f.write('\n\t\t\t<dimension>%s</dimension>' % element['text'])
         f.write('\n\t\t</dimensions>')
         f.write('\n\t</labels>')
@@ -43,7 +43,7 @@ class ResponseExportView(MethodView):
             for element in xml_data:
                 if element.get('id') == interaction['id']:
                     (alternative, dimension) = self.get_alternative_and_dimension(element, xml_data)
-                    message = '\n\t\t<info dimension="%s" alternative="%s" timestamp="%s" endtime="%s" />' % (dimension, alternative, interaction['start'], interaction['end'])
+                    message = '\n\t\t<info dimension="%s" alternative="%s" timestamp="%s" endtime="%s" />' % (dimension, alternative, interaction['start']/1000, interaction['end']/1000)
                     f.write(message)
                     break
         f.write('\n\t</interactions>')

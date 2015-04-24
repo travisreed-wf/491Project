@@ -43,7 +43,7 @@ class ResponseExportView(MethodView):
             for element in xml_data:
                 if element.get('id') == interaction['id']:
                     (alternative, dimension) = self.get_alternative_and_dimension(element, xml_data)
-                    message = '\n\t\t<info dimension="%s" alternative="%s" timestamp="%s" endtime="%s" />' % (dimension, alternative, interaction['start']/1000, interaction['end']/1000)
+                    message = '\n\t\t<info dimension="%s" alternative="%s" timestamp="%.3f" endtime="%.3f" />' % (dimension, alternative, float(interaction['start'])/1000, float(interaction['end'])/1000)
                     f.write(message)
                     break
         f.write('\n\t</interactions>')

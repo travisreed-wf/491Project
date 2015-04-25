@@ -165,7 +165,7 @@ class TaskView(MethodView):
         course = models.Course.query.filter_by(id=task.course_id).first()
         html_content = task.content.strip().replace('\n', '')
         secondary_teachers = [t.strip() for t in course.secondaryTeachers.split(",")] if course.secondaryTeachers else []
-        if current_user.id == course.teacher_id or str(current_user.id) in secondary_teachers:
+        if current_user.id == course.teacher_id or str(current_user.id) in secondary_teachers or current_user.permissions >= 100:
             return render_template("tasks/taskAuthorView.html", task=task, course=course)
         elif course.id not in [c.id for c in current_user.courses]:
             return "You are not allowed to see this task", 401
@@ -243,7 +243,7 @@ class TaskExportView(MethodView):
                 worksheet.write(0, 10 + (i * 2), "Automatic Question:%s - Correctness" % automatic_question['questionID'])
                 worksheet.set_column(10 + (i * 2), 10 + (i * 2), 35)
             for i, key in enumerate(supp.keys()):
-                worksheet.write(0, 11 + (i * 2), "Supplementary:%s - Title" % key)
+                worksheet.write(0, 11 + (i * 4), "Supplementary:%s - Title" % key)
                 worksheet.set_column(11 + (i * 4), 11 + (i * 4), 40)
                 worksheet.write(0, 12 + (i * 4), "Supplementary:%s - Min Time" % key)
                 worksheet.set_column(12 + (i * 4), 12 + (i * 4), 40)

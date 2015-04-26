@@ -28,7 +28,7 @@ ISU Web Portal
 Once changes are made in a local development environment, to push changes onto the live server follow these steps:
 
 1.  Run the repackage script which will compress and archive files on your local machine and transfer them to the vrac server<br>
-`./repackage.sh build-YYYY-MM-DD aguibert`<br>
+`./repackage.sh build-YYYY-MM-DD <ISU_USERNAME>`<br>
 
 2.  The repackage script will automatically ssh you into the vrac server (once you provide your password) after it moves the new archive onto the server.  Once you are on the vrac server, run the redelploy script on the archive you just created.<br>
 `./redeploy.sh build-YYYY-MM-DD`<br>

@@ -25,22 +25,12 @@ ISU Web Portal
 
 ===
 ### Deplyoment Instructions
-01. Package the source folder locally (except for the settingslocal)<br>
-`zip -r build-MM-DD.zip ./src -x '*/settingslocal.py'`
-02. Transfer archive to vrac server <br>
-`scp ./build-MM-DD.zip username@nirwebportal.vrac.iastate.edu:/home/nirwebportal/archives/`
-03. SSH into nirwebportal.vrac.iastate.edu <br>
-`ssh <yourusername>@nirwebportal.vrac.iastate.edu`
-04. Stop currently running server process(es) <br>
-`ps -au<yourusername>` then `kill <pid>`\
-05. Store the current settingslocal.py in a safe place.  Then remove old source and extract new build archive <br>
-`unzip build-MM-DD.zip`
-06. Replace the src folder with the new build
-07. Move settingslocal.py from your safe place to the /src folder.
-08. Reset database if schema changes were made since last build
-09. Ensure database.db is writeable
-10. Start the server <br>
-`python src/run_sandbox.py 2> stderr.log &`
+Once changes are made in a local development environment, to push changes onto the live server follow these steps:
+01.  Run the repackage script which will compress and archive files on your local machine and transfer them to the vrac server<br>
+`./repackage.sh build-YYYY-MM-DD aguibert`
+02.  The repackage script will automatically ssh you into the vrac server (once you provide your password) after it moves the new archive onto the server.  Once you are on the vrac server, run the redelploy script on the archive you just created.
+`./redeploy.sh build-YYYY-MM-DD`
+The redeploy script will tell you which processes to stop if the server is currently running.  Additionally, the script will ask for any DB changes that need to be made in order to deploy the new changes.
 
 ===
 ### Important Files

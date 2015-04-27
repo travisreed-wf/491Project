@@ -10,20 +10,25 @@
 
 {% block body %}
   <div id="loginInput" class="login">
-    <h1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LearnTrace Sign In</h1>
+    <!-- <h1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LearnTrace Sign In</h1> -->
+    <label></label>
+    <h1>LearnTrace</h1>
     <br>
     <p>
       <label for="login">Email:</label>
-      <input type="email" name="login" id="email" placeholder="example@email.com" autofocus required>
+      <input type="email" name="login" id="email" placeholder="example@email.com" autofocus>
     </p>
     <p>
       <label for="password">Password:</label>
-      <input type="password" name="password" id="password" placeholder="••••••••" required>
+      <input type="password" name="password" id="password" placeholder="••••••••">
     </p>
     <br>
-    <span id="loginError"></span>
+    <p>
+      <label for="loginError"> </label>
+      <span id="loginError"></span>
+    </p>
     <br>
-    <button type="submit" class="btn btn-success btn-lg col-md-9 col-md-offset-3">Login</button>
+    <button id="submit" type="submit" class="btn btn-success btn-lg col-md-9 col-md-offset-3">Login</button>
     <br>&nbsp;
     <button id="register" class="btn btn-primary btn-lg col-md-9 col-md-offset-3">Register</button>
   </div>
@@ -67,8 +72,7 @@ function submit(){
           if(data == "Failure"){  
             $("#loginError").text("Wrong Username or Password");
             $("#loginError").css('color', 'red');
-
-
+            $("#loginError").css('font-weight', 'bold');
           }else{
             window.location.href=$.parseJSON(data)["next_url"];
           }

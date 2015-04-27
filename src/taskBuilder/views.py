@@ -306,7 +306,6 @@ class TaskExportView(MethodView):
         size = f.tell()
         f.seek(0)
         fn = 'task_%s.xlsx' % taskID
-        print "HERE"
         response = flask.send_file(f, as_attachment=True, attachment_filename=fn,
                                    add_etags=False)
         return response

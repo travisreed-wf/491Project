@@ -7,6 +7,8 @@ import flask_login
 from flask_login import current_user
 from flask_login import login_required
 import json
+import os
+import tempfile
 
 from auth import auth
 import grading
@@ -22,8 +24,7 @@ class ResponseExportView(MethodView):
         course = response.task.course
         if course not in current_user.get_courses_where_teacher_or_ta():
             return "Permission Denied", 401
-        filename = 'src/static/uploads/response_%s.xml' % response_id
-        f = open(filename, 'w')
+        f = tempfile.TemporaryFile()
         f.write('<?xml version="1.0" encoding="utf-8"?>')
         f.write('\n<decision_matrix name="ResponseMatrix">')
         f.write('\n\t<labels>')
@@ -48,10 +49,13 @@ class ResponseExportView(MethodView):
                     break
         f.write('\n\t</interactions>')
         f.write('\n</decision_matrix>')
-        f.close()
-        fn = 'static/uploads/response_%s.xml' % response_id
-        # return ""
-        return flask.send_file(fn, as_attachment=True)
+        f.seek(0, os.SEEK_END)
+        size = f.tell()
+        f.seek(0)
+        fn = 'response_%s.xml' % response_id
+        response = flask.send_file(f, as_attachment=True, attachment_filename=fn,
+                                   add_etags=False)
+        return response
 
     def get_alternative_and_dimension(self, element, xml_data):
         for possible_element in xml_data:
@@ -60,7 +64,6 @@ class ResponseExportView(MethodView):
             elif possible_element['col'] == element['col'] and possible_element['row'] == 0:
                 alternative = possible_element['text']
         return (alternative, dimension)
-
 
 
 class ResponseView(MethodView):

@@ -7,6 +7,9 @@ from flask_login import current_user
 from flask_login import login_required
 from flask_login import current_user
 import traceback
+import tempfile
+import os
+from StringIO import StringIO
 from werkzeug import secure_filename
 import xlsxwriter
 
@@ -216,7 +219,8 @@ class TaskExportView(MethodView):
             return "Permission Denied", 401
         date_format = "%m/%d/%Y %I:%M:%S %p"
 
-        workbook = xlsxwriter.Workbook('src/static/uploads/task_%s.xlsx' % taskID)
+        output = StringIO()
+        workbook = xlsxwriter.Workbook(output)
         worksheet = workbook.add_worksheet()
         worksheet.write(0, 0, "Student ID")
         worksheet.set_column('A:A', 11)
@@ -295,7 +299,17 @@ class TaskExportView(MethodView):
                         worksheet.write(i + 1, 14 + (j * 4), False)
 
         workbook.close()
-        return redirect('/uploads/task_%s.xlsx' % taskID)
+        xlsx_data = output.getvalue()
+        f = tempfile.TemporaryFile()
+        f.write(xlsx_data)
+        f.seek(0, os.SEEK_END)
+        size = f.tell()
+        f.seek(0)
+        fn = 'task_%s.xlsx' % taskID
+        print "HERE"
+        response = flask.send_file(f, as_attachment=True, attachment_filename=fn,
+                                   add_etags=False)
+        return response
 
 
 class MultipleChoiceView(MethodView):

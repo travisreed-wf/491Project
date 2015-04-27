@@ -8,7 +8,7 @@
 {% block body %}
         <table id= "grades" class = "table table-bordered" overflow = "auto">
             <thead>
-                <tr class="info">
+                <tr class="info" style="color:white">
                     <th width="10%">Student Name</th>
                     {% for t in course_tasks['course_tasks'] %}
                         <th class="rotate-5" align="center"><div><span>{{t.title}}</span></div></th>

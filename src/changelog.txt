@@ -1,3 +1,7 @@
+### April 23
+alter table task add column xml_data text;
+alter table task_response add column xml_data text;
+
 ###April  21st
 alter table task_response add supplementary_order Text default "[]";
 

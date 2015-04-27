@@ -2,6 +2,7 @@
   var supplementaryInformationTimes = {}; 
   var supplementaryInformationMinTimes = {};
   var supplementaryInformationOrder = [];
+  var informationForXML = [];
   function answerKeyCompleted(){
     var ret = true;
     $('.automatic-grading').each(function(){
@@ -87,6 +88,11 @@
     }else{
           supplementaryInformationTimes[event.data.modalID] = duration/1000;
     }
+    var xmlData = {};
+    xmlData['start'] = event.data.startTime;
+    xmlData['end'] = endTime;
+    xmlData['id'] = event.data.modalID;
+    informationForXML.push(xmlData);
     $('.modal').off('hide.bs.modal');       
     
   }
@@ -422,6 +428,21 @@
   }
 
   function submitClicked() {
+      var xmlData = []
+      var suppIndex = 0;
+      $('.supplementary-target').first().find('.wp-supplementary').each(function(){
+        var xd = {};
+        xd['text'] = $(this).find('h3').text();
+        xd['id'] = $(this).find('.modal').attr('id');
+        var c = $(this).find('.panel-body').first().attr('class');
+        var index = c.search('col-md');
+        var size = parseInt(c.charAt(index+7));
+        var columnsPerRow = 12/size;
+        xd['row'] = Math.floor(suppIndex/columnsPerRow);
+        xd['col'] = suppIndex % columnsPerRow;
+        xmlData.push(xd);
+        suppIndex += 1;
+      })
       $('[id^=minTime]').each(function(){
         var thisID = $(this).prop('id');
         var index = parseInt(thisID.split("minTime")[1]);
@@ -455,6 +476,7 @@
       data['supplementary'] = supplementaryInformationMinTimes;
       data['course_id'] = $('#taskbuilder_viewable_courses option:selected').prop('id')
       data['taskTitle'] = $('#taskTitle').val()
+      data['xmlData'] = xmlData;
 
       // Construct a JS date object
       var date = $('#taskDueDate').val().split('/');

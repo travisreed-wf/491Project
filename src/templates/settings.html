@@ -62,7 +62,7 @@
                 success:  function(data) {
                     alert(data + " is now an Author");
                     $("#addAuthorNotification").css("visibility", "hidden");
-                    $("#addAuthorEmail").val("");
+                    $("#authorEmail").val("");
                 },
                 error: function(data){    
                     $("#addAuthorNotification").css("visibility","visible");
@@ -84,7 +84,7 @@
                 success:  function(data) {
                     alert(data + " is now an Admin");
                     $("#addAdminNotification").css("visibility", "hidden");
-                    $("#addAdminEmail").val("");
+                    $("#adminEmail").val("");
                 },
                 error: function(data){
                     $("#addAdminNotification").css("visibility","visible");
@@ -108,7 +108,8 @@
                 success:  function(data) {
                     alert(data + " is now a Student");
                     $("#addAUserNotification").css("visibility", "hidden");
-                    $("#removalEmail").val("");
+                    $("#removalAdminEmail").val("");
+                    $("#removalAuthorEmail").val("");
                 },
                 error: function(data){
                     if(removeAdmin){

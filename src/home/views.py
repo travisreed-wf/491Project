@@ -13,6 +13,8 @@ import json
 import datetime as DT
 import auth
 from auth import auth
+import os.path
+from settingslocal import ADMIN_PASSWORD
 
 
 class HomeScreenView(MethodView):
@@ -117,7 +119,7 @@ class AddAdminView(MethodView):
         if email:
             user = models.User.query.filter(models.User.email.contains(email)).first()
             if user and user.permissions:
-                if securityCode == "123456" and user.permissions < 100:
+                if securityCode == ADMIN_PASSWORD and user.permissions < 100:
                     user.permissions = 100
                     models.db.session.commit()
                     return email
@@ -143,7 +145,7 @@ class RemoveUserView(MethodView):
             user = models.User.query.filter(models.User.email.contains(email)).first()
             if user and user.permissions:
                 if user.permissions == 100:
-                    if securityCode == "123456":
+                    if securityCode == ADMIN_PASSWORD:
                         user.permissions = 10
                     else:
                         return HttpResponse("error", status=400)

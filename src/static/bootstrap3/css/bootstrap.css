@@ -1191,7 +1191,7 @@ h6,
   font-family: inherit;
   font-weight: 500;
   line-height: 1.1;
-  color: inherit;
+  color: #FFF;
 }
 h1 small,
 h2 small,
@@ -1219,7 +1219,7 @@ h6 .small,
 .h6 .small {
   font-weight: normal;
   line-height: 1;
-  color: #777;
+  color: #DDD;
 }
 h1,
 .h1,
@@ -4493,7 +4493,7 @@ fieldset[disabled] .navbar-default .btn-link:focus {
 }
 .navbar-inverse {
   background-color: #337ab7;
-  border-color: #FFFFFF;
+  border-color: #337ab7;
 }
 .navbar-inverse .navbar-brand {
   color: #FFFFFF;
@@ -5143,7 +5143,7 @@ a.thumbnail.active {
   display: block;
   padding: 10px 15px;
   margin-bottom: -1px;
-  background-color: #fff;
+  background-color: #D7D7D7;
   border: 1px solid #ddd;
 }
 .list-group-item:first-child {

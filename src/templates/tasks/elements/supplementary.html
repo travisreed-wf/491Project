@@ -11,6 +11,7 @@
         <li role="presentation"><a role="menuitem" tabindex="-1" onclick="setBtnWidth(this,2)">2</a></li>
         <li role="presentation"><a role="menuitem" tabindex="-1" onclick="setBtnWidth(this,3)">3</a></li>
         <li role="presentation"><a role="menuitem" tabindex="-1" onclick="setBtnWidth(this,4)">4</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" onclick="setBtnWidth(this,6)">6</a></li>
       </ul>
       <br>
     </div>
@@ -35,7 +36,7 @@
   <div>
   <div id="wp-video-template" style="display:none">
     <div class="wp-video wp-supplementary">
-      <div class="panel-body wp-video-panel col-md-3" align="center" onclick="clickVideo(this)" style="height:232px;border:3px;border-style:outset;border-radius:25px;cursor:pointer">
+      <div class="panel-body wp-video-panel col-md-3" align="center" onclick="clickVideo(this)" style="height:232px;border:3px;border-style:outset;border-radius:25px;cursor:pointer;overflow:auto">
         <img src="../static/images/video-button.png" style="width:140px;height:140px">
         <h3 id="p_title" class="TAKE_ONLY wp-pair-text-2" align="center"/>
       </div>
@@ -63,7 +64,7 @@
   <div id="wp-audio-template" style="display:none">
     <div class="wp-video wp-supplementary">
       <!-- TODO implement a clickAudio function -->
-      <div class="panel-body wp-video-panel col-md-3" align="center" style="height:232px;border:3px;border-style:outset;border-radius:25px;cursor:pointer">
+      <div class="panel-body wp-video-panel col-md-3" align="center" style="height:232px;border:3px;border-style:outset;border-radius:25px;cursor:pointer;overflow:auto">
         <img src="../static/images/audio-button.jpg" style="width:140px;height:140px">
         <h3 id="p_title" class="TAKE_ONLY wp-pair-text-2" align="center"/>
       </div>
@@ -99,7 +100,7 @@
   <div id="wp-text-template" style="display:none">
     <div class="wp-video wp-supplementary">
       <!-- TODO implement a clickText function -->
-      <div class="panel-body wp-video-panel col-md-3" align="center" style="height:232px;border:3px;border-style:outset;border-radius:25px;cursor:pointer">
+      <div class="panel-body wp-video-panel col-md-3" align="center" style="height:232px;border:3px;border-style:outset;border-radius:25px;cursor:pointer;overflow:auto">
         <img src="../static/images/text-button.png" style="width:140px;height:140px">
         <h3 id="p_title" class="TAKE_ONLY wp-pair-text-2" align="center"/>
       </div>
@@ -131,7 +132,7 @@
 
   <div id="wp-image-template" style="display:none">
     <div class="wp-image wp-supplementary">
-      <div class="panel-body wp-video-panel col-md-3" align="center" onclick="clickImage(this)" style="height:232px;border:3px;border-style:outset;border-radius:25px;cursor:pointer">
+      <div class="panel-body wp-video-panel col-md-3" align="center" onclick="clickImage(this)" style="height:232px;border:3px;border-style:outset;border-radius:25px;cursor:pointer;overflow:auto">
         <img src="../static/images/image-button.png" style="width:140px;height:140px">
         <h3 id="p_title" class="TAKE_ONLY wp-pair-text-2" align="center"/>
       </div>
@@ -166,7 +167,7 @@
 
   <div id="wp-file-template" style="display:none">
     <div class="wp-file wp-supplementary">
-      <div class="panel-body wp-file-panel col-md-3" align="center" onclick="clickFile(this)" style="height:232px;border:3px;border-style:outset;border-radius:25px;cursor:pointer">
+      <div class="panel-body wp-file-panel col-md-3" align="center" onclick="clickFile(this)" style="height:232px;border:3px;border-style:outset;border-radius:25px;cursor:pointer;overflow:auto">
         <h3 class="wp-file-title-label wp-pair-text-2"></h3>
       </div>
       <div class="EDIT_ONLY">
@@ -201,7 +202,7 @@
 
   <div id="wp-text-label-template" style="display:none">
     <div class="wp-file wp-supplementary">
-      <div class="panel-body col-md-3" align="center" style="height:232px;border:1px;border-style:outset;border-radius:5px;background-color:#CCCCCC">
+      <div class="panel-body col-md-3" align="center" style="height:232px;border:1px;border-style:outset;border-radius:5px;background-color:#CCCCCC;overflow:auto">
         <h3 class="wp-file-title-label wp-pair-text-2"></h3>
       </div>
       <div class="EDIT_ONLY">

@@ -61,6 +61,7 @@ def store_task(taskID):
     task.course = models.Course.query.filter_by(id=courseID).first()
     task.duedate = datetime.datetime.fromtimestamp(taskDueDate/1000.0)
     task.supplementary = json.dumps(data.get('supplementary'))
+    task.xml_data = json.dumps(data['xmlData']);
     models.db.session.add(task)
     models.db.session.commit()
     print "Stored task " + str(task.id) + " into db."
@@ -190,6 +191,7 @@ class TaskView(MethodView):
             formatted_e_time = datetime.datetime.strptime(end_time.encode('ascii', 'ignore'), date_format)
             task_response.start_time = formatted_s_time
             task_response.end_time = formatted_e_time
+            task_response.xml_data = json.dumps(data.get('xmlData'))
             models.db.session.add(task_response)
             models.db.session.commit()
             id = models.TaskResponse.query.order_by(models.TaskResponse.id.desc()).first().id

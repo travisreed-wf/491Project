@@ -96,5 +96,40 @@ class TestCalculate_Correctness(unittest.TestCase):
             self.assertEqual(taskResponse.graded, True)
             self.assertEqual(ret,100)
 
+class TestCalcualateCorrectnessInputCharacteristics(unittest.TestCase):
+
+        def setUp(self):
+            models = patch.object(grading, "models")
+            self.addCleanup(models.stop)
+            self.models = models.start()
+
+        def test1(self):
+            # Response id valid  = true
+            # Q1 type = manual
+            # Q1 correct = true
+            # Q2 type = manual
+            # Q2 correct = true
+            grader = grading.Grader()
+            task_response = Mock()
+            self.models.TaskResponse.query.filter_by.return_value.first.return_value = task_response
+            question1 = {"correct": True}
+            question2 = {"correct": True}
+            task_response.graded_response = json.dumps({
+                'automatic_questions':[],
+                'manual_questions':[question1, question2]
+            })
+            task_response.graded = None
+            ret = grader.calculate_correctness(1)
+            self.assertEqual(task_response.graded, True)
+            self.assertEqual(ret,100)
+
+
+
+
+
+
+
+
+
 
 

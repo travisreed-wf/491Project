@@ -6,7 +6,6 @@ from mock import patch
 
 import grading
 
-
 class TestGradeAutomaticQuestions(unittest.TestCase):
 
     def setUp(self):
@@ -97,7 +96,6 @@ class TestCalculate_Correctness(unittest.TestCase):
             self.assertEqual(taskResponse.graded, True)
             self.assertEqual(ret,100)
 
-
 class TestCalcualateCorrectnessInputCharacteristics(unittest.TestCase):
 
         def setUp(self):
@@ -126,6 +124,102 @@ class TestCalcualateCorrectnessInputCharacteristics(unittest.TestCase):
             self.assertEqual(ret,100)
 
 
+        def test2_Infeasible(self):
+            # Response id valid  = true
+            # Q1 type = automatic*
+            # Q1 correct = not asked*
+            # Q2 type = none
+            # Q2 correct = not asked
+            grader = grading.Grader()
+            task_response = Mock()
+            self.models.TaskResponse.query.filter_by.return_value.first.return_value = task_response
+            question1 = {}
+            question2 = {}
+            task_response.graded_response = json.dumps({
+                'automatic_questions':[],
+                'manual_questions':[]
+            })
+            task_response.graded = None
+            ret = grader.calculate_correctness(1)
+            self.assertEqual(task_response.graded, True)
+            self.assertEqual(ret,0)
+
+        def test3_Infeasible(self):
+            # Response id valid  = true
+            # Q1 type = none*
+            # Q1 correct = not answered*
+            # Q2 type = automatic*
+            # Q2 correct = not asked*
+            grader = grading.Grader()
+            task_response = Mock()
+            self.models.TaskResponse.query.filter_by.return_value.first.return_value = task_response
+            question1 = {"correct": None}
+            question2 = {}
+            task_response.graded_response = json.dumps({
+                'automatic_questions':[],
+                'manual_questions':[]
+            })
+            task_response.graded = None
+            ret = grader.calculate_correctness(1)
+            self.assertEqual(task_response.graded, True)
+            self.assertEqual(ret,0)
+
+        def test4_Infeasible(self):
+            # Response id valid  = false
+            # Q1 type = manual
+            # Q1 correct = not asked
+            # Q2 type = automatic*
+            # Q2 correct = not grade*
+            grader = grading.Grader()
+            task_response = Mock()
+            self.models.TaskResponse.query.filter_by.return_value.first.return_value = None
+            question1 = {}
+            question2 = {"correct":None}
+            task_response.graded_response = json.dumps({
+                'automatic_questions':[question2],
+                'manual_questions':[]
+            })
+            task_response.graded = None
+            with self.assertRaises(AttributeError):
+                ret = grader.calculate_correctness(1)
+
+        def test5(self):
+            # Response id valid  = false
+            # Q1 type = automatic
+            # Q1 correct = not answered
+            # Q2 type = manual
+            # Q2 correct = false
+            grader = grading.Grader()
+            task_response = Mock()
+            self.models.TaskResponse.query.filter_by.return_value.first.return_value = None
+            question1 = {"correct": None}
+            question2 = {"correct": False}
+            task_response.graded_response = json.dumps({
+                'automatic_questions':[question1],
+                'manual_questions':[question2]
+            })
+            task_response.graded = None
+            with self.assertRaises(AttributeError):
+                ret = grader.calculate_correctness(1)
+
+        def test6_infeasible(self):
+            # Response id valid  = false
+            # Q1 type = none
+            # Q1 correct = not graded
+            # Q2 type = none *
+            # Q2 correct = true *
+            grader = grading.Grader()
+            task_response = Mock()
+            self.models.TaskResponse.query.filter_by.return_value.first.return_value = None
+            question1 = {"correct": None}
+            question2 = {"correct": True}
+            task_response.graded_response = json.dumps({
+                'automatic_questions':[],
+                'manual_questions':[]
+            })
+            task_response.graded = None
+            with self.assertRaises(AttributeError):
+                ret = grader.calculate_correctness(1)
 
         def test21(self):
             # Response id valid = false
@@ -222,11 +316,3 @@ class TestCalcualateCorrectnessInputCharacteristics(unittest.TestCase):
             task_response.graded = None
             with self.assertRaises(AttributeError):
                 grader.calculate_correctness(1)
-
-
-
-
-
-
-
-

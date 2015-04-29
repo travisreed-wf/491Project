@@ -14,7 +14,7 @@
             Due Date: {{task.duedate}}<br>
             <p id="status">Status: {{task.status.capitalize()}}</p>
             <form action='/task/{{task.id}}/export' class='form-inline'>
-              <button id="export" type="submit" class="btn btn-default">Export Response Data</button>
+              <button id="export" type="submit" class="btn btn-default">Export Task Data</button>
               {% if task.status == "created" %}
               <button id="status_button" type="button" class="btn btn-default" onclick="transition('available')">Make Available to Students</button>
               {% elif task.status == "available" %}

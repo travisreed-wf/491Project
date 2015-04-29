@@ -22,11 +22,11 @@
 }
 
 .element, .elementWell {
-  background: #D7D7D7;  
+  background: #FFF;  
 }
 
 body {
-  background: #979797;
+  background: #FFF;
 }
 
 @media (min-width: 1200px) {

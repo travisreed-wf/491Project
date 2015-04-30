@@ -20,7 +20,7 @@ class TestGradebookScreenView(unittest.TestCase):
         self.addCleanup(render_template.stop)
         self.render_template = render_template.start()
 
-    def test_student_archived_course_second(self):
+    def tst_student_archived_course_second(self):
         self.current_user.permissions = 10
         task = Mock()
         tasks = [task]
@@ -50,7 +50,7 @@ class TestGradebookScreenView(unittest.TestCase):
         self.assertEqual(courses, self.current_user.courses)
         self.render_template.assert_called_with('studentGradebook.html', courses=courses, tasks=data)
 
-    def test_student_archived_course_first(self):
+    def tst_student_archived_course_first(self):
         self.current_user.permissions = 10
         task = Mock()
         tasks = [task]
@@ -80,7 +80,7 @@ class TestGradebookScreenView(unittest.TestCase):
         self.assertEqual(courses, self.current_user.courses)
         self.render_template.assert_called_with('studentGradebook.html', courses=courses, tasks=data)
 
-    def test_author(self):
+    def tst_author(self):
         self.current_user.permissions = 20
         t = Mock()
         teaching = [t]

@@ -10,6 +10,8 @@ class Grader:
 
     def calculate_correctness(self, response_id):
         task_response = models.TaskResponse.query.filter_by(id=response_id).first()
+        if task_response == None:
+            return 0
         response = json.loads(task_response.graded_response)
         correct = 0
         total_graded = 0

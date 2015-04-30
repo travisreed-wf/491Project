@@ -9,7 +9,12 @@ import grading
 
 class TestGradeSupplementaryMaterial(unittest.TestCase):
 
-    def setUp(self):
+    def setUp(self):        
+        models = patch.object(grading, "models")
+        self.addCleanup(models.stop)
+        self.models = models.start()
+
+    def test_insufficient(self):
         self.response = Mock(graded_supplementary=None)
         self.response.supplementary = json.dumps({
             'supp0': 1
@@ -21,12 +26,7 @@ class TestGradeSupplementaryMaterial(unittest.TestCase):
             }
 
         })
-        models = patch.object(grading, "models")
-        self.addCleanup(models.stop)
-        self.models = models.start()
         self.models.TaskResponse.query.filter_by.return_value.first.return_value = self.response
-
-    def test_insufficient(self):
         grading.Grader().grade_supplementary_material(2)
         exp = json.dumps([{
             'time': 1,
@@ -37,6 +37,54 @@ class TestGradeSupplementaryMaterial(unittest.TestCase):
         }])
         self.assertEqual(exp, self.response.graded_supplementary)
         self.assertEqual(self.response.cognitive_grade, 0)
+
+    def test_not_viewed(self):
+        self.response = Mock(graded_supplementary=None)
+        self.response.supplementary = json.dumps({
+            'supp0': 0
+        })
+        self.response.task.supplementary = json.dumps({
+            'supp0': {
+                'time': 2,
+                'title': "Supplementary 2"
+            }
+
+        })
+        self.models.TaskResponse.query.filter_by.return_value.first.return_value = self.response
+        grading.Grader().grade_supplementary_material(2)
+        exp = json.dumps([{
+            'time': 0,
+            'expected_time': 2,
+            'sufficient': False,
+            'id': "supp0",
+            'title': "Supplementary 2"
+        }])
+        self.assertEqual(exp, self.response.graded_supplementary)
+        self.assertEqual(self.response.cognitive_grade, 0)
+
+    def test_sufficient(self):
+        self.response = Mock(graded_supplementary=None)
+        self.response.supplementary = json.dumps({
+            'supp0': 2
+        })
+        self.response.task.supplementary = json.dumps({
+            'supp0': {
+                'time': 2,
+                'title': "Supplementary 2"
+            }
+
+        })
+        self.models.TaskResponse.query.filter_by.return_value.first.return_value = self.response
+        grading.Grader().grade_supplementary_material(2)
+        exp = json.dumps([{
+            'time': 2,
+            'expected_time': 2,
+            'sufficient': True,
+            'id': "supp0",
+            'title': "Supplementary 2"
+        }])
+        self.assertEqual(exp, self.response.graded_supplementary)
+        self.assertEqual(self.response.cognitive_grade, 100)
 
 
 class TestGradeManualQuestion(unittest.TestCase):
@@ -146,6 +194,92 @@ class TestCalculateCorrectness(unittest.TestCase):
             models = patch.object(grading, "models")
             self.addCleanup(models.stop)
             self.models = models.start()
+
+        # | correctness | in db | numAuto  | numManual |
+        # |-------------|-------|----------|-----------|
+        # | allWrong    | true  | none     | none      |
+        def test_allWrong_inDB_none_none(self):
+            grader = grading.Grader()
+            taskResponse = Mock()
+            self.models.TaskResponse.query.filter_by.return_value.first.return_value = taskResponse
+            taskResponse.graded_response = json.dumps({
+                'automatic_questions': [],
+                'manual_questions': [],
+            })
+            taskResponse.graded = None
+            ret = grader.calculate_correctness(1)
+            self.assertEqual(taskResponse.graded, True)
+            self.assertEqual(ret, 0)
+
+        # | allWrong    | false | positive | positive  |
+        def test_allWrong_false_positive_positive(self):
+            grader = grading.Grader()
+            taskResponse = Mock()
+            self.models.TaskResponse.query.filter_by.return_value.first.return_value = None
+            taskResponse.graded_response = json.dumps({
+                'automatic_questions': [{'correct': False}],
+                'manual_questions': [{'correctness': 0}],
+            })
+            taskResponse.graded = None
+            ret = grader.calculate_correctness(1)
+            self.assertEqual(taskResponse.graded, None)
+            self.assertEqual(ret, 0)
+
+        # | allRight    | true  | positive | positive  |
+        def test_allRight_true_positive_positive(self):
+            grader = grading.Grader()
+            taskResponse = Mock()
+            self.models.TaskResponse.query.filter_by.return_value.first.return_value = taskResponse
+            taskResponse.graded_response = json.dumps({
+                'automatic_questions': [{'correct': True}],
+                'manual_questions': [{'correctness': 100}],
+            })
+            taskResponse.graded = None
+            ret = grader.calculate_correctness(1)
+            self.assertEqual(taskResponse.graded, True)
+            self.assertEqual(ret, 100)
+
+        # | allRight    | false | none     | none      |
+        def test_allRight_false_none_none(self):
+            grader = grading.Grader()
+            taskResponse = Mock()
+            self.models.TaskResponse.query.filter_by.return_value.first.return_value = None
+            taskResponse.graded_response = json.dumps({
+                'automatic_questions': [{'correct': True}],
+                'manual_questions': [{'correctness': 100}],
+            })
+            taskResponse.graded = None
+            ret = grader.calculate_correctness(1)
+            self.assertEqual(taskResponse.graded, None)
+            self.assertEqual(ret, 0)
+
+        # | mixed       | true  | positive | none      |
+        def test_mixed_true_positive_none(self):
+            grader = grading.Grader()
+            taskResponse = Mock()
+            self.models.TaskResponse.query.filter_by.return_value.first.return_value = taskResponse
+            taskResponse.graded_response = json.dumps({
+                'automatic_questions': [{'correct': True}, {'correct': False}],
+                'manual_questions': [],
+            })
+            taskResponse.graded = True
+            ret = grader.calculate_correctness(1)
+            self.assertEqual(taskResponse.graded, True)
+            self.assertEqual(ret, 50)       
+
+        # | mixed       | false | none     | positive  |
+        def test_mixed_false_none_positive(self):
+            grader = grading.Grader()
+            taskResponse = Mock()
+            self.models.TaskResponse.query.filter_by.return_value.first.return_value = None
+            taskResponse.graded_response = json.dumps({
+                'automatic_questions': [],
+                'manual_questions': [{'correctness': 50}],
+            })
+            taskResponse.graded = None
+            ret = grader.calculate_correctness(1)
+            self.assertEqual(taskResponse.graded, None)
+            self.assertEqual(ret, 0)              
 
         def test_ABCDEGBCDFGBHPRS(self):
             grader = grading.Grader()

@@ -21,6 +21,14 @@
     border-left: solid #f0f0f0;
 }
 
+.element, .elementWell {
+  background: #FFF;  
+}
+
+body {
+  background: #FFF;
+}
+
 @media (min-width: 1200px) {
   .modal-xl {
     width: 1080px;

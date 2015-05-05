@@ -160,6 +160,14 @@
 
   }
 
+  function clickMatrixChoice(ctx){
+    var suppGroup = $(ctx).closest('div.question-parent')
+    $(suppGroup).find('.wp-supplementary').each(function(){
+      $($(this).find('.panel-body')).css('background-color', '#FFF')
+    })
+    $(ctx).css('background-color', '#CCC')
+  }
+
   function setBtnWidth(ctx, newSize){
     var newClass = 'col-md-' + Math.floor(12/newSize);
     var container = $(ctx).closest('div.question-parent');
@@ -199,6 +207,9 @@
   };
   function addTextLabel(ctx){
     addSuppElement(ctx, '#wp-text-label-template')
+  };
+  function addMatrixChoice(ctx){
+    addSuppElement(ctx, '#wp-matrix-choice-template')
   };
 
   function upload(f, onsuccess){

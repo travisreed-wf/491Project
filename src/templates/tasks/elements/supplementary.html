@@ -30,6 +30,7 @@
         <li role="presentation"><a role="menuitem" tabindex="-1" onclick="addImage(this)">Image</a></li>
         <li role="presentation"><a role="menuitem" tabindex="-1" onclick="addOtherFile(this)">Document</a></li>
         <li role="presentation"><a role="menuitem" tabindex="-1" onclick="addTextLabel(this)">Text Label</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" onclick="addMatrixChoice(this)">Decision Matrix Choice</a></li>
       </ul>
     </div>
   </div>
@@ -203,6 +204,19 @@
   <div id="wp-text-label-template" style="display:none">
     <div class="wp-file wp-supplementary">
       <div class="panel-body col-md-3" align="center" style="height:232px;border:1px;border-style:outset;border-radius:5px;background-color:#CCCCCC;overflow:auto">
+        <h3 class="wp-file-title-label wp-pair-text-2"></h3>
+      </div>
+      <div class="EDIT_ONLY">
+        <div class="row"/>
+        <input type="text" id="title" class="EDIT_ONLY form-control wp-pair-input-2" name="material_title" placeholder="Element Title" onchange="changeTitle(this)">
+        <br><br>
+      </div>
+    </div>
+  </div>
+
+  <div id="wp-matrix-choice-template" style="display:none">
+    <div class="wp-file wp-supplementary">
+      <div class="panel-body col-md-3" align="center" style="height:100%;border:1px;border-style:outset;border-radius:50%;overflow:auto" onclick="clickMatrixChoice(this)">
         <h3 class="wp-file-title-label wp-pair-text-2"></h3>
       </div>
       <div class="EDIT_ONLY">

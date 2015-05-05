@@ -20,7 +20,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="{{ url_for('home') }}">LearnTrace</a>
+                <a class="navbar-brand2" href="{{ url_for('home') }}"><img src='../../static/images/LearnTrace0.png' width="30%" height="100%"/></a>
             </div>
                 <!-- Creates the dropdown menu when window gets small -->
             <div class="collapse navbar-collapse">
@@ -62,7 +62,17 @@
         {% block body %}{% endblock %}
     </div>
     <!-- End the main page content -->
-
+    <!-- Footer -->
+<!--     <div class="row">
+        <div class="footer text-center">
+            <p align="center" style="padding-right: 7px">Iowa State Senior Design &middot; <a> <img src='../../static/images/brain.png' width="2%" height="2%"/> </a></p>
+        </div>
+    </div>
+    <nav class=" navbar-fixed-bottom" style="background:#FFF">
+        <div class="container-fluid">
+        <p align="center">Iowa State Senior Design &middot; <a> <img src='../../static/images/brain.png' width="2%" height="2%"/> </a><p>
+        </div>
+    </nav> -->
     {% block js_bottom %}{# Placed at the end of the document so the pages load faster #}
     <script src="/static/jquery-2.1.1.min.js"></script>
     <script src="/static/bootstrap3/js/bootstrap.min.js"></script>

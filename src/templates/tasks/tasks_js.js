@@ -161,6 +161,13 @@
   }
 
   function clickMatrixChoice(ctx){
+    var startDate = new Date();
+    var startTime = startDate.getTime();
+    var xmlData = {};
+    xmlData['start'] = startTime;
+    xmlData['end'] = "";
+    xmlData['id'] = event.data.modalID;
+    informationForXML.push(xmlData);
     var suppGroup = $(ctx).closest('div.question-parent')
     $(suppGroup).find('.wp-supplementary').each(function(){
       $($(this).find('.panel-body')).css('background-color', '#FFF')

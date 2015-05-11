@@ -449,11 +449,8 @@
         var xd = {};
         xd['text'] = $(this).find('h3').text();
         var id = $(this).find('.modal').attr('id');
-        console.log(typeof(id));
         if (typeof(id) == "undefined"){
-          console.log($(this).find('.choiceID').first());
           if ($(this).find('.choiceID').length > 0){
-            console.log("HERE");
             id = $(this).find('.choiceID').first().attr('id');
           }
         }

@@ -21,7 +21,6 @@ class ResponseExportView(MethodView):
     def get(self, response_id):
         response = models.TaskResponse.query.filter_by(id=response_id).first()
         xml_data = json.loads(response.task.xml_data)
-        print "Task data %s" % xml_data
         course = response.task.course
         if course not in current_user.get_courses_where_teacher_or_ta():
             return "Permission Denied", 401
@@ -46,13 +45,10 @@ class ResponseExportView(MethodView):
         f.write('\n\t</labels>')
         f.write('\n\t<interactions>')
         for interaction in json.loads(response.xml_data):
-            print "RESPONSE DATA: %s" % response.xml_data
             for element in xml_data:
                 if element.get('id') == interaction['id']:
                     (alternative, dimension) = self.get_alternative_and_dimension(element, xml_data)
-                    print element['row']
-                    print "Choice row: %s" % choiceRow
-                    print "------"
+
                     if element['row'] == choiceRow:
                         start = float(interaction.get('start', 0)) if interaction.get('start') else 0
                         end = float(interaction.get('end', 0)) if interaction.get('end') else 0

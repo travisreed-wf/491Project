@@ -166,7 +166,7 @@
     var xmlData = {};
     xmlData['start'] = startTime;
     xmlData['end'] = "";
-    xmlData['id'] = event.data.modalID;
+    xmlData['id'] = $(ctx).parent().find('.choiceID').attr('id');
     informationForXML.push(xmlData);
     var suppGroup = $(ctx).closest('div.question-parent')
     $(suppGroup).find('.wp-supplementary').each(function(){
@@ -448,7 +448,16 @@
       $('.supplementary-target').first().find('.wp-supplementary').each(function(){
         var xd = {};
         xd['text'] = $(this).find('h3').text();
-        xd['id'] = $(this).find('.modal').attr('id');
+        var id = $(this).find('.modal').attr('id');
+        console.log(typeof(id));
+        if (typeof(id) == "undefined"){
+          console.log($(this).find('.choiceID').first());
+          if ($(this).find('.choiceID').length > 0){
+            console.log("HERE");
+            id = $(this).find('.choiceID').first().attr('id');
+          }
+        }
+        xd['id'] = id;
         var c = $(this).find('.panel-body').first().attr('class');
         var index = c.search('col-md');
         var size = parseInt(c.charAt(index+7));

@@ -4,7 +4,7 @@ ISU Web Portal
 * Andrew Guibert
 * Andrew Hartman
 * Jonathan Mielke
-* Lucas Rorhet
+* Lucas Rohret
 * Travis Reed 
 
 ===

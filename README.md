@@ -5,7 +5,7 @@ ISU Web Portal
 * Andrew Hartman
 * Jonathan Mielke
 * Lucas Rorhet
-* Travis Reed 
+* Travis Reed asd
 
 ===
 ### Resources
